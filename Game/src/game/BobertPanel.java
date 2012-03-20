@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class BobertPanel extends JPanel implements Runnable,
-        KeyListener, MouseListener, MouseMotionListener {
+        KeyListener {
 
     //<editor-fold defaultstate="collapsed" desc="Class Variables">
     
@@ -45,6 +45,7 @@ public class BobertPanel extends JPanel implements Runnable,
     // Used for spacing in paintComponent(Graphics g) when displaying
     // text to the screen.
     static int debugTextHeight = 17;
+    
     // Important game vars. objectsDefined gets set to true once all of the
     // necessary obecjts have been initialized. gameRunning is a flag for the
     // main game thread (game loop, gameThread). bFrame is the frame (the window
@@ -55,6 +56,7 @@ public class BobertPanel extends JPanel implements Runnable,
     public static final long FPSDelayPerFrame = 2;
     public static long FPSStartOfLoopTime = 0;
     public static BobertFrame bFrame;
+    
     // Vars for the character being in the air/falling/jumping.
     static int inAirDelay = 6;
     static int inAirFrame = 0;
@@ -62,31 +64,24 @@ public class BobertPanel extends JPanel implements Runnable,
     static int vertVelocity = 0;
     static final int vertVelocityJump = -17;
     static boolean isInAir = true;
+    
     // Vars for the character moving left and right
     static int movementFrame = 0;
     static final int movementDelayReset = 0;
     static final int movementDelayInAir = 0;
     static int movementDelay = movementDelayReset;
+    
     // Desired frames per second. I think this value is bullshit, and seems to
     // not be very helpful. Just leave it at 1000.
     static int fps = 1000;
+    
     // Giving more readable names for keys on the keyboard
     static int keyLeft = KeyEvent.VK_A;
     static int keyRight = KeyEvent.VK_D;
     static int keyJump = KeyEvent.VK_W;
     static int keyCrouch = KeyEvent.VK_S;
     static int keyShoot = KeyEvent.VK_SPACE;
-    // Vars for tracking the mouse
-    static int mouseX = 0;
-    // x value of mouse last time it was clicked
-    public static int mouseXClick = 0;
-    // x value of character last time the mouse was clicked
-    public static int characterXClick = 0;
-    static int mouseY = 0;
-    // y value of mouse last time it was clicked
-    public static int mouseYClick = 0;
-    // y value of character last time the mouse was clicked
-    public static int characterYClick = 0;
+    
     // Vars to check the left-right direction of the character
     // Which way the character is facing
     static boolean facingRight = true;
@@ -125,8 +120,6 @@ public class BobertPanel extends JPanel implements Runnable,
         gameThread = new Thread(this);
         gameThread.start();
         bFrame.addKeyListener(this);
-        bFrame.addMouseListener(this);
-        bFrame.addMouseMotionListener(this);
     }
 
     public static void defineObjects() {
@@ -134,15 +127,18 @@ public class BobertPanel extends JPanel implements Runnable,
         // Something to note is that this path ("resources/bobertSmall.jpg")
         // is relative to the project folder (in this case, Game). It is 
         // NOT relative to this source file.
+        // TODO compress this file
         iiChar = new ImageIcon("resources/bobert11.png");
         imgChar = iiChar.getImage();
         character = new Rectangle(Main.B_WINDOW_WIDTH / 2 - characterWidth / 2,
                 floorCollisionHeight - characterHeight,
                 characterWidth, characterHeight);
-
-        iiBackground = new ImageIcon("resources/background.png");
+        // This needs to be a jpg because the image files is HUGE and it doesn't
+        // need transparency.
+        iiBackground = new ImageIcon("resources/background.jpg");
         imgBackground = iiBackground.getImage();
-
+        
+        // TODO compress this file.
         iiFloor = new ImageIcon("resources/foreground.png");
         imgFloor = iiFloor.getImage();
         floor = new Rectangle(-10, floorCollisionHeight,
@@ -302,7 +298,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Duh.
                 if (character.x > 0 && character.x + character.width < Main.B_WINDOW_WIDTH) {
                     if (movingRight) {
-                        if (character.x > Main.B_WINDOW_WIDTH * 0.5 && Math.abs(floor.x) + Main.B_WINDOW_WIDTH < floorWidth) {
+                        if (character.x+character.width >= Main.B_WINDOW_WIDTH * 0.65 && Math.abs(floor.x) + Main.B_WINDOW_WIDTH < floorWidth) {
                             floor.x--;
                         } else {
                             character.x++;
@@ -316,7 +312,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     // keyPressed and keyReleased methods), then move it to the left.
                     // Duh.
                     if (movingLeft) {
-                        if (character.x < Main.B_WINDOW_WIDTH * 0.1 && floor.x < 0) {
+                        if (character.x < Main.B_WINDOW_WIDTH * 0.35 && floor.x < 0) {
                             floor.x++;
                         } else {
                             character.x--;
@@ -511,40 +507,5 @@ public class BobertPanel extends JPanel implements Runnable,
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // Deal with the mouse click
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // Probably won't use this.
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // Also probably won't use this.
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // wtf does this even get called from
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // wtf does this even get called from
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        // Unnecessary
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        // TODO aim arm or whatever towards the mouse
-        mouseX = e.getXOnScreen();
-        mouseY = e.getYOnScreen();
-    }
+    
 }

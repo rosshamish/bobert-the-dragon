@@ -24,8 +24,8 @@ public class Projectile {
     static final int numProjectileImages = 2;
     static int projectileImageCount = 0;
     
-    static final int projectileShootDelay = 10;
-    
+    static long projectileLastShot = System.currentTimeMillis();
+    static long projectileShootDelay = 500;
     
     private Image image;
     private Rectangle hitBox;
@@ -37,10 +37,19 @@ public class Projectile {
 
     
     public Projectile() {
-        ImageIcon iiP = new ImageIcon(defaultPathStem+projectileImageCount+".png");
-        projectileImageCount++;
-        if (projectileImageCount >= numProjectileImages) projectileImageCount = 0;
-        image = iiP.getImage();
+        if (System.currentTimeMillis() - projectileLastShot >= projectileShootDelay) {
+            try {
+                ImageIcon iiP = new ImageIcon(defaultPathStem + projectileImageCount + ".png");
+                projectileImageCount++;
+                if (projectileImageCount >= numProjectileImages) {
+                    projectileImageCount = 0;
+                }
+                image = iiP.getImage();
+            } catch (Exception e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+            projectileLastShot = System.currentTimeMillis();
+        }
         hitBox = new Rectangle(defaultX, defaultY,
                 defaultWidth, defaultHeight);
     }
