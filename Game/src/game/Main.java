@@ -13,7 +13,6 @@ public class Main {
     
     public static void main(String[] args) {
         bFrame = new BobertFrame();
-        bFrame.setAlwaysOnTop(true);
         bFrame.setTitle("Bobert the Dragon ... (c) 2012 Bobert-the-Dragon Productions");
         bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         bFrame.setSize(B_WINDOW_WIDTH, B_WINDOW_HEIGHT);
