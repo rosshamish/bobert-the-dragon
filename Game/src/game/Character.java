@@ -16,15 +16,17 @@ public class Character {
     static final int defaultWidth  = 120;
     static final int defaultHeight = 200;
     static final int defaultX = (int) (Main.B_WINDOW_WIDTH / 2);
-    static final int defaultY = (int) (Main.B_WINDOW_HEIGHT / 2);
+    static final int defaultY = (int) (Main.B_WINDOW_CANVAS_HEIGHT / 2);
     
     static int characterImageCount = 0;
     static final int numCharacterImages = 1;
     
     private Image image;
-    private Rectangle hitBox;
+    public Rectangle hitBox;
+    // Used for collision detection
+    public Rectangle futureHitBox;
     public int vertVelocity;
-    public static final int vertVelocityJump = -20;
+    public static final int vertVelocityJump = -15;
     public boolean isInAir;
 
     // Vars to check the left-right direction of the character
@@ -75,14 +77,6 @@ public class Character {
     public void draw(Graphics2D currentGraphics2DContext) {
         currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
                 this.hitBox.width, this.hitBox.height, null);
-    }
-    
-    public Rectangle getHitBox() {
-        return hitBox;
-    }
-
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
     }
 
     public Image getImage() {

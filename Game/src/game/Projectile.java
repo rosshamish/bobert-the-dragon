@@ -15,22 +15,24 @@ import javax.swing.ImageIcon;
  */
 public class Projectile {
     
-    static final String defaultPathStem = "resources/projectile";
+    static final String defaultPathStem = "resources/projectiles/";
     static final int defaultX = 0;
     static final int defaultY = 0;
-    static final int defaultWidth  = 25;
-    static final int defaultHeight = 25;
+    static final int defaultWidth  = 40;
+    static final int defaultHeight = 40;
     
-    static final int numProjectileImages = 2;
+    static final int numProjectileImages = 7;
     static int projectileImageCount = 0;    
     
     private Image image;
-    private Rectangle hitBox;
+    public Rectangle hitBox;
     public boolean destroyed;
     public boolean movingRight;
     public boolean movingDoubleSpeed;
     public int vertVelocity;
-    public static final int vertVelocityBounce = (int) (defaultHeight*-0.7);
+    // Should be just high enough of a bounce that there's a possibility it could
+    // bounce too high.
+    public static final int vertVelocityBounce = (int) (Enemy.defaultHeight*-0.12);
 
     
     public Projectile() {
@@ -59,14 +61,6 @@ public class Projectile {
     void draw(Graphics2D currentGraphics2DContext) {
         currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
                 this.hitBox.width, this.hitBox.height, null);
-    }
-    
-    public Rectangle getHitBox() {
-        return hitBox;
-    }
-
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
     }
 
     public Image getImage() {

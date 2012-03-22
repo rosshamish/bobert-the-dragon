@@ -7,9 +7,10 @@ import javax.swing.JFrame;
  */
 public class Main {
     
-    static final int B_WINDOW_HEIGHT = 600;
+    static final int B_WINDOW_HEIGHT = 700;
     static final int B_WINDOW_BAR_HEIGHT = 26;
-    static final int B_WINDOW_WIDTH  = 800;
+    static final int B_WINDOW_CANVAS_HEIGHT = B_WINDOW_HEIGHT - B_WINDOW_BAR_HEIGHT;
+    static final int B_WINDOW_WIDTH  = 900;
     static BobertFrame bFrame;
     
     public static void main(String[] args) {

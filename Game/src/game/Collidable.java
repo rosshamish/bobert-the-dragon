@@ -15,11 +15,11 @@ import javax.swing.ImageIcon;
  */
 public class Collidable {
     
-    private Rectangle drawBox;
+    public Rectangle drawBox;
     static final int defaultDrawHeight = 20;
     static final int defaultDrawWidth = 20;
     
-    private Rectangle hitBox;
+    public Rectangle hitBox;
     static final int defaultCollisionHeight = defaultDrawHeight;
     static final int defaultCollisionWidth = defaultDrawWidth;
     
@@ -42,22 +42,6 @@ public class Collidable {
                 this.drawBox.width, this.drawBox.height, null);
     }
     
-    public Rectangle getDrawBox() {
-        return drawBox;
-    }
-
-    public void setDrawBox(Rectangle drawBox) {
-        this.drawBox = drawBox;
-    }
-
-    public Rectangle getHitBox() {
-        return hitBox;
-    }
-
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
-    }
-
     public Image getImage() {
         return image;
     }

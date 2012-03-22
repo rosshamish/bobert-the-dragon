@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.GridLayout;
-import java.awt.TextField;
 import javax.swing.JFrame;
 
 /**
