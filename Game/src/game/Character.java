@@ -3,6 +3,7 @@ package game;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,7 +16,7 @@ public class Character {
     static final int defaultWidth  = 120;
     static final int defaultHeight = 200;
     static final int defaultX = (int) (Main.B_WINDOW_WIDTH / 2);
-    static final int defaultY = (int) (BobertPanel.floorCollisionHeight - defaultHeight);
+    static final int defaultY = (int) (Main.B_WINDOW_HEIGHT / 2);
     
     static int characterImageCount = 0;
     static final int numCharacterImages = 1;
@@ -34,6 +35,12 @@ public class Character {
     public boolean movingRight;
     public boolean movingLeft;
     
+    // Giving more readable names for keys on the keyboard
+    public int keyLeft = KeyEvent.VK_A;
+    public int keyRight = KeyEvent.VK_D;
+    public int keyJump = KeyEvent.VK_W;
+    public int keyShoot = KeyEvent.VK_SPACE;
+    
     public Character() {
         try {
             ImageIcon iiP = new ImageIcon(defaultPathStem + characterImageCount + ".png");
@@ -47,7 +54,10 @@ public class Character {
         }
         hitBox = new Rectangle(defaultX, defaultY,
                 defaultWidth, defaultHeight);
-        vertVelocity = 0;
+        keyLeft = KeyEvent.VK_A;
+        keyRight = KeyEvent.VK_D;
+        keyJump = KeyEvent.VK_W;
+        keyShoot = KeyEvent.VK_SPACE;
     }
     
     public Character(String imagePath, int x, int y,
@@ -56,6 +66,10 @@ public class Character {
         image = iiP.getImage();
         hitBox = new Rectangle(x, y,
                 width, height);
+        keyLeft = KeyEvent.VK_A;
+        keyLeft = KeyEvent.VK_D;
+        keyJump = KeyEvent.VK_W;
+        keyShoot = KeyEvent.VK_SPACE;
     }
     
     public void draw(Graphics2D currentGraphics2DContext) {

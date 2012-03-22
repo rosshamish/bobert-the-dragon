@@ -13,31 +13,35 @@ public class BobertPanel extends JPanel implements Runnable,
 
     //<editor-fold defaultstate="collapsed" desc="Class Variables">
     
-    // Character vars. 
+    // Character vars.
+    static ArrayList<Character> characters;
     static Character bobert;
+    static Character enemy0;
     
     // Background display vars.
     static ImageIcon iiBackground;
     static Image imgBackground;
     
     // Floor/Ground vars. Rectangle is its hit box.
-    static Rectangle floor;
-    static Image imgFloor;
-    static ImageIcon iiFloor;
-    static final int floorWidth = Main.B_WINDOW_WIDTH * 4;
-    static final int floorDrawHeight = 24;
-    static int floorCollisionHeight = Main.B_WINDOW_HEIGHT - floorDrawHeight;
+    static Collidable floor;
+    // OLD FLOOR VARS
+//    static Rectangle floor;
+//    static Image imgFloor;
+//    static ImageIcon iiFloor;
+//    static final int floorWidth = Main.B_WINDOW_WIDTH * 4;
+//    static final int floorDrawHeight = 24;
+//    static int floorCollisionHeight = Main.B_WINDOW_HEIGHT - floorDrawHeight;
     
-    // Projectile ArrayList
+    // Projectile
     static ArrayList<Projectile> projectiles;
     static Projectile defaultProjectile;
-    // More Projectile vars.
     static boolean shootingProjectile = false;
     static boolean canShootProjectileBasedOnTimer = true;
     static int projectileTimer = 0;
     static int projectileTimerDelay = 200;
     static int projectileFrame = 0;
     static final int projectileDelay = 8;
+    
     // Used for spacing in paintComponent(Graphics g) when displaying
     // text to the screen.
     static int debugTextHeight = 17;
@@ -68,12 +72,7 @@ public class BobertPanel extends JPanel implements Runnable,
     // not be very helpful. Just leave it at 1000.
     static int fps = 1000;
     
-    // Giving more readable names for keys on the keyboard
-    static int keyLeft = KeyEvent.VK_A;
-    static int keyRight = KeyEvent.VK_D;
-    static int keyJump = KeyEvent.VK_W;
-    static int keyCrouch = KeyEvent.VK_S;
-    static int keyShoot = KeyEvent.VK_SPACE;
+    
     //</editor-fold>
     
     public BobertPanel(BobertFrame frame) {
@@ -108,7 +107,14 @@ public class BobertPanel extends JPanel implements Runnable,
     }
 
     public static void defineObjects() {
+        characters = new ArrayList<Character>();
+        
         bobert = new Character();
+        enemy0 = new Character("resources/default.png",
+                500, Main.B_WINDOW_HEIGHT/2,
+                50, 60);
+        characters.add(bobert);
+        characters.add(enemy0);
         
         // This needs to be a jpg because the image files is HUGE and it doesn't
         // need transparency.
@@ -116,10 +122,14 @@ public class BobertPanel extends JPanel implements Runnable,
         imgBackground = iiBackground.getImage();
         
         // TODO compress this file.
-        iiFloor = new ImageIcon("resources/foreground.png");
-        imgFloor = iiFloor.getImage();
-        floor = new Rectangle(-10, floorCollisionHeight,
-                floorWidth + 10, floorDrawHeight);
+        int floorWidth = Main.B_WINDOW_WIDTH*3;
+        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_HEIGHT-Main.B_WINDOW_BAR_HEIGHT,
+                floorWidth, 60);
+        // In this case, the whole drawn area of the floor IS collidable
+        Rectangle floorDrawRect = floorCollisionRect;
+        floor = new Collidable(floorDrawRect, floorCollisionRect, 
+                "resources/floor.png");
+        
         // Initialize the list of projectiles
         projectiles = new ArrayList<Projectile>();
         projectiles.ensureCapacity(10);
@@ -142,17 +152,15 @@ public class BobertPanel extends JPanel implements Runnable,
         if (objectsDefined) {
 
             // **Draw background
-            // -20 because it the top of the window (the bar) is about 20 pixels
-            g2d.drawImage(imgBackground, floor.x, -20,
-                    floorWidth, Main.B_WINDOW_HEIGHT,
+            g2d.drawImage(imgBackground, 
+                    floor.getDrawBox().x, 0,
+                    floor.getDrawBox().width, Main.B_WINDOW_HEIGHT-Main.B_WINDOW_BAR_HEIGHT,
                     null);
 
             // **Draw character
-            // Draw the character rectangle for debugging
-//            g.setColor(Color.BLACK);
-//            g.fillRect(character.x, character.y, 
-//                    character.width, character.height);
-            bobert.draw(g2d);
+            for (int i=0; i<characters.size();i++) {
+                characters.get(i).draw(g2d);
+            }
 
             // **Draw Projectile
             if (shootingProjectile) {
@@ -162,15 +170,7 @@ public class BobertPanel extends JPanel implements Runnable,
             }
 
             // **Draw floor
-            // Draw the floor rectangle for debugging
-//            g.setColor(Color.DARK_GRAY);
-//            g.fillRect(floor.x, floor.y, 
-//                    floor.width, floor.height);
-            // Draw the ground image
-            // -20 because it the top of the window (the bar) is about 20 pixels
-            g2d.drawImage(imgFloor, -10, -20,
-                    Main.B_WINDOW_WIDTH + 20, Main.B_WINDOW_HEIGHT,
-                    null);
+            floor.draw(g2d);
 
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
@@ -224,11 +224,11 @@ public class BobertPanel extends JPanel implements Runnable,
                 // we should set the character to be standing directly on top of
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
-                if ((floor.contains(newBotLeft) || floor.contains(newBotRight))) {
+                if ((floor.getHitBox().contains(newBotLeft) || floor.getHitBox().contains(newBotRight))) {
                     bobert.isInAir = false;
-                    bobert.getHitBox().y = floor.y - bobert.getHitBox().height;
+                    bobert.getHitBox().y = floor.getHitBox().y - bobert.getHitBox().height;
                     // The default projectile should move along with the character.
-                    defaultProjectile.getHitBox().y = floor.y - bobert.getHitBox().height;
+                    defaultProjectile.getHitBox().y = floor.getDrawBox().y - bobert.getHitBox().height;
                     // Set the character's vertical velocity to 0 because we are
                     // on the ground, goddamn it, and we aren't jumping, goddamn it.
                     bobert.vertVelocity = 0;
@@ -276,8 +276,9 @@ public class BobertPanel extends JPanel implements Runnable,
                         bobert.getHitBox().x + bobert.getHitBox().width < Main.B_WINDOW_WIDTH) {
                     if (bobert.movingRight) {
                         if (bobert.getHitBox().x+bobert.getHitBox().width >= Main.B_WINDOW_WIDTH * 0.65 && 
-                                Math.abs(floor.x) + Main.B_WINDOW_WIDTH < floorWidth) {
-                            floor.x--;
+                                Math.abs(floor.getDrawBox().x) + Main.B_WINDOW_WIDTH < floor.getDrawBox().width) {
+                            floor.getDrawBox().x--;
+                            floor.getHitBox().x--;
                         } else {
                             bobert.getHitBox().x++;
                             // The default projectile should move along with the character.
@@ -291,8 +292,9 @@ public class BobertPanel extends JPanel implements Runnable,
                     // Duh.
                     if (bobert.movingLeft) {
                         if (bobert.getHitBox().x < Main.B_WINDOW_WIDTH * 0.35 && 
-                                floor.x < 0) {
-                            floor.x++;
+                                floor.getDrawBox().x < 0) {
+                            floor.getDrawBox().x++;
+                            floor.getHitBox().x++;
                         } else {
                             bobert.getHitBox().x--;
                             // The default projectile should move along with the character.
@@ -358,8 +360,9 @@ public class BobertPanel extends JPanel implements Runnable,
                         // set the projectile to sit just above the floor.
                         // Otherwise, add gravity to velocity and then velocity to 
                         // the projectile's y value normally.
-                        if (temp.getHitBox().y + gravity + temp.vertVelocity + temp.getHitBox().height >= floor.y) {
-                            temp.getHitBox().y = floor.y - temp.getHitBox().height;
+                        if (temp.getHitBox().y + gravity + temp.vertVelocity + temp.getHitBox().height 
+                                >= floor.getHitBox().y) {
+                            temp.getHitBox().y = floor.getHitBox().y - temp.getHitBox().height;
                             temp.vertVelocity = Projectile.vertVelocityBounce;
                         } else {
                             temp.vertVelocity += gravity;
@@ -398,10 +401,9 @@ public class BobertPanel extends JPanel implements Runnable,
             // TODO modify this timer so that it will keep one keypress in memory
             // i.e. if you press it and the timer is still active, it will fire
             // once the timer runs all the way, then stop.
-            projectileTimer++;
-            // To protect against data overflows
-            if (projectileTimer > projectileTimerDelay+50) {
-                projectileTimer = projectileTimerDelay+50;
+            // If statement is to protect against data overflows
+            if (projectileTimer < projectileTimerDelay) {
+                projectileTimer++;
             }
 
             // Sleeps the thread for a short period of time to keep the game
@@ -438,17 +440,17 @@ public class BobertPanel extends JPanel implements Runnable,
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == keyLeft) {
+        if (e.getKeyCode() == bobert.keyLeft) {
             bobert.movingLeft = true;
             bobert.facingLeft = true;
             bobert.facingRight = false;
         }
-        if (e.getKeyCode() == keyRight) {
+        if (e.getKeyCode() == bobert.keyRight) {
             bobert.movingRight = true;
             bobert.facingLeft = false;
             bobert.facingRight = true;
         }
-        if (e.getKeyCode() == keyJump) {
+        if (e.getKeyCode() == bobert.keyJump) {
             // Make sure we aren't already jumping, then set isInAir to true
             // as a flag that we are jumping, and then set the vertical 
             // velocity to jumping.
@@ -457,7 +459,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.vertVelocity = Character.vertVelocityJump;
             }
         }
-        if (e.getKeyCode() == keyShoot) {
+        if (e.getKeyCode() == bobert.keyShoot) {
             // Make sure we aren't already shooting the projetile, then set
             // shootingProjectile to true and set the projectile velocity
             // to bouncing.
@@ -487,10 +489,10 @@ public class BobertPanel extends JPanel implements Runnable,
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == keyLeft) {
+        if (e.getKeyCode() == bobert.keyLeft) {
             bobert.movingLeft = false;
         }
-        if (e.getKeyCode() == keyRight) {
+        if (e.getKeyCode() == bobert.keyRight) {
             bobert.movingRight = false;
         }
     }

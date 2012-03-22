@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 public class Main {
     
     static final int B_WINDOW_HEIGHT = 600;
+    static final int B_WINDOW_BAR_HEIGHT = 26;
     static final int B_WINDOW_WIDTH  = 800;
     static BobertFrame bFrame;
     
