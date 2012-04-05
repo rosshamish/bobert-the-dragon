@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 /**
@@ -12,7 +13,7 @@ import javax.swing.ImageIcon;
  */
 public class Character {
     
-    static final String defaultPathStem = "resources/character";
+    static final String defaultPathStem = "resources/character/";
     static final int defaultWidth  = 120;
     static final int defaultHeight = 200;
     static final int defaultX = (int) (Main.B_WINDOW_WIDTH / 2);
@@ -22,6 +23,7 @@ public class Character {
     static final int numCharacterImages = 1;
     
     private Image image;
+    public ArrayList<String> imageLocations;
     public Rectangle hitBox;
     // Used for collision detection
     public Rectangle futureHitBox;
@@ -75,8 +77,25 @@ public class Character {
     }
     
     public void draw(Graphics2D currentGraphics2DContext) {
-        currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
-                this.hitBox.width, this.hitBox.height, null);
+        if (facingLeft) {
+//            currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
+//                    this.hitBox.width, this.hitBox.height, null);
+            currentGraphics2DContext.drawImage(image,
+                    hitBox.x, hitBox.y,
+                    hitBox.x+hitBox.width, hitBox.y+hitBox.height,
+                    image.getWidth(null), 0,
+                    0, image.getHeight(null),
+                    null);
+        } else {
+//            currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
+//                    this.hitBox.width, this.hitBox.height, null);
+            currentGraphics2DContext.drawImage(image,
+                    hitBox.x, hitBox.y,
+                    hitBox.x+hitBox.width, hitBox.y+hitBox.height,
+                    0, 0,
+                    image.getWidth(null), image.getHeight(null),
+                    null);
+        }
     }
 
     public Image getImage() {

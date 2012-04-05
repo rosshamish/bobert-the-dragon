@@ -2,7 +2,7 @@
 	<!-- Template Projectile XML Code
 	<projectile>
 		<name>projectile name</name>
-		<location>location relative to the Game folder, NO QUOTES</location>
+		<location>location relative to Game folder</location>
 		<width>width in pixels, bro. The default is 40</width>
 		<height>height in pixels, bro. The default is 40</height>
 	</projectile>
@@ -13,7 +13,7 @@
 
 	<!-- Projectile 0 -->
 	<projectile>
-		<name> Blue with Red Stripes </name>
+		<name> Red Stripes </name>
 		<location> resources/projectiles/0.png </location>
 		<width> 53 </width>
 		<height> 50 </height>
@@ -21,7 +21,7 @@
 	
 	<!-- Projectile 1 -->
 	<projectile>
-		<name> Red with Blue Stripes </name>
+		<name> Blue Stripes </name>
 		<location> resources/projectiles/1.png </location>
 		<width> 52 </width>
 		<height> 48 </height>
@@ -29,7 +29,7 @@
 
 	<!-- Projectile 2 -->
 	<projectile>
-		<name> Blue with Orange Stars </name>
+		<name> Orange Stars </name>
 		<location> resources/projectiles/2.png </location>
 		<width> 55 </width>
 		<height> 50 </height>
@@ -71,8 +71,8 @@
 	<projectile>
 		<name> Mega Bobert </name>
 		<location> resources/character0.png </location>
-		<width> 300 </width>
-		<height> 400 </height>
+		<width> 150 </width>
+		<height> 200 </height>
 	</projectile>
 
 	<!-- Projectile 8 -->

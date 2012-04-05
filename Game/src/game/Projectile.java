@@ -36,6 +36,7 @@ public class Projectile {
     
     private Image image;
     public Rectangle hitBox;
+    public String name;
     public boolean destroyed;
     public boolean movingRight;
     public boolean movingDoubleSpeed;
@@ -63,16 +64,12 @@ public class Projectile {
                     new File("resources/projectiles/projectile_data.xml") );
             
             // normalize text representation
-//            doc.getDocumentElement ().normalize ();
-            System.out.println ("Root element of the doc is " +
-                    doc.getDocumentElement().getNodeName());
+            doc.getDocumentElement().normalize ();
             
             
             NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
             int totalProjectiles = listOfProjectiles.getLength();
             numProjectileImages = totalProjectiles;
-//            numProjectileImages = totalProjectiles;
-            System.out.println("Total no of projectile images: " + totalProjectiles);
             
 //            for(int i=0; i<totalProjectiles; i++){
                 
@@ -87,16 +84,13 @@ public class Projectile {
                     Element nameElement = (Element)nameList.item(0);
                     
                     NodeList textNAMEList = nameElement.getChildNodes();
-                    System.out.println("Name: " +
-                            ((Node)textNAMEList.item(0)).getNodeValue().trim());
+                    name =  ((Node)textNAMEList.item(0)).getNodeValue().trim();
                     //-------
                     NodeList locationList = projectileElement.getElementsByTagName("location");
                     Element locationElement = (Element)locationList.item(0);
                     
                     NodeList textLOCATIONList = locationElement.getChildNodes();
                     String parsedImagePath = ((Node)textLOCATIONList.item(0)).getNodeValue().trim();
-                    System.out.println("Location: " +
-                            ((Node)textLOCATIONList.item(0)).getNodeValue().trim());
                     //-------
                     NodeList widthList = projectileElement.getElementsByTagName("width");
                     Element widthElement = (Element)widthList.item(0);
@@ -104,8 +98,6 @@ public class Projectile {
                     NodeList textWIDTHList = widthElement.getChildNodes();
                     String parsedImageWidthString = ((Node)textWIDTHList.item(0)).getNodeValue().trim();
                     int parsedImageWidth = Integer.parseInt(parsedImageWidthString);
-                    System.out.println("Width: " +
-                            ((Node)textWIDTHList.item(0)).getNodeValue().trim());
                     //-------
                     NodeList heightList = projectileElement.getElementsByTagName("height");
                     Element heightElement = (Element)heightList.item(0);
@@ -113,8 +105,6 @@ public class Projectile {
                     NodeList textHEIGHTList = heightElement.getChildNodes();
                     String parsedImageHeightString = ((Node)textHEIGHTList.item(0)).getNodeValue().trim();
                     int parsedImageHeight = Integer.parseInt(parsedImageHeightString);
-                    System.out.println("Height: " +
-                            ((Node)textHEIGHTList.item(0)).getNodeValue().trim());
                     //------
                     /*
                      * Finally using the information parsed from the xml file.

@@ -19,6 +19,12 @@ public class BobertPanel extends JPanel implements Runnable,
     static Character bobert;
     static Enemy enemy0;
     
+    // Animation vars
+    static int animationFrame = 0;
+    static int animationDelay = 25;
+    static int bobertImageCount = 0;
+    static int numBobertImages = 16;
+    
     // Background display vars.
     static ImageIcon iiBackground;
     static Image imgBackground;
@@ -66,6 +72,7 @@ public class BobertPanel extends JPanel implements Runnable,
     
     public BobertPanel(BobertFrame frame) {
         setBackground(new Color(103, 187, 241));
+        this.setDoubleBuffered(true);
         // Need to assign the BobertFrame to a static variable so that we 
         // can add Listeners to it in addNotify(). Explanation is in addNotify().
         bFrame = frame;
@@ -99,6 +106,10 @@ public class BobertPanel extends JPanel implements Runnable,
         enemies = new ArrayList<Enemy>();
         
         bobert = new Character();
+        bobert.imageLocations = new ArrayList<String>();
+        for (int i=0; i<numBobertImages; i++) {
+            bobert.imageLocations.add("resources/character/"+i+".png");
+        }
         enemy0 = new Enemy();
         
         enemies.add(enemy0);
@@ -136,7 +147,7 @@ public class BobertPanel extends JPanel implements Runnable,
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
-
+        
         if (objectsDefined) {
 
             // **Draw background
@@ -159,17 +170,22 @@ public class BobertPanel extends JPanel implements Runnable,
                     onScreenProjectiles.get(i).draw(g2d);
                 }
             }
+            // **Draw the currently held projectile's name
+            int fontSize = 20;
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
+            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
 
             // **Draw floor
             floor.draw(g2d);
 
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.drawString("Projectile.numProjectileImages " + Projectile.numProjectileImages, 0, debugTextHeight * 1);
-            g2d.drawString("Projectile.projectileImageCount: " + Projectile.projectileImageCount, 0, debugTextHeight * 2);
-            g2d.drawString("defaultProjectile.image:  "+ defaultProjectile.getImage(), 0, debugTextHeight*3);
-//            g2d.drawString("defaultProjectile.hitBox.x - floor.hitBox.x:"+(defaultProjectile.hitBox.x - floor.hitBox.x), 0, debugTextHeight*4);
-            g2d.drawString("shootingProjectile:  " + shootingProjectile, 0, debugTextHeight * 5);
+            g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
+            g2d.drawString("bobertImageCount: " + bobertImageCount, 0, debugTextHeight * 1);
+            g2d.drawString("numBobertImages: " + numBobertImages, 0, debugTextHeight * 2);
+            g2d.drawString("animationFrame:  "+ animationFrame, 0, debugTextHeight*3);
+            g2d.drawString("animationDelay: "+ animationDelay, 0, debugTextHeight*4);
+//            g2d.drawString("shootingProjectile:  " + shootingProjectile, 0, debugTextHeight * 5);
 //            g2d.drawString("movingLeft:     "+movingLeft, 0, debugTextHeight*6);
 //            g2d.drawString("facingLeft:     "+facingLeft, 0, debugTextHeight*7);
 //            g2d.drawString("projectileVertVelocity: "+projectileVertVelocity, 0, debugTextHeight*9);
@@ -370,6 +386,28 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Increase skipped frame counter
                 movementFrame++;
             }
+            //</editor-fold>
+            
+            // **Handles all animation
+            //<editor-fold defaultstate="collapsed" desc="Animation">
+            if (animationFrame >= animationDelay) {
+                // Right-facing images: 0-15
+                // Left-facing images: 16-30
+                if (bobert.movingRight || bobert.movingLeft) {
+                    bobertImageCount++;
+                } else if (bobert.facingRight || bobert.facingLeft) {
+                    bobertImageCount = 12;
+                }
+                if (bobertImageCount >= numBobertImages) {
+                    bobertImageCount = 0;
+                }
+                bobert.setImage(bobert.imageLocations.get(bobertImageCount));
+                
+                animationFrame = 0;
+            } else {
+                animationFrame++;
+            }
+            
             //</editor-fold>
 
             // **Handles all onScreenProjectiles, as well as collision detection for each
