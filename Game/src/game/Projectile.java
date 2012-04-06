@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import rosslib.RossLib;
 /**
  *
  * @author r.anderson8
@@ -28,10 +29,11 @@ public class Projectile {
     static final int defaultY = 0;
     static final int defaultWidth  = 40;
     static final int defaultHeight = 40;
+    static final int defaultSpeed = 7;
     static ArrayList<Projectile>availableProjectiles = new ArrayList<Projectile>();
     
-    static int numProjectileImages = 2;
-    static int projectileImageCount = 0;    
+    static int numImages = 2;
+    static int imageCount = 0;    
     
     private Image image;
     public Rectangle hitBox;
@@ -48,10 +50,10 @@ public class Projectile {
 
     
 //    public Projectile() {
-//        Projectile newProj = availableProjectiles.get(projectileImageCount);
-//        projectileImageCount++;
-//        if (projectileImageCount >= numProjectileImages) {
-//            projectileImageCount = 0;
+//        Projectile newProj = availableProjectiles.get(imageCount);
+//        imageCount++;
+//        if (imageCount >= numImages) {
+//            imageCount = 0;
 //        }
 //        image = newProj.image;
 //        hitBox = newProj.hitBox;
@@ -71,12 +73,12 @@ public class Projectile {
 //            
 //            NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
 //            int totalProjectiles = listOfProjectiles.getLength();
-//            numProjectileImages = totalProjectiles;
+//            numImages = totalProjectiles;
 //            
 ////            for(int i=0; i<totalProjectiles; i++){
 //                
 //                
-//                Node projectileNode = listOfProjectiles.item(projectileImageCount);
+//                Node projectileNode = listOfProjectiles.item(imageCount);
 //                if(projectileNode.getNodeType() == Node.ELEMENT_NODE){
 //                    
 //                    
@@ -119,9 +121,9 @@ public class Projectile {
 //                    image = ii.getImage();
 //                    hitBox = new Rectangle(defaultX, defaultY,
 //                            parsedImageWidth, parsedImageHeight);
-//                    projectileImageCount++;
-//                    if (projectileImageCount >= numProjectileImages) {
-//                        projectileImageCount = 0;
+//                    imageCount++;
+//                    if (imageCount >= numImages) {
+//                        imageCount = 0;
 //                    }
 //                }//end if
 //              
@@ -146,17 +148,21 @@ public class Projectile {
     
     public Projectile() {
         String filePath = defaultPathStem + "projectile_data.xml";
-        numProjectileImages = Main.parseXML(filePath, "projectile");
+        numImages = RossLib.parseXML(filePath, "projectile");
+        imageCount++;
+        if (imageCount >= numImages) {
+            imageCount = 0;
+        }
         //name
-        name = Main.parseXML(filePath, "projectile", projectileImageCount, "name");
+        name = RossLib.parseXML(filePath, "projectile", imageCount, "name");
         //location
-        String location = Main.parseXML(filePath, "projectile", projectileImageCount, "location");
+        String location = RossLib.parseXML(filePath, "projectile", imageCount, "location");
         ImageIcon ii = new ImageIcon(location);
         image = ii.getImage();
         //width
-        int width = Integer.parseInt(Main.parseXML(filePath, "projectile", projectileImageCount, "width"));
+        int width = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "width"));
         //height
-        int height = Integer.parseInt(Main.parseXML(filePath, "projectile", projectileImageCount, "height"));
+        int height = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "height"));
         hitBox = new Rectangle(defaultX, defaultY,
                 width, height);
         drawBox = new Rectangle(defaultX-drawHitOffset, defaultY-drawHitOffset,
@@ -183,7 +189,7 @@ public class Projectile {
             
             NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
             int totalProjectiles = listOfProjectiles.getLength();
-            numProjectileImages = totalProjectiles;
+            numImages = totalProjectiles;
             System.out.println("Total no of projectile images: " + totalProjectiles);
             
             for(int i=0; i<totalProjectiles; i++){
@@ -256,9 +262,15 @@ public class Projectile {
                 width, height);
     }
     
-    void draw(Graphics2D currentGraphics2DContext) {
-        currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
-                this.hitBox.width, this.hitBox.height, null);
+    /**
+     * @param currentGraphics2DContext -> the parameter passed by paint()
+     * @param floorX -> the current x-coordinate of the floor
+     */
+    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
+        currentGraphics2DContext.drawImage(this.getImage(), 
+                floorX+this.drawBox.x, this.drawBox.y,
+                this.drawBox.width, this.drawBox.height, 
+                null);
     }
 
     public Image getImage() {

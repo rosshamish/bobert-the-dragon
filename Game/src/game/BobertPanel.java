@@ -4,12 +4,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import rosslib.RossLib;
 
 public class BobertPanel extends JPanel implements Runnable,
         KeyListener {
@@ -110,12 +109,12 @@ public class BobertPanel extends JPanel implements Runnable,
         bobert = new Character();
         bobert.imageLocations = new ArrayList<String>();
         
-        String amtImages = Main.parseXML("resources/character/character_data.xml", 
+        String amtImages = RossLib.parseXML("resources/character/character_data.xml", 
                 "character", "Bobert", "numberOfImages");
         if (!amtImages.isEmpty()) {
             bobert.numImages = Integer.parseInt(amtImages); 
         }
-        String defaultImage = Main.parseXML("resources/character/character_data.xml", 
+        String defaultImage = RossLib.parseXML("resources/character/character_data.xml", 
                 "character", "Bobert", "defaultImage");
         if (!defaultImage.isEmpty()) {
             bobert.imageCount = Integer.parseInt(defaultImage);
@@ -182,7 +181,7 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Draw Projectile
             if (shootingProjectile) {
                 for (int i = 0; i < onScreenProjectiles.size(); i++) {
-                    onScreenProjectiles.get(i).draw(g2d);
+                    onScreenProjectiles.get(i).draw(g2d, floor.hitBox.x);
                 }
             }
             // **Draw the currently held projectile's name
@@ -196,10 +195,12 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            g2d.drawString("enemies.get(0).drawBox.x: " + enemies.get(0).drawBox.x, 0, debugTextHeight * 1);
-            g2d.drawString("enemies.get(0).drawBox.width: " + enemies.get(0).drawBox.width, 0, debugTextHeight * 2);
-            g2d.drawString("enemies.get(0).hitBox.x:  "+ enemies.get(0).hitBox.x, 0, debugTextHeight*3);
-            g2d.drawString("enemies.get(0).hitBox.width: "+ enemies.get(0).hitBox.width, 0, debugTextHeight*4);
+            if (onScreenProjectiles.size() > 0) {
+            g2d.drawString("onScreenProjectiles.get(0).drawBox.x: " + onScreenProjectiles.get(0).drawBox.x, 0, debugTextHeight * 1);
+            g2d.drawString("onScreenProjectiles.get(0).drawBox.width: " + onScreenProjectiles.get(0).drawBox.width, 0, debugTextHeight * 2);
+            }
+//            g2d.drawString("enemies.get(0).hitBox.x:  "+ enemies.get(0).hitBox.x, 0, debugTextHeight*3);
+//            g2d.drawString("enemies.get(0).hitBox.width: "+ enemies.get(0).hitBox.width, 0, debugTextHeight*4);
 //            g2d.drawString("shootingProjectile:  " + shootingProjectile, 0, debugTextHeight * 5);
 //            g2d.drawString("movingLeft:     "+movingLeft, 0, debugTextHeight*6);
 //            g2d.drawString("facingLeft:     "+facingLeft, 0, debugTextHeight*7);
@@ -364,8 +365,10 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 // The default projectile needs to be positioned in the same
                 // spot as the character!
-                defaultProjectile.hitBox.x = bobert.hitBox.x;
+                defaultProjectile.hitBox.x = bobert.hitBox.x - floor.hitBox.x;
                 defaultProjectile.hitBox.y = bobert.hitBox.y;
+                defaultProjectile.drawBox.x = bobert.hitBox.x - floor.hitBox.x;
+                defaultProjectile.drawBox.y = bobert.hitBox.y;
 
                 //**Enemy movement
                 for (int i = 0; i < enemies.size(); i++) {
@@ -443,11 +446,17 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (projectileFrame >= projectileDelay) {
 
                     // **Horizontal Movement
-                    // Move the projectile in the direction the character
-                    // is facing
+                    // Move the projectile in the direction it's moving.
                     // If the character was moving at the time it shot the projectile,
                     // move the projectile twice as fast.
-                    int horizSpeed = 7;
+                    String speed = RossLib.parseXML("resources/projectiles/projectile_data.xml", 
+                            "projectile", Projectile.imageCount, "speed");
+                    int horizSpeed;
+                    if (!speed.isEmpty()) {
+                        horizSpeed = Integer.parseInt(speed);
+                    } else {
+                        horizSpeed = Projectile.defaultSpeed;
+                    }
                     for (int i = 0; i < onScreenProjectiles.size(); i++) {
                         Projectile temp = onScreenProjectiles.get(i);
                         if (temp.movingRight) {
@@ -465,7 +474,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         // If is moving left
                         if (!temp.movingRight) {
                             temp.hitBox.x -= horizSpeed;
-                            temp.drawBox.x = horizSpeed;
+                            temp.drawBox.x -= horizSpeed;
                             // See wasMovingRight for explanation
                             if (temp.movingDoubleSpeed) {
                                 temp.hitBox.x -= horizSpeed;
@@ -490,10 +499,8 @@ public class BobertPanel extends JPanel implements Runnable,
 
 
                         // Bounds check to see if the projectile is off the screen
-                        if (temp.hitBox.y < 0) {
-                            temp.destroyed = true;
-                        }
-                        if (temp.hitBox.x+temp.hitBox.width < 0 || temp.hitBox.x > floor.hitBox.x + floor.hitBox.width) {
+                        if (temp.hitBox.x+temp.hitBox.width < floor.hitBox.x 
+                                || temp.hitBox.x > floor.hitBox.width) {
                             
                             temp.destroyed = true;
                         }
@@ -599,7 +606,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 onScreenProjectiles.add(newProjectile);
                 defaultProjectile = new Projectile();
-                defaultProjectile.hitBox.x = bobert.hitBox.x;
+                defaultProjectile.hitBox.x = bobert.hitBox.x - floor.hitBox.x;
                 defaultProjectile.hitBox.y = bobert.hitBox.y;
             }
             shootingProjectile = true;

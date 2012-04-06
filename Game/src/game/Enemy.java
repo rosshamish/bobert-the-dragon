@@ -17,8 +17,8 @@ public class Enemy {
     // There is no default x because it will always be randomly calculated
     static final int defaultY = (int) (Main.B_WINDOW_CANVAS_HEIGHT - defaultHeight);
     
-    static int enemyImageCount = 0;
-    static final int numEnemyImages = 1;
+    static int imageCount = 0;
+    static final int numImages = 1;
     
     private Image image;
     public Rectangle drawBox;
@@ -37,11 +37,11 @@ public class Enemy {
     
     public Enemy() {
         try {
-            ImageIcon iiP = new ImageIcon(defaultPathStem + enemyImageCount + ".png");
-            enemyImageCount++;
+            ImageIcon iiP = new ImageIcon(defaultPathStem + imageCount + ".png");
+            imageCount++;
             // TODO parse all data in this constructor from XML
-            if (enemyImageCount >= numEnemyImages) {
-                enemyImageCount = 0;
+            if (imageCount >= numImages) {
+                imageCount = 0;
             }
             image = iiP.getImage();
         } catch (Exception e) {
@@ -78,6 +78,10 @@ public class Enemy {
         }
     }
     
+    /**
+     * @param currentGraphics2DContext -> the parameter passed by paint()
+     * @param floorX -> the current x-coordinate of the floor
+     */
     public void draw(Graphics2D currentGraphics2DContext, int floorX) {
         currentGraphics2DContext.drawImage(this.getImage(), 
                 floorX+this.drawBox.x, this.drawBox.y,
