@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
-import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -36,6 +35,8 @@ public class Projectile {
     
     private Image image;
     public Rectangle hitBox;
+    public Rectangle drawBox;
+    public int drawHitOffset = 5;
     public String name;
     public boolean destroyed;
     public boolean movingRight;
@@ -56,90 +57,110 @@ public class Projectile {
 //        hitBox = newProj.hitBox;
 //        vertVelocity = vertVelocityBounce;
 //    }
+    
+//    public Projectile() {
+//        try {
+//            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+//            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+//            org.w3c.dom.Document doc = docBuilder.parse(
+//                    new File("resources/projectiles/projectile_data.xml") );
+//            
+//            // normalize text representation
+//            doc.getDocumentElement().normalize ();
+//            
+//            
+//            NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
+//            int totalProjectiles = listOfProjectiles.getLength();
+//            numProjectileImages = totalProjectiles;
+//            
+////            for(int i=0; i<totalProjectiles; i++){
+//                
+//                
+//                Node projectileNode = listOfProjectiles.item(projectileImageCount);
+//                if(projectileNode.getNodeType() == Node.ELEMENT_NODE){
+//                    
+//                    
+//                    Element projectileElement = (Element)projectileNode;
+//                    //-------
+//                    NodeList nameList = projectileElement.getElementsByTagName("name");
+//                    Element nameElement = (Element)nameList.item(0);
+//                    
+//                    NodeList textNAMEList = nameElement.getChildNodes();
+//                    name =  ((Node)textNAMEList.item(0)).getNodeValue().trim();
+//                    //-------
+//                    NodeList locationList = projectileElement.getElementsByTagName("location");
+//                    Element locationElement = (Element)locationList.item(0);
+//                    
+//                    NodeList textLOCATIONList = locationElement.getChildNodes();
+//                    String parsedImagePath = ((Node)textLOCATIONList.item(0)).getNodeValue().trim();
+//                    //-------
+//                    NodeList widthList = projectileElement.getElementsByTagName("width");
+//                    Element widthElement = (Element)widthList.item(0);
+//                    
+//                    NodeList textWIDTHList = widthElement.getChildNodes();
+//                    String parsedImageWidthString = ((Node)textWIDTHList.item(0)).getNodeValue().trim();
+//                    int parsedImageWidth = Integer.parseInt(parsedImageWidthString);
+//                    //-------
+//                    NodeList heightList = projectileElement.getElementsByTagName("height");
+//                    Element heightElement = (Element)heightList.item(0);
+//                    
+//                    NodeList textHEIGHTList = heightElement.getChildNodes();
+//                    String parsedImageHeightString = ((Node)textHEIGHTList.item(0)).getNodeValue().trim();
+//                    int parsedImageHeight = Integer.parseInt(parsedImageHeightString);
+//                    //------
+//                    /*
+//                     * Finally using the information parsed from the xml file.
+//                     * IMPORTANT: The info is parsed every time a new projectile
+//                     * is thrown, NOT when it is compiled. Because of this, you
+//                     * can draw things, change size, etc, while the game is running
+//                     * without having to restart the whole game. FUCKING AWESOME.
+//                     */
+//                    ImageIcon ii = new ImageIcon(parsedImagePath);
+//                    image = ii.getImage();
+//                    hitBox = new Rectangle(defaultX, defaultY,
+//                            parsedImageWidth, parsedImageHeight);
+//                    projectileImageCount++;
+//                    if (projectileImageCount >= numProjectileImages) {
+//                        projectileImageCount = 0;
+//                    }
+//                }//end if
+//              
+//              
+//                
+////            }//end for (i)
+//            
+//            
+//        }catch (SAXParseException err) {
+//            System.out.println ("** Parsing error" + ", line "
+//                    + err.getLineNumber () + ", uri " + err.getSystemId ());
+//            System.out.println(" " + err.getMessage ());
+//            
+//        }catch (SAXException e) {
+//            Exception x = e.getException ();
+//            ((x == null) ? e : x).printStackTrace ();
+//            
+//        }catch (Throwable t) {
+//            t.printStackTrace ();
+//        }
+//    }
+    
     public Projectile() {
-        try {
-            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            org.w3c.dom.Document doc = docBuilder.parse(
-                    new File("resources/projectiles/projectile_data.xml") );
-            
-            // normalize text representation
-            doc.getDocumentElement().normalize ();
-            
-            
-            NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
-            int totalProjectiles = listOfProjectiles.getLength();
-            numProjectileImages = totalProjectiles;
-            
-//            for(int i=0; i<totalProjectiles; i++){
-                
-                
-                Node projectileNode = listOfProjectiles.item(projectileImageCount);
-                if(projectileNode.getNodeType() == Node.ELEMENT_NODE){
-                    
-                    
-                    Element projectileElement = (Element)projectileNode;
-                    //-------
-                    NodeList nameList = projectileElement.getElementsByTagName("name");
-                    Element nameElement = (Element)nameList.item(0);
-                    
-                    NodeList textNAMEList = nameElement.getChildNodes();
-                    name =  ((Node)textNAMEList.item(0)).getNodeValue().trim();
-                    //-------
-                    NodeList locationList = projectileElement.getElementsByTagName("location");
-                    Element locationElement = (Element)locationList.item(0);
-                    
-                    NodeList textLOCATIONList = locationElement.getChildNodes();
-                    String parsedImagePath = ((Node)textLOCATIONList.item(0)).getNodeValue().trim();
-                    //-------
-                    NodeList widthList = projectileElement.getElementsByTagName("width");
-                    Element widthElement = (Element)widthList.item(0);
-                    
-                    NodeList textWIDTHList = widthElement.getChildNodes();
-                    String parsedImageWidthString = ((Node)textWIDTHList.item(0)).getNodeValue().trim();
-                    int parsedImageWidth = Integer.parseInt(parsedImageWidthString);
-                    //-------
-                    NodeList heightList = projectileElement.getElementsByTagName("height");
-                    Element heightElement = (Element)heightList.item(0);
-                    
-                    NodeList textHEIGHTList = heightElement.getChildNodes();
-                    String parsedImageHeightString = ((Node)textHEIGHTList.item(0)).getNodeValue().trim();
-                    int parsedImageHeight = Integer.parseInt(parsedImageHeightString);
-                    //------
-                    /*
-                     * Finally using the information parsed from the xml file.
-                     * IMPORTANT: The info is parsed every time a new projectile
-                     * is thrown, NOT when it is compiled. Because of this, you
-                     * can draw things, change size, etc, while the game is running
-                     * without having to restart the whole game. FUCKING AWESOME.
-                     */
-                    ImageIcon ii = new ImageIcon(parsedImagePath);
-                    image = ii.getImage();
-                    hitBox = new Rectangle(defaultX, defaultY,
-                            parsedImageWidth, parsedImageHeight);
-                    projectileImageCount++;
-                    if (projectileImageCount >= numProjectileImages) {
-                        projectileImageCount = 0;
-                    }
-                }//end if
-              
-              
-                
-//            }//end for (i)
-            
-            
-        }catch (SAXParseException err) {
-            System.out.println ("** Parsing error" + ", line "
-                    + err.getLineNumber () + ", uri " + err.getSystemId ());
-            System.out.println(" " + err.getMessage ());
-            
-        }catch (SAXException e) {
-            Exception x = e.getException ();
-            ((x == null) ? e : x).printStackTrace ();
-            
-        }catch (Throwable t) {
-            t.printStackTrace ();
-        }
+        String filePath = defaultPathStem + "projectile_data.xml";
+        numProjectileImages = Main.parseXML(filePath, "projectile");
+        //name
+        name = Main.parseXML(filePath, "projectile", projectileImageCount, "name");
+        //location
+        String location = Main.parseXML(filePath, "projectile", projectileImageCount, "location");
+        ImageIcon ii = new ImageIcon(location);
+        image = ii.getImage();
+        //width
+        int width = Integer.parseInt(Main.parseXML(filePath, "projectile", projectileImageCount, "width"));
+        //height
+        int height = Integer.parseInt(Main.parseXML(filePath, "projectile", projectileImageCount, "height"));
+        hitBox = new Rectangle(defaultX, defaultY,
+                width, height);
+        drawBox = new Rectangle(defaultX-drawHitOffset, defaultY-drawHitOffset,
+                width+drawHitOffset*2, height+drawHitOffset*1);
     }
     
     /*

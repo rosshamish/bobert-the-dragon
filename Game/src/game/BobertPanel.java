@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -107,8 +109,17 @@ public class BobertPanel extends JPanel implements Runnable,
         
         bobert = new Character();
         bobert.imageLocations = new ArrayList<String>();
-        bobert.numImages = 16; // TODO parse xml file for this value
-        bobert.imageCount = 12; // TODO parse xml file for this value (12 is standing)
+        
+        String amtImages = Main.parseXML("resources/character/character_data.xml", 
+                "character", "Bobert", "numberOfImages");
+        if (!amtImages.isEmpty()) {
+            bobert.numImages = Integer.parseInt(amtImages); 
+        }
+        String defaultImage = Main.parseXML("resources/character/character_data.xml", 
+                "character", "Bobert", "defaultImage");
+        if (!defaultImage.isEmpty()) {
+            bobert.imageCount = Integer.parseInt(defaultImage);
+        }
         for (int i=0; i<bobert.numImages; i++) {
             bobert.imageLocations.add(Character.defaultPathStem+i+".png");
         }
@@ -118,7 +129,7 @@ public class BobertPanel extends JPanel implements Runnable,
             enemies.add(new Enemy());
         }
         
-        // This needs to be a jpg because the image files is HUGE and it doesn't
+        // This needs to be a jpg because the image file is HUGE and it doesn't
         // need transparency.
         iiBackground = new ImageIcon("resources/background.jpg");
         imgBackground = iiBackground.getImage();
@@ -314,16 +325,17 @@ public class BobertPanel extends JPanel implements Runnable,
                 // If the character is moving to the right (as set in the
                 // keyPressed and keyReleased methods), then move it to the right.
                 // Duh.
+                
                 if (bobert.hitBox.x > 0
                         && bobert.hitBox.x + bobert.hitBox.width < Main.B_WINDOW_WIDTH) {
                     if (bobert.movingRight) {
                         if (bobert.hitBox.x + bobert.hitBox.width >= Main.B_WINDOW_WIDTH * 0.65
                                 && Math.abs(floor.drawBox.x) + Main.B_WINDOW_WIDTH < floor.drawBox.width) {
-                            floor.drawBox.x--;
-                            floor.hitBox.x--;
+                            floor.drawBox.x -= bobert.moveSpeed;
+                            floor.hitBox.x -= bobert.moveSpeed;
                         } else {
 
-                            bobert.hitBox.x++;
+                            bobert.hitBox.x += bobert.moveSpeed;
                         }
 
 
@@ -334,10 +346,10 @@ public class BobertPanel extends JPanel implements Runnable,
                     if (bobert.movingLeft) {
                         if (bobert.hitBox.x < Main.B_WINDOW_WIDTH * 0.35
                                 && floor.drawBox.x < 0) {
-                            floor.drawBox.x++;
-                            floor.hitBox.x++;
+                            floor.drawBox.x += bobert.moveSpeed;
+                            floor.hitBox.x += bobert.moveSpeed;
                         } else {
-                            bobert.hitBox.x--;
+                            bobert.hitBox.x -= bobert.moveSpeed;
                         }
                         // If the projectile has yet to be shot (i.e. it isn't bouncing
                         // around), then it should move along with the character.
@@ -345,9 +357,9 @@ public class BobertPanel extends JPanel implements Runnable,
                     }
                 } else {
                     if (bobert.hitBox.x <= 0) {
-                        bobert.hitBox.x++;
+                        bobert.hitBox.x += bobert.moveSpeed;
                     } else {
-                        bobert.hitBox.x--;
+                        bobert.hitBox.x -= bobert.moveSpeed;
                     }
                 }
                 // The default projectile needs to be positioned in the same
@@ -358,6 +370,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 //**Enemy movement
                 for (int i = 0; i < enemies.size(); i++) {
                     Enemy temp = enemies.get(i);
+                    
                     // Randomly decide if the enemy should turn around or not.
                     int changePos = (int) ((Math.random() * 1000));
                     if (changePos == 1) {
@@ -370,8 +383,8 @@ public class BobertPanel extends JPanel implements Runnable,
                     }
                     if (temp.movingRight) {
                         if (temp.hitBox.x+temp.hitBox.width < floor.hitBox.width) {
-                            temp.hitBox.x++;
-                            temp.drawBox.x++;
+                            temp.hitBox.x += temp.moveSpeed;
+                            temp.drawBox.x += temp.moveSpeed;
                         } else {
                             temp.movingRight = false;
                             temp.movingLeft = true;
@@ -379,8 +392,8 @@ public class BobertPanel extends JPanel implements Runnable,
                     }
                     if (temp.movingLeft) {
                         if (temp.hitBox.x > 0) {
-                            temp.hitBox.x--;
-                            temp.drawBox.x--;
+                            temp.hitBox.x -= temp.moveSpeed;
+                            temp.drawBox.x -= temp.moveSpeed;
                         } else {
                             temp.movingRight = true;
                             temp.movingLeft = false;
@@ -408,7 +421,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 } else if (bobert.facingRight || bobert.facingLeft) {
                     bobertImageCount = 12;
                 }
-                if (bobertImageCount >= numBobertImages) {
+                if (bobertImageCount >= bobert.imageLocations.size()) {
                     bobertImageCount = 0;
                 }
                 bobert.setImage(bobert.imageLocations.get(bobertImageCount));
@@ -434,24 +447,29 @@ public class BobertPanel extends JPanel implements Runnable,
                     // is facing
                     // If the character was moving at the time it shot the projectile,
                     // move the projectile twice as fast.
+                    int horizSpeed = 7;
                     for (int i = 0; i < onScreenProjectiles.size(); i++) {
                         Projectile temp = onScreenProjectiles.get(i);
                         if (temp.movingRight) {
-                            temp.hitBox.x += 5;
+                            temp.hitBox.x += horizSpeed;
+                            temp.drawBox.x += horizSpeed;
                             // wasMovingRight is set to true in keyPressed and is set
                             // back to false in keyReleased (if the projectile isn't
                             // being shot), and is set back to false in projectileDestroyed
                             // as well.
                             if (temp.movingDoubleSpeed) {
-                                temp.hitBox.x += 5;
+                                temp.hitBox.x += horizSpeed;
+                                temp.drawBox.x += horizSpeed;
                             }
                         }
                         // If is moving left
                         if (!temp.movingRight) {
-                            temp.hitBox.x -= 5;
+                            temp.hitBox.x -= horizSpeed;
+                            temp.drawBox.x = horizSpeed;
                             // See wasMovingRight for explanation
                             if (temp.movingDoubleSpeed) {
-                                temp.hitBox.x -= 5;
+                                temp.hitBox.x -= horizSpeed;
+                                temp.drawBox.x -= horizSpeed;
                             }
                         }
                         // **Vertical Movement
@@ -462,10 +480,12 @@ public class BobertPanel extends JPanel implements Runnable,
                         if (temp.hitBox.y + gravity + temp.vertVelocity + temp.hitBox.height
                                 >= floor.hitBox.y) {
                             temp.hitBox.y = floor.hitBox.y - temp.hitBox.height;
+                            temp.drawBox.y = floor.hitBox.y - temp.drawBox.height;
                             temp.vertVelocity = Projectile.vertVelocityBounce;
                         } else {
                             temp.vertVelocity += gravity;
                             temp.hitBox.y += temp.vertVelocity;
+                            temp.drawBox.y += temp.vertVelocity;
                         }
 
 

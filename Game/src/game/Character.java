@@ -29,6 +29,7 @@ public class Character {
     public Rectangle futureHitBox;
     public int vertVelocity;
     public static final int vertVelocityJump = -15;
+    public int moveSpeed = 2;
     public boolean isInAir;
 
     // Vars to check the left-right direction of the character

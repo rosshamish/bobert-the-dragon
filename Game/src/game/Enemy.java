@@ -28,6 +28,7 @@ public class Enemy {
     public Rectangle futureHitBox;
     public int vertVelocity;
     public static final int vertVelocityJump = -15;
+    public int moveSpeed = 1;
     public boolean isInAir;
 
     // Which way the character is moving
