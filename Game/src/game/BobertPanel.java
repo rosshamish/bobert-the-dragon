@@ -107,12 +107,16 @@ public class BobertPanel extends JPanel implements Runnable,
         
         bobert = new Character();
         bobert.imageLocations = new ArrayList<String>();
-        for (int i=0; i<numBobertImages; i++) {
-            bobert.imageLocations.add("resources/character/"+i+".png");
+        bobert.numImages = 16; // TODO parse xml file for this value
+        bobert.imageCount = 12; // TODO parse xml file for this value (12 is standing)
+        for (int i=0; i<bobert.numImages; i++) {
+            bobert.imageLocations.add(Character.defaultPathStem+i+".png");
         }
-        enemy0 = new Enemy();
         
-        enemies.add(enemy0);
+        int numTotalEnemies = 5;
+        for (int i=0; i<numTotalEnemies; i++) {
+            enemies.add(new Enemy());
+        }
         
         // This needs to be a jpg because the image files is HUGE and it doesn't
         // need transparency.
@@ -181,10 +185,10 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            g2d.drawString("bobertImageCount: " + bobertImageCount, 0, debugTextHeight * 1);
-            g2d.drawString("numBobertImages: " + numBobertImages, 0, debugTextHeight * 2);
-            g2d.drawString("animationFrame:  "+ animationFrame, 0, debugTextHeight*3);
-            g2d.drawString("animationDelay: "+ animationDelay, 0, debugTextHeight*4);
+            g2d.drawString("enemies.get(0).drawBox.x: " + enemies.get(0).drawBox.x, 0, debugTextHeight * 1);
+            g2d.drawString("enemies.get(0).drawBox.width: " + enemies.get(0).drawBox.width, 0, debugTextHeight * 2);
+            g2d.drawString("enemies.get(0).hitBox.x:  "+ enemies.get(0).hitBox.x, 0, debugTextHeight*3);
+            g2d.drawString("enemies.get(0).hitBox.width: "+ enemies.get(0).hitBox.width, 0, debugTextHeight*4);
 //            g2d.drawString("shootingProjectile:  " + shootingProjectile, 0, debugTextHeight * 5);
 //            g2d.drawString("movingLeft:     "+movingLeft, 0, debugTextHeight*6);
 //            g2d.drawString("facingLeft:     "+facingLeft, 0, debugTextHeight*7);
@@ -252,28 +256,32 @@ public class BobertPanel extends JPanel implements Runnable,
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
                 for (int i = 0; i < enemies.size(); i++) {
-                    enemies.get(i).futureHitBox = enemies.get(i).hitBox;
-                    enemies.get(i).futureHitBox.y += enemies.get(i).vertVelocity + gravity;
-                    if (enemies.get(i).futureHitBox.y + enemies.get(i).futureHitBox.height
+                    Enemy temp = enemies.get(i);
+                    temp.futureHitBox = temp.hitBox;
+                    temp.futureHitBox.y += temp.vertVelocity + gravity;
+                    if (temp.futureHitBox.y + temp.futureHitBox.height
                             >= floor.hitBox.y) {
-                        enemies.get(i).isInAir = false;
-                        enemies.get(i).hitBox.y = floor.hitBox.y - enemies.get(i).hitBox.height;
+                        temp.isInAir = false;
+                        temp.hitBox.y = floor.hitBox.y - temp.hitBox.height;
+                        temp.drawBox.y = floor.hitBox.y - temp.drawBox.height;
                         // Set the character's vertical velocity to 0 because we are
                         // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                        enemies.get(i).vertVelocity = 0;
+                        temp.vertVelocity = 0;
                     } else {
                         // If we aren't going to be on the ground right away, then
                         // we must be in the air. Set isInAir to true so that we can
                         // know whether or not we are jumping.
-                        enemies.get(i).isInAir = true;
+                        temp.isInAir = true;
                     }
                     // If the character is in the air, add some gravity to our current
                     // velocity, and then add the new velocity to the character's
                     // height.
-                    if (enemies.get(i).isInAir) {
-                        enemies.get(i).vertVelocity += gravity;
-                        enemies.get(i).hitBox.y += enemies.get(i).vertVelocity;
+                    if (temp.isInAir) {
+                        temp.vertVelocity += gravity;
+                        temp.hitBox.y += temp.vertVelocity;
+                        temp.drawBox.y += temp.vertVelocity;
                     }
+                    enemies.set(i, temp);
                 }
 
 
@@ -361,8 +369,9 @@ public class BobertPanel extends JPanel implements Runnable,
                         temp.movingLeft = true;
                     }
                     if (temp.movingRight) {
-                        if (temp.hitBox.x < floor.hitBox.width) {
+                        if (temp.hitBox.x+temp.hitBox.width < floor.hitBox.width) {
                             temp.hitBox.x++;
+                            temp.drawBox.x++;
                         } else {
                             temp.movingRight = false;
                             temp.movingLeft = true;
@@ -371,6 +380,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     if (temp.movingLeft) {
                         if (temp.hitBox.x > 0) {
                             temp.hitBox.x--;
+                            temp.drawBox.x--;
                         } else {
                             temp.movingRight = true;
                             temp.movingLeft = false;

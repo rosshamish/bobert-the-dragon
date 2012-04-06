@@ -12,8 +12,8 @@ import javax.swing.ImageIcon;
  */
 public class Enemy {
     static final String defaultPathStem = "resources/enemies/";
-    static final int defaultWidth  = 60;
-    static final int defaultHeight = 110;
+    static final int defaultWidth  = 80;
+    static final int defaultHeight = 130;
     // There is no default x because it will always be randomly calculated
     static final int defaultY = (int) (Main.B_WINDOW_CANVAS_HEIGHT - defaultHeight);
     
@@ -21,7 +21,9 @@ public class Enemy {
     static final int numEnemyImages = 1;
     
     private Image image;
+    public Rectangle drawBox;
     public Rectangle hitBox;
+    static int drawHitOffset = 5;
     // Used for collision detection
     public Rectangle futureHitBox;
     public int vertVelocity;
@@ -36,6 +38,7 @@ public class Enemy {
         try {
             ImageIcon iiP = new ImageIcon(defaultPathStem + enemyImageCount + ".png");
             enemyImageCount++;
+            // TODO parse all data in this constructor from XML
             if (enemyImageCount >= numEnemyImages) {
                 enemyImageCount = 0;
             }
@@ -53,6 +56,10 @@ public class Enemy {
         int randomX = rand.nextInt(Main.B_WINDOW_WIDTH*4);
         hitBox = new Rectangle(randomX, defaultY,
                 defaultWidth, defaultHeight);
+        drawBox = new Rectangle(randomX+drawHitOffset, defaultY+drawHitOffset,
+                defaultWidth-drawHitOffset*2, defaultHeight-drawHitOffset*1);
+        // defaultHeight-drawHitOffset*1 is only multiplied by 1 because the
+        // feet need to touch the floor otherwise it doesn't make sense.
     }
     
     public Enemy(String imagePath, int x, int y,
@@ -72,8 +79,9 @@ public class Enemy {
     
     public void draw(Graphics2D currentGraphics2DContext, int floorX) {
         currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.hitBox.x, this.hitBox.y,
-                this.hitBox.width, this.hitBox.height, null);
+                floorX+this.drawBox.x, this.drawBox.y,
+                this.drawBox.width, this.drawBox.height, 
+                null);
     }
 
     public Image getImage() {

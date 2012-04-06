@@ -19,8 +19,8 @@ public class Character {
     static final int defaultX = (int) (Main.B_WINDOW_WIDTH / 2);
     static final int defaultY = (int) (Main.B_WINDOW_CANVAS_HEIGHT / 2);
     
-    static int characterImageCount = 0;
-    static final int numCharacterImages = 1;
+    int imageCount = 0;
+    public int numImages;
     
     private Image image;
     public ArrayList<String> imageLocations;
@@ -47,10 +47,10 @@ public class Character {
     
     public Character() {
         try {
-            ImageIcon iiP = new ImageIcon(defaultPathStem + characterImageCount + ".png");
-            characterImageCount++;
-            if (characterImageCount >= numCharacterImages) {
-                characterImageCount = 0;
+            ImageIcon iiP = new ImageIcon(defaultPathStem + imageCount + ".png");
+            imageCount++;
+            if (imageCount >= numImages) {
+                imageCount = 0;
             }
             image = iiP.getImage();
         } catch (Exception e) {
