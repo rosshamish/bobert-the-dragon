@@ -1,0 +1,12 @@
+<enemy_data>
+
+	<!-- Enemy 0 -->
+	<enemy>
+		<name> Garth </name>
+		<location> resources/enemies/0.png </location>
+		<width> 80 </width>
+		<height> 160 </height>
+		<speed> 1 </speed>
+	</enemy>
+
+</enemy_data>

@@ -104,7 +104,18 @@ public class BobertPanel extends JPanel implements Runnable,
     }
 
     public static void defineObjects() {
-        enemies = new ArrayList<Enemy>();
+               
+        // TODO compress this file.
+        // ALWAYS DEFINE THE FLOOR FIRST
+        int floorWidth = Main.B_WINDOW_WIDTH*3;
+        int floorDrawHeight = 30;
+        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
+                floorWidth, 100);
+        // In this case, the whole drawn area of the floor IS collidable
+        Rectangle floorDrawRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT-floorDrawHeight,
+                floorWidth, floorDrawHeight);
+        floor = new Collidable(floorDrawRect, floorCollisionRect, 
+                "resources/floor.png");
         
         bobert = new Character();
         bobert.imageLocations = new ArrayList<String>();
@@ -123,7 +134,8 @@ public class BobertPanel extends JPanel implements Runnable,
             bobert.imageLocations.add(Character.defaultPathStem+i+".png");
         }
         
-        int numTotalEnemies = 5;
+        enemies = new ArrayList<Enemy>();
+        int numTotalEnemies = RossLib.parseXML(Enemy.defaultPathStem+"enemy_data.xml", "enemy");
         for (int i=0; i<numTotalEnemies; i++) {
             enemies.add(new Enemy());
         }
@@ -133,20 +145,8 @@ public class BobertPanel extends JPanel implements Runnable,
         iiBackground = new ImageIcon("resources/background.jpg");
         imgBackground = iiBackground.getImage();
         
-        // TODO compress this file.
-        int floorWidth = Main.B_WINDOW_WIDTH*3;
-        int floorDrawHeight = 30;
-        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
-                floorWidth, 100);
-        // In this case, the whole drawn area of the floor IS collidable
-        Rectangle floorDrawRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT-floorDrawHeight,
-                floorWidth, floorDrawHeight);
-        floor = new Collidable(floorDrawRect, floorCollisionRect, 
-                "resources/floor.png");
-        
         // Initialize the lists of projectiles
         onScreenProjectiles = new ArrayList<Projectile>();
-        
         defaultProjectile = new Projectile();
         defaultProjectile.hitBox.x = bobert.hitBox.x;
         defaultProjectile.hitBox.y = bobert.hitBox.y;
@@ -195,14 +195,14 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            if (onScreenProjectiles.size() > 0) {
-            g2d.drawString("onScreenProjectiles.get(0).drawBox.x: " + onScreenProjectiles.get(0).drawBox.x, 0, debugTextHeight * 1);
-            g2d.drawString("onScreenProjectiles.get(0).drawBox.width: " + onScreenProjectiles.get(0).drawBox.width, 0, debugTextHeight * 2);
+            if (enemies.size() > 0) {
+            g2d.drawString("enemies.get(0).drawBox.y: " + enemies.get(0).drawBox.y, 0, debugTextHeight * 1);
+            g2d.drawString("enemies.get(0).drawBox.height: " + enemies.get(0).drawBox.height, 0, debugTextHeight * 2);
+            g2d.drawString("floor.hitBox.y:  "+ floor.hitBox.y, 0, debugTextHeight*3);
+            g2d.drawString("floor.hitBox.height: "+ floor.hitBox.height, 0, debugTextHeight*4);
+            g2d.drawString("enemies.get(0).hitBox.y:  " + enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
+            g2d.drawString("enemies.get(0).hitBox.height:  "+enemies.get(0).hitBox.height, 0, debugTextHeight*6);
             }
-//            g2d.drawString("enemies.get(0).hitBox.x:  "+ enemies.get(0).hitBox.x, 0, debugTextHeight*3);
-//            g2d.drawString("enemies.get(0).hitBox.width: "+ enemies.get(0).hitBox.width, 0, debugTextHeight*4);
-//            g2d.drawString("shootingProjectile:  " + shootingProjectile, 0, debugTextHeight * 5);
-//            g2d.drawString("movingLeft:     "+movingLeft, 0, debugTextHeight*6);
 //            g2d.drawString("facingLeft:     "+facingLeft, 0, debugTextHeight*7);
 //            g2d.drawString("projectileVertVelocity: "+projectileVertVelocity, 0, debugTextHeight*9);
         }

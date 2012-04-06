@@ -52,7 +52,7 @@ public class Projectile {
 //    public Projectile() {
 //        Projectile newProj = availableProjectiles.get(imageCount);
 //        imageCount++;
-//        if (imageCount >= numImages) {
+//        if (imageCount >= numEnemies) {
 //            imageCount = 0;
 //        }
 //        image = newProj.image;
@@ -73,7 +73,7 @@ public class Projectile {
 //            
 //            NodeList listOfProjectiles = doc.getElementsByTagName("projectile");
 //            int totalProjectiles = listOfProjectiles.getLength();
-//            numImages = totalProjectiles;
+//            numEnemies = totalProjectiles;
 //            
 ////            for(int i=0; i<totalProjectiles; i++){
 //                
@@ -122,7 +122,7 @@ public class Projectile {
 //                    hitBox = new Rectangle(defaultX, defaultY,
 //                            parsedImageWidth, parsedImageHeight);
 //                    imageCount++;
-//                    if (imageCount >= numImages) {
+//                    if (imageCount >= numEnemies) {
 //                        imageCount = 0;
 //                    }
 //                }//end if

@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.Random;
 import javax.swing.ImageIcon;
+import rosslib.RossLib;
 
 /**
  *
@@ -18,9 +19,10 @@ public class Enemy {
     static final int defaultY = (int) (Main.B_WINDOW_CANVAS_HEIGHT - defaultHeight);
     
     static int imageCount = 0;
-    static final int numImages = 1;
+    static int numEnemies = 1;
     
     private Image image;
+    public String name;
     public Rectangle drawBox;
     public Rectangle hitBox;
     static int drawHitOffset = 5;
@@ -36,29 +38,28 @@ public class Enemy {
     public boolean movingLeft;
     
     public Enemy() {
-        try {
-            ImageIcon iiP = new ImageIcon(defaultPathStem + imageCount + ".png");
-            imageCount++;
-            // TODO parse all data in this constructor from XML
-            if (imageCount >= numImages) {
-                imageCount = 0;
-            }
-            image = iiP.getImage();
-        } catch (Exception e) {
-            System.out.println("Exception: "+e.getMessage());
+        String filePath = defaultPathStem + "enemy_data.xml";
+        numEnemies = RossLib.parseXML(filePath, "enemy");
+        imageCount++;
+        if (imageCount >= numEnemies) {
+            imageCount = 0;
         }
-        Random rand = new Random();
-        movingRight = rand.nextBoolean();
-        if (movingRight) {
-            movingLeft = false;
-        } else {
-            movingLeft = true;
-        }
-        int randomX = rand.nextInt(Main.B_WINDOW_WIDTH*4);
-        hitBox = new Rectangle(randomX, defaultY,
-                defaultWidth, defaultHeight);
-        drawBox = new Rectangle(randomX+drawHitOffset, defaultY+drawHitOffset,
-                defaultWidth-drawHitOffset*2, defaultHeight-drawHitOffset*1);
+        //name
+        name = RossLib.parseXML(filePath, "enemy", imageCount, "name");
+        //location
+        String location = RossLib.parseXML(filePath, "enemy", imageCount, "location");
+        ImageIcon ii = new ImageIcon(location);
+        image = ii.getImage();
+        //width
+        int width = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "width"));
+        //height
+        int height = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "height"));
+        Random rn = new Random();
+        int randX = rn.nextInt(BobertPanel.floor.hitBox.width)+BobertPanel.floor.hitBox.x;
+        hitBox = new Rectangle(randX, defaultY,
+                width, height);
+        drawBox = new Rectangle(randX-drawHitOffset, defaultY-drawHitOffset,
+                width+drawHitOffset*2, height+drawHitOffset*1);
         // defaultHeight-drawHitOffset*1 is only multiplied by 1 because the
         // feet need to touch the floor otherwise it doesn't make sense.
     }
