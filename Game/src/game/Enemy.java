@@ -19,7 +19,7 @@ public class Enemy extends Sprite
     static String dataPath = resourcesPath + "enemy_data.xml";
     
     static int imageCount = 0;
-    static int numEnemies = 1;
+    static int numEnemies = 6;
     
     
     
@@ -79,12 +79,4 @@ public class Enemy extends Sprite
                 null);
     }
     
-    @Override
-    public void drawDebug(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.setColor(Color.blue);
-        currentGraphics2DContext.draw(drawBox);
-        
-        currentGraphics2DContext.setColor(Color.red);
-        currentGraphics2DContext.draw(hitBox);
-    }
 }

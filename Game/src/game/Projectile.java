@@ -5,7 +5,6 @@
 package game;
 
 import interfaces.Drawable;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;

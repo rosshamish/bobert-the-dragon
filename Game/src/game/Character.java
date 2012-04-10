@@ -1,7 +1,6 @@
 package game;
 
 import interfaces.Drawable;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -28,9 +27,6 @@ public class Character extends Sprite
     
     static int imageCount = 0;
     static int numImages;
-    
-    
-    
     
     public Character() {
         try {
@@ -78,5 +74,9 @@ public class Character extends Sprite
                     image.getWidth(null), image.getHeight(null),
                     null);
         }
+//        currentGraphics2DContext.drawImage(this.getImage(), 
+//                floorX+this.drawBox.x, this.drawBox.y,
+//                this.drawBox.width, this.drawBox.height, 
+//                null);
     }
 }

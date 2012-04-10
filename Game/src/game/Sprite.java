@@ -37,13 +37,4 @@ public abstract class Sprite extends Collidable
                 null);
     }
     
-    @Override
-    public void drawDebug(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.setColor(Color.blue);
-        currentGraphics2DContext.draw(drawBox);
-        
-        currentGraphics2DContext.setColor(Color.red);
-        currentGraphics2DContext.draw(hitBox);
-    }
-    
 }

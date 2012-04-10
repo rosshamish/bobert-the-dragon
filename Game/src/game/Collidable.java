@@ -65,7 +65,6 @@ public class Collidable extends WorldObject
      */
     void setX(int newX) {
         hitBox.x = newX;
-        futureHitBox.x = newX;
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
         }
@@ -91,7 +90,6 @@ public class Collidable extends WorldObject
      */
     void setY(int newY) {
         hitBox.y = newY;
-        futureHitBox.y = newY;
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
         }
@@ -117,7 +115,6 @@ public class Collidable extends WorldObject
      */
     void moveRightBy(int distanceRight) {
         hitBox.x += distanceRight;
-        futureHitBox.x += distanceRight;
         drawBox.x += distanceRight;
     }
     
@@ -127,7 +124,6 @@ public class Collidable extends WorldObject
      */
     void moveLeftBy(int distanceLeft) {
         hitBox.x -= distanceLeft;
-        futureHitBox.x -= distanceLeft;
         drawBox.x -= distanceLeft;
     }
     /**
@@ -137,7 +133,6 @@ public class Collidable extends WorldObject
      */
     void moveVerticallyBy(int distanceDown) {
         hitBox.y += distanceDown;
-        futureHitBox.y += distanceDown;
         drawBox.y += distanceDown;
     }
     
@@ -162,15 +157,15 @@ public class Collidable extends WorldObject
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
         }
-        if (this.worldObjectType == WorldObjectType.FRIENDLY) {
+        if (this.worldObjectType == WorldObjectType.FRIENDLY || 
+                this.worldObjectType == WorldObjectType.PROJECTILE) {
             drawBox.x = collisionBox.x + this.drawHitOffset;
             drawBox.y = collisionBox.y + this.drawHitOffset;
             drawBox.width = collisionBox.width - (this.drawHitOffset*2); // Subtract 1 for each side of the box.
             drawBox.height = collisionBox.height - (this.drawHitOffset); // The feet need to touch ground.
             return;
         }
-        if (this.worldObjectType == WorldObjectType.HOSTILE || 
-                this.worldObjectType == WorldObjectType.PROJECTILE) {
+        if (this.worldObjectType == WorldObjectType.HOSTILE) {
             drawBox.x = collisionBox.x - this.drawHitOffset;
             drawBox.y = collisionBox.y - this.drawHitOffset;
             drawBox.width = collisionBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.

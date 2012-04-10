@@ -47,7 +47,7 @@ public class WorldObject
     
     @Override
     public void drawDebug(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.setColor(Color.yellow);
+        currentGraphics2DContext.setColor(Color.green);
         currentGraphics2DContext.draw(drawBox);
     }
     

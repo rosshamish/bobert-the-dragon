@@ -7,7 +7,6 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -165,12 +164,15 @@ public class BobertPanel extends JPanel implements Runnable,
 
             // **Draw background
             background.draw(g2d, floor.hitBox.x);
+//            background.drawDebug(g2d, floor.hitBox.x);
 
             // **Draw bobert
-            bobert.draw(g2d, floor.hitBox.x);
+//            bobert.draw(g2d, floor.hitBox.x);
+            bobert.drawDebug(g2d, floor.hitBox.x);
             // **Draw enemies
             for (int i=0; i<enemies.size();i++) {
                 enemies.get(i).draw(g2d, floor.hitBox.x);
+                enemies.get(i).drawDebug(g2d, floor.hitBox.x);
             }
             
 
@@ -183,6 +185,7 @@ public class BobertPanel extends JPanel implements Runnable,
             }
             // **Draw the currently held projectile's name
             int fontSize = 20;
+            g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
             g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
 
