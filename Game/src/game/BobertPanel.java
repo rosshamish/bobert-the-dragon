@@ -1,5 +1,6 @@
 package game;
 
+import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,17 +19,15 @@ public class BobertPanel extends JPanel implements Runnable,
     // Character vars.
     static ArrayList<Enemy> enemies;
     static Character bobert;
-    static Enemy enemy0;
     
     // Animation vars
     static int animationFrame = 0;
     static int animationDelay = 25;
-    static int bobertImageCount = 0;
-    static int numBobertImages = 16;
     
     // Background display vars.
-    static ImageIcon iiBackground;
-    static Image imgBackground;
+    static WorldObject background;
+//    static ImageIcon iiBackground;
+//    static Image imgBackground;
     
     // Floor/Ground vars. Rectangle is its hit box.
     static Collidable floor;
@@ -108,48 +107,48 @@ public class BobertPanel extends JPanel implements Runnable,
         // TODO compress this file.
         // ALWAYS DEFINE THE FLOOR FIRST
         int floorWidth = Main.B_WINDOW_WIDTH*3;
-        int floorDrawHeight = 30;
-        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
+        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT-50,
                 floorWidth, 100);
-        // In this case, the whole drawn area of the floor IS collidable
-        Rectangle floorDrawRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT-floorDrawHeight,
-                floorWidth, floorDrawHeight);
-        floor = new Collidable(floorDrawRect, floorCollisionRect, 
-                "resources/floor.png");
+        floor = new Collidable(floorCollisionRect, WorldObjectType.NEUTRAL, Collidable.resourcesPathStem + "floor.png");
+        floor.initBoxes(floor.hitBox);
+        
+        // This needs to be a jpg because the image file is HUGE and it doesn't
+        // need transparency.
+        background = new WorldObject(new Rectangle(floor.drawBox.x, 0,
+                floor.drawBox.width, Main.B_WINDOW_HEIGHT));
+        background.setImage("resources/background.jpg");
+//        iiBackground = new ImageIcon("resources/background.jpg");
+//        imgBackground = iiBackground.getImage();
         
         bobert = new Character();
-        bobert.imageLocations = new ArrayList<String>();
+        bobert.imagePaths = new ArrayList<String>();
         
-        String amtImages = RossLib.parseXML("resources/character/character_data.xml", 
+        String amtImages = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "numberOfImages");
         if (!amtImages.isEmpty()) {
-            bobert.numImages = Integer.parseInt(amtImages); 
+            Character.numImages = Integer.parseInt(amtImages); 
         }
-        String defaultImage = RossLib.parseXML("resources/character/character_data.xml", 
+        String defaultImage = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "defaultImage");
         if (!defaultImage.isEmpty()) {
-            bobert.imageCount = Integer.parseInt(defaultImage);
+            Character.imageCount = Integer.parseInt(defaultImage);
         }
-        for (int i=0; i<bobert.numImages; i++) {
-            bobert.imageLocations.add(Character.defaultPathStem+i+".png");
+        for (int i=0; i<Character.numImages; i++) {
+            bobert.imagePaths.add(Character.resourcesPath+i+".png");
         }
         
         enemies = new ArrayList<Enemy>();
-        int numTotalEnemies = RossLib.parseXML(Enemy.defaultPathStem+"enemy_data.xml", "enemy");
+        int numTotalEnemies = RossLib.parseXML(Enemy.dataPath, "enemy");
         for (int i=0; i<numTotalEnemies; i++) {
             enemies.add(new Enemy());
         }
         
-        // This needs to be a jpg because the image file is HUGE and it doesn't
-        // need transparency.
-        iiBackground = new ImageIcon("resources/background.jpg");
-        imgBackground = iiBackground.getImage();
-        
         // Initialize the lists of projectiles
         onScreenProjectiles = new ArrayList<Projectile>();
         defaultProjectile = new Projectile();
-        defaultProjectile.hitBox.x = bobert.hitBox.x;
-        defaultProjectile.hitBox.y = bobert.hitBox.y;
+        defaultProjectile.setX(bobert.hitBox.x);
+        defaultProjectile.setY(bobert.hitBox.y);
+        Projectile.numImages = RossLib.parseXML(Projectile.dataPath, "projectile");
 
         gameRunning = true;
         objectsDefined = true;
@@ -165,13 +164,10 @@ public class BobertPanel extends JPanel implements Runnable,
         if (objectsDefined) {
 
             // **Draw background
-            g2d.drawImage(imgBackground, 
-                    floor.drawBox.x, 0,
-                    floor.drawBox.width, Main.B_WINDOW_CANVAS_HEIGHT,
-                    null);
+            background.draw(g2d, floor.hitBox.x);
 
             // **Draw bobert
-            bobert.draw(g2d);
+            bobert.draw(g2d, floor.hitBox.x);
             // **Draw enemies
             for (int i=0; i<enemies.size();i++) {
                 enemies.get(i).draw(g2d, floor.hitBox.x);
@@ -181,7 +177,8 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Draw Projectile
             if (shootingProjectile) {
                 for (int i = 0; i < onScreenProjectiles.size(); i++) {
-                    onScreenProjectiles.get(i).draw(g2d, floor.hitBox.x);
+//                    onScreenProjectiles.get(i).draw(g2d, floor.hitBox.x);
+                    onScreenProjectiles.get(i).drawDebug(g2d, floor.hitBox.x);
                 }
             }
             // **Draw the currently held projectile's name
@@ -190,19 +187,18 @@ public class BobertPanel extends JPanel implements Runnable,
             g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
 
             // **Draw floor
-            floor.draw(g2d);
+//            floor.draw(g2d, floor.drawBox.x);
+            floor.drawDebug(g2d, floor.hitBox.x);
 
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            if (enemies.size() > 0) {
-            g2d.drawString("enemies.get(0).drawBox.y: " + enemies.get(0).drawBox.y, 0, debugTextHeight * 1);
-            g2d.drawString("enemies.get(0).drawBox.height: " + enemies.get(0).drawBox.height, 0, debugTextHeight * 2);
-            g2d.drawString("floor.hitBox.y:  "+ floor.hitBox.y, 0, debugTextHeight*3);
-            g2d.drawString("floor.hitBox.height: "+ floor.hitBox.height, 0, debugTextHeight*4);
-            g2d.drawString("enemies.get(0).hitBox.y:  " + enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
-            g2d.drawString("enemies.get(0).hitBox.height:  "+enemies.get(0).hitBox.height, 0, debugTextHeight*6);
-            }
+            g2d.drawString("bobert.drawBox.x: " + bobert.drawBox.x, 0, debugTextHeight * 1);
+            g2d.drawString("bobert.hitBox.x: " + bobert.hitBox.x, 0, debugTextHeight * 2);
+            g2d.drawString("floor.image:  "+ floor.image, 0, debugTextHeight*3);
+            g2d.drawString("floor.hitBox.x: "+ floor.hitBox.x, 0, debugTextHeight*4);
+            g2d.drawString("floor.hitBox.x + floor.hitBox.width:  " + (floor.hitBox.x + floor.hitBox.width), 0, debugTextHeight * 5);
+//            g2d.drawString("enemies.get(0).hitBox.height:  "+enemies.get(0).hitBox.height, 0, debugTextHeight*6);
 //            g2d.drawString("facingLeft:     "+facingLeft, 0, debugTextHeight*7);
 //            g2d.drawString("projectileVertVelocity: "+projectileVertVelocity, 0, debugTextHeight*9);
         }
@@ -238,15 +234,15 @@ public class BobertPanel extends JPanel implements Runnable,
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
                 bobert.futureHitBox = bobert.hitBox;
-                bobert.futureHitBox.y += bobert.vertVelocity + gravity;
-                if (bobert.futureHitBox.intersects(floor.hitBox)) {
+                bobert.futureHitBox.y += bobert.vertVelocity;
+                if (bobert.willCollideWith(floor)) {
                     bobert.isInAir = false;
-                    bobert.hitBox.y = floor.hitBox.y - bobert.hitBox.height;
+                    bobert.setY(floor.hitBox.y - bobert.hitBox.height);
                     // The default projectile should move along with the character.
-                    defaultProjectile.hitBox.y = floor.drawBox.y - bobert.hitBox.height;
+                    defaultProjectile.setY(floor.drawBox.y - bobert.hitBox.height);
                     // Set the character's vertical velocity to 0 because we are
                     // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                    bobert.vertVelocity = 0;
+                    bobert.vertVelocity = 2;
                 } else {
                     // If we aren't going to be on the ground right away, then
                     // we must be in the air. Set isInAir to true so that we can
@@ -258,9 +254,9 @@ public class BobertPanel extends JPanel implements Runnable,
                 // height.
                 if (bobert.isInAir) {
                     bobert.vertVelocity += gravity;
-                    bobert.hitBox.y += bobert.vertVelocity;
+                    bobert.moveVerticallyBy(bobert.vertVelocity);
                     // The default projectile should move along with the character.
-                    defaultProjectile.hitBox.y += bobert.vertVelocity;
+                    defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
                 }
                 // DO ALL THIS AGAIN FOR EACH ENEMY
                 // If the character is about to be inside/below the floor, then
@@ -268,32 +264,28 @@ public class BobertPanel extends JPanel implements Runnable,
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
                 for (int i = 0; i < enemies.size(); i++) {
-                    Enemy temp = enemies.get(i);
-                    temp.futureHitBox = temp.hitBox;
-                    temp.futureHitBox.y += temp.vertVelocity + gravity;
-                    if (temp.futureHitBox.y + temp.futureHitBox.height
-                            >= floor.hitBox.y) {
-                        temp.isInAir = false;
-                        temp.hitBox.y = floor.hitBox.y - temp.hitBox.height;
-                        temp.drawBox.y = floor.hitBox.y - temp.drawBox.height;
+                    Enemy currentEnemy = enemies.get(i);
+                    currentEnemy.futureHitBox.y += currentEnemy.vertVelocity;
+                    if (currentEnemy.willCollideWith(floor)) {
+                        currentEnemy.isInAir = false;
+                        currentEnemy.setY(floor.hitBox.y - currentEnemy.hitBox.height);
                         // Set the character's vertical velocity to 0 because we are
                         // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                        temp.vertVelocity = 0;
+                        currentEnemy.vertVelocity = 2;
                     } else {
                         // If we aren't going to be on the ground right away, then
                         // we must be in the air. Set isInAir to true so that we can
                         // know whether or not we are jumping.
-                        temp.isInAir = true;
+                        currentEnemy.isInAir = true;
                     }
                     // If the character is in the air, add some gravity to our current
                     // velocity, and then add the new velocity to the character's
                     // height.
-                    if (temp.isInAir) {
-                        temp.vertVelocity += gravity;
-                        temp.hitBox.y += temp.vertVelocity;
-                        temp.drawBox.y += temp.vertVelocity;
+                    if (currentEnemy.isInAir) {
+                        currentEnemy.vertVelocity += gravity;
+                        currentEnemy.moveVerticallyBy(currentEnemy.vertVelocity);
                     }
-                    enemies.set(i, temp);
+                    enemies.set(i, currentEnemy);
                 }
 
 
@@ -332,11 +324,9 @@ public class BobertPanel extends JPanel implements Runnable,
                     if (bobert.movingRight) {
                         if (bobert.hitBox.x + bobert.hitBox.width >= Main.B_WINDOW_WIDTH * 0.65
                                 && Math.abs(floor.drawBox.x) + Main.B_WINDOW_WIDTH < floor.drawBox.width) {
-                            floor.drawBox.x -= bobert.moveSpeed;
-                            floor.hitBox.x -= bobert.moveSpeed;
+                            floor.moveLeftBy(bobert.moveSpeed);
                         } else {
-
-                            bobert.hitBox.x += bobert.moveSpeed;
+                            bobert.moveRightBy(bobert.moveSpeed);
                         }
 
 
@@ -347,10 +337,9 @@ public class BobertPanel extends JPanel implements Runnable,
                     if (bobert.movingLeft) {
                         if (bobert.hitBox.x < Main.B_WINDOW_WIDTH * 0.35
                                 && floor.drawBox.x < 0) {
-                            floor.drawBox.x += bobert.moveSpeed;
-                            floor.hitBox.x += bobert.moveSpeed;
+                            floor.moveRightBy(bobert.moveSpeed);
                         } else {
-                            bobert.hitBox.x -= bobert.moveSpeed;
+                            bobert.moveLeftBy(bobert.moveSpeed);
                         }
                         // If the projectile has yet to be shot (i.e. it isn't bouncing
                         // around), then it should move along with the character.
@@ -358,51 +347,47 @@ public class BobertPanel extends JPanel implements Runnable,
                     }
                 } else {
                     if (bobert.hitBox.x <= 0) {
-                        bobert.hitBox.x += bobert.moveSpeed;
+                        bobert.moveRightBy(bobert.moveSpeed);
                     } else {
-                        bobert.hitBox.x -= bobert.moveSpeed;
+                        bobert.moveLeftBy(bobert.moveSpeed);
                     }
                 }
                 // The default projectile needs to be positioned in the same
                 // spot as the character!
-                defaultProjectile.hitBox.x = bobert.hitBox.x - floor.hitBox.x;
-                defaultProjectile.hitBox.y = bobert.hitBox.y;
-                defaultProjectile.drawBox.x = bobert.hitBox.x - floor.hitBox.x;
-                defaultProjectile.drawBox.y = bobert.hitBox.y;
+                defaultProjectile.setX(bobert.hitBox.x - floor.hitBox.x);
+                defaultProjectile.setY(bobert.hitBox.y);
 
                 //**Enemy movement
                 for (int i = 0; i < enemies.size(); i++) {
-                    Enemy temp = enemies.get(i);
+                    Enemy currentEnemy = enemies.get(i);
                     
                     // Randomly decide if the enemy should turn around or not.
                     int changePos = (int) ((Math.random() * 1000));
                     if (changePos == 1) {
-                        temp.movingRight = true;
-                        temp.movingLeft = false;
+                        currentEnemy.movingRight = true;
+                        currentEnemy.movingLeft = false;
                     }
                     if (changePos == 2) {
-                        temp.movingRight = false;
-                        temp.movingLeft = true;
+                        currentEnemy.movingRight = false;
+                        currentEnemy.movingLeft = true;
                     }
-                    if (temp.movingRight) {
-                        if (temp.hitBox.x+temp.hitBox.width < floor.hitBox.width) {
-                            temp.hitBox.x += temp.moveSpeed;
-                            temp.drawBox.x += temp.moveSpeed;
+                    if (currentEnemy.movingRight) {
+                        if (currentEnemy.hitBox.x+currentEnemy.hitBox.width < floor.hitBox.width) {
+                            currentEnemy.moveRightBy(currentEnemy.moveSpeed);
                         } else {
-                            temp.movingRight = false;
-                            temp.movingLeft = true;
+                            currentEnemy.movingRight = false;
+                            currentEnemy.movingLeft = true;
                         }
                     }
-                    if (temp.movingLeft) {
-                        if (temp.hitBox.x > 0) {
-                            temp.hitBox.x -= temp.moveSpeed;
-                            temp.drawBox.x -= temp.moveSpeed;
+                    if (currentEnemy.movingLeft) {
+                        if (currentEnemy.hitBox.x > 0) {
+                            currentEnemy.moveLeftBy(currentEnemy.moveSpeed);
                         } else {
-                            temp.movingRight = true;
-                            temp.movingLeft = false;
+                            currentEnemy.movingRight = true;
+                            currentEnemy.movingLeft = false;
                         }
                     }
-                    enemies.set(i, temp);
+                    enemies.set(i, currentEnemy);
                 }
 
                 // Set frame to 0 to reset counter, blah blah, see explanation in
@@ -420,14 +405,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Right-facing images: 0-15
                 // Left-facing images: 16-30
                 if (bobert.movingRight || bobert.movingLeft) {
-                    bobertImageCount++;
+                    Character.imageCount++;
                 } else if (bobert.facingRight || bobert.facingLeft) {
-                    bobertImageCount = 12;
+                    Character.imageCount = 12;
                 }
-                if (bobertImageCount >= bobert.imageLocations.size()) {
-                    bobertImageCount = 0;
+                if (Character.imageCount >= bobert.imagePaths.size()) {
+                    Character.imageCount = 0;
                 }
-                bobert.setImage(bobert.imageLocations.get(bobertImageCount));
+                bobert.setImage(bobert.imagePaths.get(Character.imageCount));
                 
                 animationFrame = 0;
             } else {
@@ -449,36 +434,24 @@ public class BobertPanel extends JPanel implements Runnable,
                     // Move the projectile in the direction it's moving.
                     // If the character was moving at the time it shot the projectile,
                     // move the projectile twice as fast.
-                    String speed = RossLib.parseXML("resources/projectiles/projectile_data.xml", 
-                            "projectile", Projectile.imageCount, "speed");
-                    int horizSpeed;
-                    if (!speed.isEmpty()) {
-                        horizSpeed = Integer.parseInt(speed);
-                    } else {
-                        horizSpeed = Projectile.defaultSpeed;
-                    }
                     for (int i = 0; i < onScreenProjectiles.size(); i++) {
-                        Projectile temp = onScreenProjectiles.get(i);
-                        if (temp.movingRight) {
-                            temp.hitBox.x += horizSpeed;
-                            temp.drawBox.x += horizSpeed;
+                        Projectile currentProjectile = onScreenProjectiles.get(i);
+                        if (currentProjectile.movingRight) {
+                            currentProjectile.moveRightBy(currentProjectile.moveSpeed);
                             // wasMovingRight is set to true in keyPressed and is set
                             // back to false in keyReleased (if the projectile isn't
                             // being shot), and is set back to false in projectileDestroyed
                             // as well.
-                            if (temp.movingDoubleSpeed) {
-                                temp.hitBox.x += horizSpeed;
-                                temp.drawBox.x += horizSpeed;
+                            if (currentProjectile.movingDoubleSpeed) {
+                                currentProjectile.moveRightBy(currentProjectile.moveSpeed);
                             }
                         }
                         // If is moving left
-                        if (!temp.movingRight) {
-                            temp.hitBox.x -= horizSpeed;
-                            temp.drawBox.x -= horizSpeed;
+                        if (!currentProjectile.movingRight) {
+                            currentProjectile.moveLeftBy(currentProjectile.moveSpeed);
                             // See wasMovingRight for explanation
-                            if (temp.movingDoubleSpeed) {
-                                temp.hitBox.x -= horizSpeed;
-                                temp.drawBox.x -= horizSpeed;
+                            if (currentProjectile.movingDoubleSpeed) {
+                                currentProjectile.moveLeftBy(currentProjectile.moveSpeed);
                             }
                         }
                         // **Vertical Movement
@@ -486,33 +459,29 @@ public class BobertPanel extends JPanel implements Runnable,
                         // set the projectile to sit just above the floor.
                         // Otherwise, add gravity to velocity and then velocity to
                         // the projectile's y value normally.
-                        if (temp.hitBox.y + gravity + temp.vertVelocity + temp.hitBox.height
-                                >= floor.hitBox.y) {
-                            temp.hitBox.y = floor.hitBox.y - temp.hitBox.height;
-                            temp.drawBox.y = floor.hitBox.y - temp.drawBox.height;
-                            temp.vertVelocity = Projectile.vertVelocityBounce;
+                        if (currentProjectile.isCollidingWith(floor)) {
+                            currentProjectile.setY(floor.hitBox.y - currentProjectile.hitBox.height);
+                            currentProjectile.vertVelocity = Projectile.vertVelocityBounce;
                         } else {
-                            temp.vertVelocity += gravity;
-                            temp.hitBox.y += temp.vertVelocity;
-                            temp.drawBox.y += temp.vertVelocity;
+                            currentProjectile.vertVelocity += gravity;
+                            currentProjectile.moveVerticallyBy(currentProjectile.vertVelocity);
                         }
-
 
                         // Bounds check to see if the projectile is off the screen
-                        if (temp.hitBox.x+temp.hitBox.width < floor.hitBox.x 
-                                || temp.hitBox.x > floor.hitBox.width) {
+                        if (currentProjectile.hitBox.x+currentProjectile.hitBox.width < floor.hitBox.x 
+                                || currentProjectile.hitBox.x > floor.hitBox.width) {
                             
-                            temp.destroyed = true;
+                            currentProjectile.destroyed = true;
                         }
 
-                        if (temp.destroyed) {
+                        if (currentProjectile.destroyed) {
                             onScreenProjectiles.remove(i);
                             i--;
                             if (onScreenProjectiles.isEmpty()) {
                                 shootingProjectile = false;
                             }
                         } else {
-                            onScreenProjectiles.set(i, temp);
+                            onScreenProjectiles.set(i, currentProjectile);
                         }
                     }
 
@@ -606,8 +575,8 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 onScreenProjectiles.add(newProjectile);
                 defaultProjectile = new Projectile();
-                defaultProjectile.hitBox.x = bobert.hitBox.x - floor.hitBox.x;
-                defaultProjectile.hitBox.y = bobert.hitBox.y;
+                defaultProjectile.setX(bobert.hitBox.x - floor.hitBox.x);
+                defaultProjectile.setY(bobert.hitBox.y);
             }
             shootingProjectile = true;
         }

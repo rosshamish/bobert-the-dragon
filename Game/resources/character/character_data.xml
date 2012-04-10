@@ -1,8 +1,15 @@
 <character_data>
 	<character>
 		<name> Bobert </name>
+
 		<numberOfImages> 16 </numberOfImages>
 		<defaultImage> 12 </defaultImage>
+
+		<width> 120 </width>
+		<height> 200 </height>
+
+		<vertVelocityJump> -15 </vertVelocityJump>
+		<speed> 2 </speed>
 	</character>
 
 
