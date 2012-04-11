@@ -12,26 +12,41 @@ import java.util.ArrayList;
  */
 public class Collidable extends WorldObject 
                                  implements Drawable {
+    public enum CollisionType {
+        PASSABLE,
+        IMPASSABLE,
+        PLATFORM        
+    };
+    
     public Rectangle hitBox;
     public Rectangle futureHitBox; // For collision detection
+    public CollisionType collisionType = CollisionType.PASSABLE;
     public int drawHitOffset = 5;
     protected WorldObjectType worldObjectType;
     
     public Collidable() {
         this.hitBox = new Rectangle();
-        this.worldObjectType = WorldObjectType.NEUTRAL;
         this.drawBox = hitBox;
+        this.futureHitBox = hitBox;
+        this.worldObjectType = WorldObjectType.NEUTRAL;
+        this.collisionType = CollisionType.IMPASSABLE;
     }
     
-    public Collidable(Rectangle collisionRect, WorldObjectType objType, String imageLocation) {
+    public Collidable(Rectangle collisionRect, WorldObjectType objType, CollisionType colType, String imageLocation) {
         this.hitBox = collisionRect;
+        this.drawBox = hitBox;
+        this.futureHitBox = hitBox;
         this.worldObjectType = objType;
+        this.collisionType = colType;
         this.setImage(imageLocation);
     }
     
-    public Collidable(Rectangle collisionRect, WorldObjectType objType, ArrayList<String> imageLocations) {
+    public Collidable(Rectangle collisionRect, WorldObjectType objType, CollisionType colType, ArrayList<String> imageLocations) {
         this.hitBox = collisionRect;
+        this.drawBox = hitBox;
+        this.futureHitBox = hitBox;
         this.worldObjectType = objType;
+        this.collisionType = colType;
         this.imagePaths = imageLocations;
     }
     /**
@@ -40,11 +55,22 @@ public class Collidable extends WorldObject
      * @return -> Whether or not the current hit boxes are colliding.
      */
     boolean isCollidingWith(Collidable object) {
-        if (this.hitBox.intersects(object.hitBox)) {
-            return true;
-        } else {
+        if (object.collisionType == CollisionType.PASSABLE) {
             return false;
+        } else if (object.collisionType == CollisionType.IMPASSABLE) {
+            if (this.hitBox.intersects(object.hitBox)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (object.collisionType == CollisionType.PLATFORM) {
+            if (this.hitBox.y + this.hitBox.height >= object.hitBox.y) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        return false;
     }
     /**
      * Uses the future hit box instead of the current one
@@ -52,11 +78,22 @@ public class Collidable extends WorldObject
      * @return -> Whether or not this will collide with the object in the next frame.
      */
     boolean willCollideWith(Collidable object) {
-        if (this.futureHitBox.intersects(object.hitBox)) {
-            return true;
-        } else {
+        if (object.collisionType == CollisionType.PASSABLE) {
             return false;
+        } else if (object.collisionType == CollisionType.IMPASSABLE) {
+            if (this.futureHitBox.intersects(object.hitBox)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (object.collisionType == CollisionType.PLATFORM) {
+            if (this.futureHitBox.y + this.futureHitBox.height >= object.hitBox.y) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        return false;
     }
     
     /**
@@ -159,17 +196,17 @@ public class Collidable extends WorldObject
         }
         if (this.worldObjectType == WorldObjectType.FRIENDLY || 
                 this.worldObjectType == WorldObjectType.PROJECTILE) {
-            drawBox.x = collisionBox.x + this.drawHitOffset;
-            drawBox.y = collisionBox.y + this.drawHitOffset;
-            drawBox.width = collisionBox.width - (this.drawHitOffset*2); // Subtract 1 for each side of the box.
-            drawBox.height = collisionBox.height - (this.drawHitOffset); // The feet need to touch ground.
+            drawBox.x = hitBox.x + this.drawHitOffset;
+            drawBox.y = hitBox.y + this.drawHitOffset;
+            drawBox.width = hitBox.width - (this.drawHitOffset*2); // Subtract 1 for each side of the box.
+            drawBox.height = hitBox.height - (this.drawHitOffset); // The feet need to touch ground.
             return;
         }
         if (this.worldObjectType == WorldObjectType.HOSTILE) {
-            drawBox.x = collisionBox.x - this.drawHitOffset;
-            drawBox.y = collisionBox.y - this.drawHitOffset;
-            drawBox.width = collisionBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.
-            drawBox.height = collisionBox.height + (this.drawHitOffset); // The feet need to touch ground.
+            drawBox.x = hitBox.x - this.drawHitOffset;
+            drawBox.y = hitBox.y - this.drawHitOffset;
+            drawBox.width = hitBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.
+            drawBox.height = hitBox.height + (this.drawHitOffset); // The feet need to touch ground.
             return;
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
@@ -178,6 +215,14 @@ public class Collidable extends WorldObject
             drawBox = hitBox;
             return;
         }
+        if (this.worldObjectType == WorldObjectType.FLOOR) {
+            drawBox.x = hitBox.x;
+            drawBox.y = hitBox.y - drawHitOffset;
+            drawBox.width = hitBox.width;
+            drawBox.height = hitBox.height + drawHitOffset;
+            return;
+        }
+        
     }
     
     /**
@@ -185,20 +230,27 @@ public class Collidable extends WorldObject
      * @param floorX -> the current x-coordinate of the floor
      */
     @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.drawBox.x, this.drawBox.y,
-                this.drawBox.width, this.drawBox.height, 
-                null);
+    public void draw(Graphics2D currentGraphics2DContext, Camera cam) {
+        // Check to see if this object is inside the camera's view
+        if (this.isInViewOf(cam)) {
+            currentGraphics2DContext.drawImage(this.getImage(),
+                    this.xPositionInCam(cam), this.yPositionInCam(cam),
+                    this.drawBox.width, this.drawBox.height,
+                    null);
+        }
     }
     
     @Override
-    public void drawDebug(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.setColor(Color.blue);
-        currentGraphics2DContext.draw(drawBox);
-        
-        currentGraphics2DContext.setColor(Color.red);
-        currentGraphics2DContext.draw(hitBox);
+    public void drawDebug(Graphics2D currentGraphics2DContext, Camera cam) {
+        if (this.isInViewOf(cam)) {
+            currentGraphics2DContext.setColor(Color.blue);
+            currentGraphics2DContext.drawRect(this.xPositionInCam(cam), this.yPositionInCam(cam), 
+                    this.drawBox.width, this.drawBox.height);
+
+            currentGraphics2DContext.setColor(Color.red);
+            currentGraphics2DContext.drawRect(this.xPositionInCam(cam), this.yPositionInCam(cam), 
+                    this.hitBox.width, this.hitBox.height);
+        }
     }
     
     

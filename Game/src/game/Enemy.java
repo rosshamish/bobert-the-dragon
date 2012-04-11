@@ -37,6 +37,7 @@ public class Enemy extends Sprite
         ImageIcon ii = new ImageIcon(location);
         image = ii.getImage();
         worldObjectType = WorldObjectType.HOSTILE;
+        collisionType = CollisionType.IMPASSABLE;
         moveSpeed = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "speed"));
         //width
         int width = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "width"));
@@ -66,17 +67,4 @@ public class Enemy extends Sprite
             movingLeft = true;
         }
     }
-    
-    /**
-     * @param currentGraphics2DContext -> the parameter passed by paint()
-     * @param floorX -> the current x-coordinate of the floor
-     */
-    @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.drawBox.x, this.drawBox.y,
-                this.drawBox.width, this.drawBox.height, 
-                null);
-    }
-    
 }

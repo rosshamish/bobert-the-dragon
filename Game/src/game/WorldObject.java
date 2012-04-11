@@ -18,6 +18,7 @@ public class WorldObject
     public enum WorldObjectType {
         FRIENDLY,
         NEUTRAL,
+        FLOOR,
         CHARACTER,
         PROJECTILE,
         HOSTILE
@@ -37,16 +38,41 @@ public class WorldObject
         drawBox = drawRect;
     }
     
-    @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.drawBox.x, this.drawBox.y,
-                this.drawBox.width, this.drawBox.height, 
-                null);
+    public boolean isInViewOf(Camera cam) {
+        if (       // The left side is in the camera
+             (drawBox.x >= cam.getX() && drawBox.x <= cam.getX() + cam.getWidth())
+                || // The right side is in the camera
+             (drawBox.x + drawBox.width >= cam.getX() && drawBox.x + drawBox.width <= cam.getX() + cam.getWidth())
+                || // The left side is on the left of the cam, and the right side is on the right of the cam.
+             (drawBox.x <= cam.getX() && drawBox.x + drawBox.width >= cam.getX() + cam.getWidth())
+            ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public int xPositionInCam(Camera cam) {
+        return drawBox.x - cam.getX();
+    }
+    
+    public int yPositionInCam(Camera cam) {
+        return drawBox.y - cam.getY();
     }
     
     @Override
-    public void drawDebug(Graphics2D currentGraphics2DContext, int floorX) {
+    public void draw(Graphics2D currentGraphics2DContext, Camera cam) {
+        // Check to see if this object is inside the camera's view
+        if (this.isInViewOf(cam)) {
+            currentGraphics2DContext.drawImage(this.getImage(),
+                    this.xPositionInCam(cam), this.yPositionInCam(cam),
+                    this.drawBox.width, this.drawBox.height,
+                    null);
+        }
+    }
+    
+    @Override
+    public void drawDebug(Graphics2D currentGraphics2DContext, Camera cam) {
         currentGraphics2DContext.setColor(Color.green);
         currentGraphics2DContext.draw(drawBox);
     }

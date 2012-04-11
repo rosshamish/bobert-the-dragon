@@ -23,16 +23,16 @@ public class Projectile extends Sprite
     static int imageCount = 0;
     static int numImages;
     
-    static final int defaultSpeed = 7;
+    static final int defaultSpeed = 18;
     static ArrayList<Projectile>availableProjectiles = new ArrayList<Projectile>();
     
     public boolean destroyed;
-    public boolean movingDoubleSpeed;
+    public boolean movingQuickerSpeed;
     
     
     // Should be just high enough of a bounce that there's a possibility it could
     // bounce too high.
-    public static final int vertVelocityBounce = -5;
+    public static final int vertVelocityBounce = -10;
 
     public Projectile() {
         String filePath = Projectile.dataPath;        
@@ -47,26 +47,15 @@ public class Projectile extends Sprite
         ImageIcon ii = new ImageIcon(location);
         image = ii.getImage();
         worldObjectType = WorldObjectType.PROJECTILE;
+        collisionType = CollisionType.IMPASSABLE;
         //width
         int width = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "width"));
         //height
         int height = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "height"));
-        this.moveSpeed = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "speed"));
+        this.moveSpeed = defaultSpeed;
+        this.drawHitOffset = (int) (width * 0.12);
         initBoxes(new Rectangle(0, 0,
                                 width, height)
                   );
     }
-    
-    /**
-     * @param currentGraphics2DContext -> the parameter passed by paint()
-     * @param floorX -> the current x-coordinate of the floor
-     */
-    @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.drawBox.x, this.drawBox.y,
-                this.drawBox.width, this.drawBox.height, 
-                null);
-    }
-    
 }

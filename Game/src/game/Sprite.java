@@ -25,16 +25,4 @@ public abstract class Sprite extends Collidable
     public boolean movingRight;
     public boolean movingLeft;
     
-    /**
-     * @param currentGraphics2DContext -> the parameter passed by paint()
-     * @param floorX -> the current x-coordinate of the floor
-     */
-    @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        currentGraphics2DContext.drawImage(this.getImage(), 
-                floorX+this.drawBox.x, this.drawBox.y,
-                this.drawBox.width, this.drawBox.height, 
-                null);
-    }
-    
 }

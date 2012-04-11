@@ -24,6 +24,7 @@ public class Character extends Sprite
     public int keyShoot = KeyEvent.VK_SPACE;
     
     static int vertVelocityJump = -15;
+    public boolean hasDoubleJumped = false;
     
     static int imageCount = 0;
     static int numImages;
@@ -45,37 +46,40 @@ public class Character extends Sprite
                 "character", "bobert", "height")
                 );
         worldObjectType = WorldObjectType.CHARACTER;
+        collisionType = CollisionType.IMPASSABLE;
         moveSpeed = Integer.parseInt(RossLib.parseXML(dataPath, "character", "bobert", "speed"));
-        int defaultX = 400;
-        int defaultY = 400;
+        int defaultX = (int) (Main.B_WINDOW_WIDTH * 0.5);
+        int defaultY = 350;
         initBoxes(new Rectangle(defaultX, defaultY,
                                 width, height)
                   );
     }
     
     @Override
-    public void draw(Graphics2D currentGraphics2DContext, int floorX) {
-        if (facingLeft) {
+    public void draw(Graphics2D currentGraphics2DContext, Camera cam) {
+        if (this.isInViewOf(cam)) {
+            if (facingLeft) {
 //            currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
 //                    this.hitBox.width, this.hitBox.height, null);
-            currentGraphics2DContext.drawImage(image,
-                    drawBox.x, drawBox.y,
-                    drawBox.x+drawBox.width, drawBox.y+drawBox.height,
-                    image.getWidth(null), 0,
-                    0, image.getHeight(null),
-                    null);
-        } else {
+                currentGraphics2DContext.drawImage(image,
+                        this.xPositionInCam(cam), this.yPositionInCam(cam),
+                        this.xPositionInCam(cam) + drawBox.width, this.yPositionInCam(cam) + drawBox.height,
+                        image.getWidth(null), 0,
+                        0, image.getHeight(null),
+                        null);
+            } else {
 //            currentGraphics2DContext.drawImage(this.getImage(), this.hitBox.x, this.hitBox.y,
 //                    this.hitBox.width, this.hitBox.height, null);
-            currentGraphics2DContext.drawImage(image,
-                    drawBox.x, drawBox.y,
-                    drawBox.x+drawBox.width, drawBox.y+drawBox.height,
-                    0, 0,
-                    image.getWidth(null), image.getHeight(null),
-                    null);
+                currentGraphics2DContext.drawImage(image,
+                        this.xPositionInCam(cam), this.yPositionInCam(cam),
+                        this.xPositionInCam(cam) + drawBox.width, this.yPositionInCam(cam) + drawBox.height,
+                        0, 0,
+                        image.getWidth(null), image.getHeight(null),
+                        null);
+            }
         }
 //        currentGraphics2DContext.drawImage(this.getImage(), 
-//                floorX+this.drawBox.x, this.drawBox.y,
+//                floorX+this.this.xPositionInCam(cam), this.this.yPositionInCam(cam),
 //                this.drawBox.width, this.drawBox.height, 
 //                null);
     }
