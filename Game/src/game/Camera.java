@@ -8,6 +8,7 @@ public class Camera {
     private int y;
     private int width;
     private int height;
+    public static int scrollFactor = 2;
     
     public Camera(int inputX, int inputY, int inputWidth, int inputHeight) {
         x = inputX;
@@ -34,6 +35,15 @@ public class Camera {
     
     void moveVerticallyBy(int distanceDown) {
         y += distanceDown;
+    }
+    
+    void moveVerticallyTowards(Collidable obj) {
+        if (this.getY() + this.getHeight()*0.5 <= obj.hitBox.y + obj.hitBox.height*0.5) {
+            // if this camera's centre is higher on screen than the object's centre
+            this.moveVerticallyBy(-2);
+        } else {
+            this.moveVerticallyBy(+2);
+        }
     }
     
     public void setX(int inputX) {

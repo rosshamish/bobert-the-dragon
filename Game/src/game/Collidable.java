@@ -109,6 +109,7 @@ public class Collidable extends WorldObject
      * @return -> Whether or not this will collide with the object in the next frame.
      */
     boolean willCollideWith(Collidable obj) {
+        updateFutureHitBox();
         if (obj.collisionType == CollisionType.PASSABLE) {
             return false;
         } else if (obj.collisionType == CollisionType.IMPASSABLE) {
@@ -252,6 +253,10 @@ public class Collidable extends WorldObject
             return;
         }
         
+    }
+    
+    void updateFutureHitBox() {
+        this.futureHitBox = this.hitBox;
     }
     
     /**
