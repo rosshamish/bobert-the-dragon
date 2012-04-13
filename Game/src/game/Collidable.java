@@ -49,48 +49,77 @@ public class Collidable extends WorldObject
         this.collisionType = colType;
         this.imagePaths = imageLocations;
     }
+    
+    boolean isAbove(Collidable obj) {
+        if (this.isHigherThan(obj)) {
+            if ( (this.leftEdge() <= obj.rightEdge() && this.leftEdge() >= obj.leftEdge())
+                    || this.rightEdge() >= obj.leftEdge() && this.rightEdge() <= obj.rightEdge()
+                    || this.rightEdge() >= obj.rightEdge() && this.leftEdge() <= obj.leftEdge()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean isHigherThan(Collidable obj) {
+        if (this.bottomEdge() <= obj.topEdge()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    int topEdge() {
+        return hitBox.y;
+    }
+    int bottomEdge() {
+        return hitBox.y+hitBox.height;
+    }
+    int leftEdge() {
+        return hitBox.x;
+    }
+    int rightEdge() {
+        return hitBox.x+hitBox.width;
+    }
+    
     /**
      * Uses the current hit box 
-     * @param object -> Object to compare with.
+     * @param obj -> Object to compare with.
      * @return -> Whether or not the current hit boxes are colliding.
      */
-    boolean isCollidingWith(Collidable object) {
-        if (object.collisionType == CollisionType.PASSABLE) {
+    boolean isCollidingWith(Collidable obj) {
+        if (obj.collisionType == CollisionType.PASSABLE) {
             return false;
-        } else if (object.collisionType == CollisionType.IMPASSABLE) {
-            if (this.hitBox.intersects(object.hitBox)) {
+        } else if (obj.collisionType == CollisionType.IMPASSABLE) {
+            if (this.hitBox.intersects(obj.hitBox)) {
                 return true;
-            } else {
-                return false;
             }
-        } else if (object.collisionType == CollisionType.PLATFORM) {
-            if (this.hitBox.y + this.hitBox.height >= object.hitBox.y) {
-                return true;
-            } else {
-                return false;
+        } else if (obj.collisionType == CollisionType.PLATFORM) {
+            if (this.isAbove(obj)) {
+                if (this.hitBox.intersects(obj.hitBox)) {
+                    return true;
+                }
             }
         }
         return false;
     }
     /**
      * Uses the future hit box instead of the current one
-     * @param object
+     * @param obj
      * @return -> Whether or not this will collide with the object in the next frame.
      */
-    boolean willCollideWith(Collidable object) {
-        if (object.collisionType == CollisionType.PASSABLE) {
+    boolean willCollideWith(Collidable obj) {
+        if (obj.collisionType == CollisionType.PASSABLE) {
             return false;
-        } else if (object.collisionType == CollisionType.IMPASSABLE) {
-            if (this.futureHitBox.intersects(object.hitBox)) {
+        } else if (obj.collisionType == CollisionType.IMPASSABLE) {
+            if (this.futureHitBox.intersects(obj.hitBox)) {
                 return true;
-            } else {
-                return false;
             }
-        } else if (object.collisionType == CollisionType.PLATFORM) {
-            if (this.futureHitBox.y + this.futureHitBox.height >= object.hitBox.y) {
-                return true;
-            } else {
-                return false;
+        } else if (obj.collisionType == CollisionType.PLATFORM) {
+            if (this.isAbove(obj)) {
+                if (this.futureHitBox.intersects(obj.hitBox)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -181,7 +210,7 @@ public class Collidable extends WorldObject
      * @param height -> Height
      * @param drawHitOffset -> The offset between the drawn object and the rectangle
      *                         that will be considered a collision.
-     * @param SpriteType -> Whether the sprite is friendly, neutral, character or hostile. This is
+     * @param SpriteType -> Whether the sprite is friendly, neutral, character, projectile or hostile. This is
      *                      because hostile sprites will have slightly larger 
      *                      collision boxes than their drawn size, and friendly sprites
      *                      will have slightly smaller collision boxes than their

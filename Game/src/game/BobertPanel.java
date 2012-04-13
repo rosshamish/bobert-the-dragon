@@ -111,12 +111,13 @@ public class BobertPanel extends JPanel implements Runnable,
         int floorWidth = Main.B_WINDOW_WIDTH*3;
         Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
                 floorWidth, 100);
-        floor = new Collidable(floorCollisionRect, WorldObjectType.FLOOR, CollisionType.PLATFORM, Collidable.resourcesPathStem + "floor.png");
+        floor = new Collidable(floorCollisionRect, WorldObjectType.FLOOR, CollisionType.IMPASSABLE, Collidable.resourcesPathStem + "floor.png");
         floor.initBoxes(floor.hitBox);
+        collidables.add(floor);
         
-        Rectangle testBoxCollisionRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.5),
+        Rectangle testBoxCollisionRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.6),
                 100, 20);
-        Collidable testBox = new Collidable(testBoxCollisionRect, WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
+        Collidable testBox = new Collidable(testBoxCollisionRect, WorldObjectType.NEUTRAL, CollisionType.IMPASSABLE,
                 Collidable.resourcesPathStem + "default.png");
         testBox.initBoxes(testBox.hitBox);
         collidables.add(testBox);
@@ -158,6 +159,7 @@ public class BobertPanel extends JPanel implements Runnable,
 
         gameRunning = true;
         objectsDefined = true;
+        System.out.println("Objects defined woohoo!");
     }
 
     @Override
@@ -196,21 +198,22 @@ public class BobertPanel extends JPanel implements Runnable,
             g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
 
             // **Draw floor
-            floor.draw(g2d, screenCam);
+//            floor.draw(g2d, screenCam);
 //            floor.drawDebug(g2d, screenCam);
             // **Draw collidables
             for (int i=0; i<collidables.size(); i++) {
                 collidables.get(i).draw(g2d, screenCam);
+//                collidables.get(i).drawDebug(g2d, screenCam);
             }
 
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            g2d.drawString("bobert.isInViewOf(screenCam): " + bobert.isInViewOf(screenCam), 0, debugTextHeight * 1);
-            g2d.drawString("bobert.drawBox.x: " + bobert.drawBox.x, 0, debugTextHeight * 2);
-            g2d.drawString("screenCam.getX(): "+ screenCam.getX(), 0, debugTextHeight*3);
-            g2d.drawString("screenCam.getY(): "+ screenCam.getY(), 0, debugTextHeight*4);
-            g2d.drawString("screenCam.getWidth():  " + screenCam.getWidth(), 0, debugTextHeight * 5);
+//            g2d.drawString("bobert.hasDoubleJumped: " + bobert.hasDoubleJumped, 0, debugTextHeight * 1);
+//            g2d.drawString("bobert.isInAir: " + bobert.isInAir, 0, debugTextHeight * 2);
+//            g2d.drawString("screenCam.getX(): "+ screenCam.getX(), 0, debugTextHeight*3);
+//            g2d.drawString("screenCam.getY(): "+ screenCam.getY(), 0, debugTextHeight*4);
+//            g2d.drawString("screenCam.getWidth():  " + screenCam.getWidth(), 0, debugTextHeight * 5);
 //            g2d.drawString("bobert.topEdge():  "+ bobert.topEdge(), 0, debugTextHeight*6);
 //            g2d.drawString("bobert.movingRight:     "+bobert.movingRight, 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
@@ -248,23 +251,25 @@ public class BobertPanel extends JPanel implements Runnable,
                 // on the ground now.
                 bobert.futureHitBox = bobert.hitBox;
                 bobert.futureHitBox.y += bobert.vertVelocity;
-                if (bobert.willCollideWith(floor)) {
-                        bobert.isInAir = false;
-                        bobert.hasDoubleJumped = false;
-                        bobert.setY(floor.drawBox.y - bobert.drawBox.height);
-                        // The default projectile should move along with the character.
-                        defaultProjectile.setY(floor.drawBox.y - bobert.drawBox.height);
-                        // Set the character's vertical velocity to 0 because we are
-                        // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                        bobert.vertVelocity = 2;
-                    } else {
-                        // If we aren't going to be on the ground right away, then
-                        // we must be in the air. Set isInAir to true so that we can
-                        // know whether or not we are jumping.
-                        bobert.isInAir = true;
-                }
+//                if (bobert.willCollideWith(floor)) {
+//                    System.out.println("Floor!");
+//                    bobert.isInAir = false;
+//                    bobert.hasDoubleJumped = false;
+//                    bobert.setY(floor.drawBox.y - bobert.drawBox.height);
+//                    // The default projectile should move along with the character.
+//                    defaultProjectile.setY(floor.drawBox.y - bobert.drawBox.height);
+//                    // Set the character's vertical velocity to 0 because we are
+//                    // on the ground, goddamn it, and we aren't jumping, goddamn it.
+//                    bobert.vertVelocity = 2;
+//                } else {
+//                    // If we aren't going to be on the ground right away, then
+//                    // we must be in the air. Set isInAir to true so that we can
+//                    // know whether or not we are jumping.
+//                    bobert.isInAir = true;
+//                }
                 for (int i = 0; i < collidables.size(); i++) {
                     if (bobert.willCollideWith(collidables.get(i))) {
+//                        System.out.println("Collided with the box!");
                         bobert.isInAir = false;
                         bobert.hasDoubleJumped = false;
                         bobert.setY(collidables.get(i).drawBox.y - bobert.drawBox.height);
