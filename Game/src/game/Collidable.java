@@ -125,8 +125,10 @@ public class Collidable extends WorldObject
                 return true;
             }
         } else if (obj.collisionType == CollisionType.PLATFORM) {
-            if (this.futureHitBox.intersects(obj.hitBox)) {
-                return true;
+            if (this.isAbove(obj)) {
+                if (this.futureHitBox.intersects(obj.hitBox)) {
+                    return true;
+                }
             }
         }
         return false;

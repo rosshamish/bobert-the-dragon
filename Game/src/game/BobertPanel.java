@@ -118,10 +118,11 @@ public class BobertPanel extends JPanel implements Runnable,
                 Collidable.resourcesPathStem + "backgrounds/floor.png");
         floor.initBoxes(floor.hitBox);
         collidables.add(floor);
-        
+        // TODO this platform/collidable data should realistically come from an 
+        // xml file for this particular
+        // level.
         Collidable platform;
         Rectangle platCollisRect;
-        
         platCollisRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.6),
                 100, 60);
         platform = new Collidable(platCollisRect, 
@@ -236,8 +237,8 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            g2d.drawString("background.drawBox.y: " + background.drawBox.y, 0, debugTextHeight * 1);
-            g2d.drawString("screenCam.getY(): " + screenCam.getY(), 0, debugTextHeight * 2);
+//            g2d.drawString("background.drawBox.y: " + background.drawBox.y, 0, debugTextHeight * 1);
+//            g2d.drawString("screenCam.getY(): " + screenCam.getY(), 0, debugTextHeight * 2);
 //            g2d.drawString("bobert.hitBox.intersects(testBox.hitBox): "+ bobert.hitBox.intersects(testBox.hitBox), 0, debugTextHeight*3);
 //            g2d.drawString("bobert.futureHitBox.intersects(testBox.hitBox): "+ bobert.futureHitBox.intersects(testBox.hitBox), 0, debugTextHeight*4);
 //            g2d.drawString("bobert.vertVelocity:  " + bobert.vertVelocity, 0, debugTextHeight * 5);
@@ -281,8 +282,10 @@ public class BobertPanel extends JPanel implements Runnable,
                 for (int i = 0; i < collidables.size(); i++) {
                     if (bobert.willCollideWith(collidables.get(i))) {
                         if (collidables.get(i).collisionType == CollisionType.PLATFORM) {
-                            if (!bobert.isAbove(collidables.get(i))) {
-                                break;
+                            if (bobert.vertVelocity < 0) {
+                                // if bobert is moving upwards, he can't collide
+                                // because you have to FALL onto a platform, bro.
+                                break; 
                             }
                         }
                         bobert.isInAir = false;
