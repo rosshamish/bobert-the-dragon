@@ -17,6 +17,8 @@ public class Collidable extends WorldObject
         IMPASSABLE,
         PLATFORM        
     };
+    public static String resourcesPath = resourcesPathStem + "collidables/";
+    public static String dataPath = resourcesPath + "collidables_data.xml";
     
     public Rectangle hitBox;
     public Rectangle futureHitBox; // For collision detection
@@ -62,7 +64,7 @@ public class Collidable extends WorldObject
     }
     
     private boolean isHigherThan(Collidable obj) {
-        if (this.bottomEdge() <= obj.topEdge()) {
+        if (this.bottomEdge() <= obj.bottomEdge()) {
             return true;
         } else {
             return false;
@@ -70,16 +72,22 @@ public class Collidable extends WorldObject
     }
     
     int topEdge() {
-        return hitBox.y;
+        return this.hitBox.y;
     }
     int bottomEdge() {
-        return hitBox.y+hitBox.height;
+        return this.hitBox.y+this.hitBox.height;
     }
     int leftEdge() {
         return hitBox.x;
     }
     int rightEdge() {
         return hitBox.x+hitBox.width;
+    }
+    int middleVertically() {
+        return (int) (hitBox.y + hitBox.height*0.5);
+    }
+    int middleHorizontally() {
+        return (int) (hitBox.x + hitBox.width*0.5);
     }
     
     /**
@@ -117,10 +125,8 @@ public class Collidable extends WorldObject
                 return true;
             }
         } else if (obj.collisionType == CollisionType.PLATFORM) {
-            if (this.isAbove(obj)) {
-                if (this.futureHitBox.intersects(obj.hitBox)) {
-                    return true;
-                }
+            if (this.futureHitBox.intersects(obj.hitBox)) {
+                return true;
             }
         }
         return false;

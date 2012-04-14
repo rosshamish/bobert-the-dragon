@@ -38,11 +38,11 @@ public class Camera {
     }
     
     void moveVerticallyTowards(Collidable obj) {
-        if (this.getY() + this.getHeight()*0.5 <= obj.hitBox.y + obj.hitBox.height*0.5) {
+        if (this.getY() + this.getHeight()*0.5 <= obj.middleVertically()) {
             // if this camera's centre is higher on screen than the object's centre
-            this.moveVerticallyBy(-2);
+            this.moveVerticallyBy(+3);
         } else {
-            this.moveVerticallyBy(+2);
+            this.moveVerticallyBy(-3);
         }
     }
     

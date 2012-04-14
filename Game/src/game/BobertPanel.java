@@ -114,24 +114,42 @@ public class BobertPanel extends JPanel implements Runnable,
         Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
                 floorWidth, 100);
         floor = new Collidable(floorCollisionRect, 
-                WorldObjectType.FLOOR, CollisionType.IMPASSABLE, 
-                Collidable.resourcesPathStem + "floor.png");
+                WorldObjectType.FLOOR, CollisionType.PLATFORM, 
+                Collidable.resourcesPathStem + "backgrounds/floor.png");
         floor.initBoxes(floor.hitBox);
         collidables.add(floor);
         
-        Rectangle testBoxCollisionRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.6),
-                100, 20);
-        Collidable testBox = new Collidable(testBoxCollisionRect, 
-                WorldObjectType.NEUTRAL, CollisionType.IMPASSABLE,
-                Collidable.resourcesPathStem + "default.png");
-        testBox.initBoxes(testBox.hitBox);
-        collidables.add(testBox);
+        Collidable platform;
+        Rectangle platCollisRect;
+        
+        platCollisRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.6),
+                100, 60);
+        platform = new Collidable(platCollisRect, 
+                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
+                Collidable.resourcesPath + "platform_cloud1.png");
+        platform.initBoxes(platform.hitBox);
+        collidables.add(platform);
+        platCollisRect = new Rectangle(600, (int)(Main.B_WINDOW_HEIGHT * 0.2),
+                100, 70);
+        platform = new Collidable(platCollisRect,
+                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
+                Collidable.resourcesPath + "platform_magenta.png");
+        platform.initBoxes(platform.hitBox);
+        collidables.add(platform);
+        platCollisRect = new Rectangle(1300, (int)(Main.B_WINDOW_HEIGHT * -0.2),
+                180, 100);
+        platform = new Collidable(platCollisRect,
+                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
+                Collidable.resourcesPath + "platform_lightgreen.png");
+        platform.initBoxes(platform.hitBox);
+        collidables.add(platform);
+        
         
         // This needs to be a jpg because the image file is HUGE and it doesn't
         // need transparency.
         background = new WorldObject(new Rectangle(floor.hitBox.x, (int) (-0.5 * Main.B_WINDOW_HEIGHT),
                 floor.hitBox.width, (int) (Main.B_WINDOW_HEIGHT*1.5)));
-        background.setImage("resources/background.jpg");
+        background.setImage("resources/backgrounds/bground_mountains.jpg");
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -180,9 +198,7 @@ public class BobertPanel extends JPanel implements Runnable,
             background.draw(g2d, screenCam);
 //            background.drawDebug(g2d, screenCam);
 
-            // **Draw bobert
-            bobert.draw(g2d, screenCam);
-//            bobert.drawDebug(g2d, screenCam);
+            
             // **Draw enemies
             for (int i=0; i<enemies.size();i++) {
                 enemies.get(i).draw(g2d, screenCam);
@@ -196,30 +212,36 @@ public class BobertPanel extends JPanel implements Runnable,
 //                    onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
                 }
             }
-            // **Draw the currently held projectile's name
-            int fontSize = 20;
-            g2d.setColor(Color.black);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
-            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
-
-            // **Draw floor
-//            floor.draw(g2d, screenCam);
-//            floor.drawDebug(g2d, screenCam);
             // **Draw collidables
             for (int i=0; i<collidables.size(); i++) {
                 collidables.get(i).draw(g2d, screenCam);
 //                collidables.get(i).drawDebug(g2d, screenCam);
             }
+            
+            // **Draw bobert
+            bobert.draw(g2d, screenCam);
+//            bobert.drawDebug(g2d, screenCam);
+            
+            // **Draw the currently held projectile's name
+            int fontSize = 20;
+            g2d.setColor(Color.black);
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
+//            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
+
+            // **Draw floor
+            floor.draw(g2d, screenCam);
+//            floor.drawDebug(g2d, screenCam);
+            
 
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-//            g2d.drawString("bobert.hasDoubleJumped: " + bobert.hasDoubleJumped, 0, debugTextHeight * 1);
-//            g2d.drawString("bobert.isInAir: " + bobert.isInAir, 0, debugTextHeight * 2);
-//            g2d.drawString("screenCam.getX(): "+ screenCam.getX(), 0, debugTextHeight*3);
-//            g2d.drawString("screenCam.getY(): "+ screenCam.getY(), 0, debugTextHeight*4);
-//            g2d.drawString("screenCam.getWidth():  " + screenCam.getWidth(), 0, debugTextHeight * 5);
-//            g2d.drawString("bobert.topEdge():  "+ bobert.topEdge(), 0, debugTextHeight*6);
+            g2d.drawString("background.drawBox.y: " + background.drawBox.y, 0, debugTextHeight * 1);
+            g2d.drawString("screenCam.getY(): " + screenCam.getY(), 0, debugTextHeight * 2);
+//            g2d.drawString("bobert.hitBox.intersects(testBox.hitBox): "+ bobert.hitBox.intersects(testBox.hitBox), 0, debugTextHeight*3);
+//            g2d.drawString("bobert.futureHitBox.intersects(testBox.hitBox): "+ bobert.futureHitBox.intersects(testBox.hitBox), 0, debugTextHeight*4);
+//            g2d.drawString("bobert.vertVelocity:  " + bobert.vertVelocity, 0, debugTextHeight * 5);
+//            g2d.drawString("bobert.isAbove(collidables.get(i):  "+ bobert.isAbove(collidables.get(1)), 0, debugTextHeight*6);
 //            g2d.drawString("bobert.movingRight:     "+bobert.movingRight, 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
         }
@@ -258,7 +280,11 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.futureHitBox.y += bobert.vertVelocity;
                 for (int i = 0; i < collidables.size(); i++) {
                     if (bobert.willCollideWith(collidables.get(i))) {
-//                        System.out.println("Collided with the box!");
+                        if (collidables.get(i).collisionType == CollisionType.PLATFORM) {
+                            if (!bobert.isAbove(collidables.get(i))) {
+                                break;
+                            }
+                        }
                         bobert.isInAir = false;
                         bobert.hasDoubleJumped = false;
                         bobert.setY(collidables.get(i).drawBox.y - bobert.drawBox.height);
@@ -281,7 +307,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (bobert.isInAir) {
                     bobert.vertVelocity += gravity;
                     bobert.moveVerticallyBy(bobert.vertVelocity);
-                    defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
+                    // defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
                 }
                 
                 // DO ALL THIS AGAIN FOR EACH ENEMY
@@ -546,9 +572,15 @@ public class BobertPanel extends JPanel implements Runnable,
                     && bobert.xPositionInCam(screenCam) < screenCam.getWidth() * 0.5) {
                 screenCam.moveLeftBy(bobert.moveSpeed * Camera.scrollFactor);
             }
-            if (bobert.hitBox.y + bobert.hitBox.height <= floor.topEdge()) {
-//                screenCam.moveVerticallyTowards(bobert);
+            if (screenCam.getY() < 0 
+                    && bobert.yPositionInCam(screenCam) > screenCam.getY() + (screenCam.getHeight()*0.5)){
+                screenCam.moveVerticallyBy(3);
             }
+            if (screenCam.getY() > background.drawBox.y 
+                    && bobert.yPositionInCam(screenCam) < screenCam.getY() + (screenCam.getHeight()*0.5)) {
+                screenCam.moveVerticallyBy(-3);
+            }
+            
 //            if (bobert.isInAir) {
 //                screenCam.moveVerticallyBy(bobert.vertVelocity * Camera.scrollFactor);
 //            } else {
