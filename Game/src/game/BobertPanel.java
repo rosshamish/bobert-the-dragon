@@ -176,7 +176,7 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 7));
+            g2d.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 420));
 //            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
 //            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
 //            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
