@@ -23,8 +23,8 @@ public class Enemy extends Sprite
     
     
     
-    public Enemy() {
-        String filePath = dataPath;
+    public Enemy(GameLevel level, int iLevel) {
+        String filePath = "resources/levels/"+iLevel+"/enemies/enemy_data.xml";
         numEnemies = RossLib.parseXML(filePath, "enemy");
         imageCount++;
         if (imageCount >= numEnemies) {
@@ -34,8 +34,7 @@ public class Enemy extends Sprite
         name = RossLib.parseXML(filePath, "enemy", imageCount, "name");
         //location
         String location = RossLib.parseXML(filePath, "enemy", imageCount, "location");
-        ImageIcon ii = new ImageIcon(location);
-        image = ii.getImage();
+        setImage(location);
         worldObjectType = WorldObjectType.HOSTILE;
         collisionType = CollisionType.IMPASSABLE;
         moveSpeed = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "speed"));
@@ -44,9 +43,9 @@ public class Enemy extends Sprite
         //height
         int height = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "height"));
         Random rn = new Random();
-        int randX = rn.nextInt(BobertPanel.floor.hitBox.width)+BobertPanel.floor.hitBox.x;
-        
-        initBoxes(new Rectangle(randX, BobertPanel.floor.hitBox.y,
+        int randX = rn.nextInt(level.floor.hitBox.width)+level.floor.hitBox.x;
+        // TODO actually parse a logical y value
+        initBoxes(new Rectangle(randX, level.floor.hitBox.y-this.hitBox.height,
                                 width, height)
                   );
         // defaultHeight-drawHitOffset*1 is only multiplied by 1 because the

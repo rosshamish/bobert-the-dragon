@@ -34,7 +34,7 @@ public class Projectile extends Sprite
     public static final int vertVelocityBounce = -10;
 
     public Projectile() {
-        String filePath = Projectile.dataPath;        
+        String filePath = "resources/projectiles/projectile_data.xml";      
         imageCount++;
         if (imageCount >= numImages) {
             imageCount = 0;
@@ -42,9 +42,8 @@ public class Projectile extends Sprite
         //name
         name = RossLib.parseXML(filePath, "projectile", imageCount, "name");
         //location
-        String location = RossLib.parseXML(filePath, "projectile", imageCount, "location");
-        ImageIcon ii = new ImageIcon(location);
-        image = ii.getImage();
+        String imgLocation = RossLib.parseXML(filePath, "projectile", imageCount, "location");
+        setImage(imgLocation);
         worldObjectType = WorldObjectType.PROJECTILE;
         collisionType = CollisionType.IMPASSABLE;
         //width

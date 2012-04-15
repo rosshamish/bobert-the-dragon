@@ -15,7 +15,7 @@ public class Collidable extends WorldObject
     public enum CollisionType {
         PASSABLE,
         IMPASSABLE,
-        PLATFORM        
+        PLATFORM
     };
     public static String resourcesPath = resourcesPathStem + "collidables/";
     public static String dataPath = resourcesPath + "collidables_data.xml";
@@ -265,6 +265,24 @@ public class Collidable extends WorldObject
     
     void updateFutureHitBox() {
         this.futureHitBox = this.hitBox;
+    }
+    int updateDefaultProjectileX() {
+        return this.hitBox.x;
+    }
+    int updateDefaultProjectileY() {
+        return this.hitBox.y;
+    }
+    
+    static CollisionType parseCollisionType(String _type) {
+        if (_type.equalsIgnoreCase("passable")) {
+            return CollisionType.PASSABLE;
+        } else if (_type.equalsIgnoreCase("impassable")) {
+            return CollisionType.IMPASSABLE;
+        } else if (_type.equalsIgnoreCase("platform")) {
+            return CollisionType.PLATFORM;
+        } else {
+            return CollisionType.PASSABLE;
+        }
     }
     
     /**

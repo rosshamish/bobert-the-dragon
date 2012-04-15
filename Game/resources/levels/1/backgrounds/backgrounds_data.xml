@@ -1,0 +1,14 @@
+<backgrounds_data>
+	<!-- Background -->
+	<background>
+		<location> resources/levels/1/backgrounds/sunset.jpg </location>
+		<width> 2700 </width>
+		<height> 900 </height>
+	</background>
+
+	<!-- Floor -->
+	<floor>
+		<location> resources/levels/1/backgrounds/floor.png </location>
+	</floor>
+
+</backgrounds_data>

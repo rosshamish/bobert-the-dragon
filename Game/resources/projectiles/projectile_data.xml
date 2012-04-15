@@ -92,4 +92,22 @@
 		<speed> 7 </speed>
 	</projectile>
 
+	<!-- Projectile 9 -->
+	<projectile>
+		<name> Axe </name>
+		<location> resources/projectiles/axe.png </location>
+		<width> 42 </width>
+		<height> 71 </height>
+		<speed> 7 </speed>
+	</projectile>
+	
+	<!-- Projectile 10 -->
+	<projectile>
+		<name> Ladder </name>
+		<location> resources/projectiles/ladder.png </location>
+		<width> 100 </width>
+		<height> 80 </height>
+		<speed> 7 </speed>
+	</projectile>
+
 </projectile_data>

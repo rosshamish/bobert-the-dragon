@@ -21,7 +21,8 @@ public class WorldObject
         FLOOR,
         CHARACTER,
         PROJECTILE,
-        HOSTILE
+        HOSTILE,
+        COLLECTABLE
     };
     
     static String resourcesPathStem = "resources/";

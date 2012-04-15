@@ -1,8 +1,10 @@
 package game;
 
 import game.Collidable.CollisionType;
-import game.WorldObject.WorldObjectType;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -19,21 +21,14 @@ public class BobertPanel extends JPanel implements Runnable,
     //<editor-fold defaultstate="collapsed" desc="Class Variables">
     
     // Character vars.
-    static ArrayList<Enemy> enemies;
     static Character bobert;
     static Camera screenCam;
+    static GameLevel level;
     
     // Animation vars
     static int animationFrame = 0;
     static int animationDelay = 25;
-    
-    // Background display vars.
-    static WorldObject background;
-    
-    // Collidable vars.
-    static Collidable floor;
-    static ArrayList<Collidable> collidables;
-    
+        
     // Projectile
     static ArrayList<Projectile> onScreenProjectiles;
     static Projectile defaultProjectile;
@@ -107,50 +102,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        // TODO compress this file.
-        // ALWAYS DEFINE THE collidables FIRST
-        collidables = new ArrayList<Collidable>();
-        int floorWidth = screenCam.getWidth()*3;
-        Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
-                floorWidth, 100);
-        floor = new Collidable(floorCollisionRect, 
-                WorldObjectType.FLOOR, CollisionType.PLATFORM, 
-                Collidable.resourcesPathStem + "backgrounds/floor.png");
-        floor.initBoxes(floor.hitBox);
-        collidables.add(floor);
-        // TODO this platform/collidable data should realistically come from an 
-        // xml file for this particular
-        // level.
-        Collidable platform;
-        Rectangle platCollisRect;
-        platCollisRect = new Rectangle(900, (int)(Main.B_WINDOW_HEIGHT * 0.6),
-                100, 60);
-        platform = new Collidable(platCollisRect, 
-                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
-                Collidable.resourcesPath + "platform_cloud1.png");
-        platform.initBoxes(platform.hitBox);
-        collidables.add(platform);
-        platCollisRect = new Rectangle(600, (int)(Main.B_WINDOW_HEIGHT * 0.2),
-                100, 70);
-        platform = new Collidable(platCollisRect,
-                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
-                Collidable.resourcesPath + "platform_magenta.png");
-        platform.initBoxes(platform.hitBox);
-        collidables.add(platform);
-        platCollisRect = new Rectangle(1300, (int)(Main.B_WINDOW_HEIGHT * -0.2),
-                180, 100);
-        platform = new Collidable(platCollisRect,
-                WorldObjectType.NEUTRAL, CollisionType.PLATFORM,
-                Collidable.resourcesPath + "platform_lightgreen.png");
-        platform.initBoxes(platform.hitBox);
-        collidables.add(platform);
-        
-        
-        // This needs to be a jpg because the image file is HUGE and it doesn't
-        // need transparency.
-        background = new WorldObject(new Rectangle(floor.hitBox.x, (int) (-0.5 * Main.B_WINDOW_HEIGHT),
-                floor.hitBox.width, (int) (Main.B_WINDOW_HEIGHT*1.5)));
-        background.setImage("resources/backgrounds/bground_mountains.jpg");
+        level = new GameLevel(1, screenCam);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -166,12 +118,6 @@ public class BobertPanel extends JPanel implements Runnable,
         }
         for (int i=0; i<Character.numImages; i++) {
             bobert.imagePaths.add(Character.resourcesPath+i+".png");
-        }
-        
-        enemies = new ArrayList<Enemy>();
-        int numTotalEnemies = RossLib.parseXML(Enemy.dataPath, "enemy");
-        for (int i=0; i<numTotalEnemies; i++) {
-            enemies.add(new Enemy());
         }
         
         // Initialize the lists of projectiles
@@ -196,14 +142,14 @@ public class BobertPanel extends JPanel implements Runnable,
         if (objectsDefined) {
 
             // **Draw background
-            background.draw(g2d, screenCam);
+            level.background.draw(g2d, screenCam);
 //            background.drawDebug(g2d, screenCam);
 
             
             // **Draw enemies
-            for (int i=0; i<enemies.size();i++) {
-                enemies.get(i).draw(g2d, screenCam);
-//                enemies.get(i).drawDebug(g2d, screenCam);
+            for (int i=0; i<level.enemies.size();i++) {
+                level.enemies.get(i).draw(g2d, screenCam);
+//                level.enemies.get(i).drawDebug(g2d, screenCam);
             }
 
             // **Draw Projectile
@@ -214,9 +160,9 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
             }
             // **Draw collidables
-            for (int i=0; i<collidables.size(); i++) {
-                collidables.get(i).draw(g2d, screenCam);
-//                collidables.get(i).drawDebug(g2d, screenCam);
+            for (int i=0; i<level.collidables.size(); i++) {
+                level.collidables.get(i).draw(g2d, screenCam);
+//                level.collidables.get(i).drawDebug(g2d, screenCam);
             }
             
             // **Draw bobert
@@ -228,20 +174,15 @@ public class BobertPanel extends JPanel implements Runnable,
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
 //            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
-
-            // **Draw floor
-            floor.draw(g2d, screenCam);
-//            floor.drawDebug(g2d, screenCam);
-            
-
+        
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-//            g2d.drawString("background.drawBox.y: " + background.drawBox.y, 0, debugTextHeight * 1);
-//            g2d.drawString("screenCam.getY(): " + screenCam.getY(), 0, debugTextHeight * 2);
-//            g2d.drawString("bobert.hitBox.intersects(testBox.hitBox): "+ bobert.hitBox.intersects(testBox.hitBox), 0, debugTextHeight*3);
-//            g2d.drawString("bobert.futureHitBox.intersects(testBox.hitBox): "+ bobert.futureHitBox.intersects(testBox.hitBox), 0, debugTextHeight*4);
-//            g2d.drawString("bobert.vertVelocity:  " + bobert.vertVelocity, 0, debugTextHeight * 5);
+            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
+            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
+            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
+            g2d.drawString("projectileTimerDelay: "+ this.projectileTimerDelay, 0, debugTextHeight*4);
+            g2d.drawString("defaultProjectile.hitBox.x:  " + defaultProjectile.hitBox.x, 0, debugTextHeight * 5);
 //            g2d.drawString("bobert.isAbove(collidables.get(i):  "+ bobert.isAbove(collidables.get(1)), 0, debugTextHeight*6);
 //            g2d.drawString("bobert.movingRight:     "+bobert.movingRight, 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
@@ -279,9 +220,9 @@ public class BobertPanel extends JPanel implements Runnable,
                 // on the ground now.
                 bobert.updateFutureHitBox();
                 bobert.futureHitBox.y += bobert.vertVelocity;
-                for (int i = 0; i < collidables.size(); i++) {
-                    if (bobert.willCollideWith(collidables.get(i))) {
-                        if (collidables.get(i).collisionType == CollisionType.PLATFORM) {
+                for (int i = 0; i < level.collidables.size(); i++) {
+                    if (bobert.willCollideWith(level.collidables.get(i))) {
+                        if (level.collidables.get(i).collisionType == CollisionType.PLATFORM) {
                             if (bobert.vertVelocity < 0) {
                                 // if bobert is moving upwards, he can't collide
                                 // because you have to FALL onto a platform, bro.
@@ -290,8 +231,8 @@ public class BobertPanel extends JPanel implements Runnable,
                         }
                         bobert.isInAir = false;
                         bobert.hasDoubleJumped = false;
-                        bobert.setY(collidables.get(i).drawBox.y - bobert.drawBox.height);
-                        defaultProjectile.setY(collidables.get(i).drawBox.y - bobert.drawBox.height);
+                        bobert.setY(level.collidables.get(i).drawBox.y - bobert.drawBox.height);
+                        defaultProjectile.setY(level.collidables.get(i).drawBox.y - bobert.drawBox.height);
                         // Set the character's vertical velocity to 0 because we are
                         // on the ground, goddamn it, and we aren't jumping, goddamn it.
                         bobert.vertVelocity = 1;
@@ -318,13 +259,13 @@ public class BobertPanel extends JPanel implements Runnable,
                 // we should set the character to be standing directly on top of
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
-                for (int i = 0; i < enemies.size(); i++) {
-                    for (int j = 0; j < collidables.size(); j++) {
-                        Enemy currentEnemy = enemies.get(i);
+                for (int i = 0; i < level.enemies.size(); i++) {
+                    for (int j = 0; j < level.collidables.size(); j++) {
+                        Enemy currentEnemy = level.enemies.get(i);
                         currentEnemy.futureHitBox.y += currentEnemy.vertVelocity;
-                        if (currentEnemy.willCollideWith(collidables.get(j))) {
+                        if (currentEnemy.willCollideWith(level.collidables.get(j))) {
                             currentEnemy.isInAir = false;
-                            currentEnemy.setY(collidables.get(j).hitBox.y - currentEnemy.hitBox.height);
+                            currentEnemy.setY(level.collidables.get(j).hitBox.y - currentEnemy.hitBox.height);
                             // Set the character's vertical velocity to 0 because we are
                             // on the ground, goddamn it, and we aren't jumping, goddamn it.
                             currentEnemy.vertVelocity = 2;
@@ -342,7 +283,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             currentEnemy.vertVelocity += gravity;
                             currentEnemy.moveVerticallyBy(currentEnemy.vertVelocity);
                         }
-                        enemies.set(i, currentEnemy);
+                        level.enemies.set(i, currentEnemy);
                     }
                 }
 
@@ -366,7 +307,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 // keyPressed and keyReleased methods), then move it to the right.
                 // Duh.
                 if (bobert.hitBox.x > 0
-                        && bobert.hitBox.x + bobert.hitBox.width < floor.hitBox.width) {
+                        && bobert.hitBox.x + bobert.hitBox.width < level.background.drawBox.width) {
                     if (bobert.movingRight) {
                         bobert.moveRightBy(bobert.moveSpeed);
                     }
@@ -385,14 +326,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 // The default projectile needs to be positioned in the same
                 // spot as the character!
-                defaultProjectile.setX(bobert.hitBox.x - floor.hitBox.x);
+                defaultProjectile.setX(bobert.hitBox.x);
                 defaultProjectile.setY(bobert.hitBox.y);
 
                 //**Enemy movement
-                for (int i = 0; i < enemies.size(); i++) {
-                    Enemy currentEnemy = enemies.get(i);
+                for (int i = 0; i < level.enemies.size(); i++) {
+                    Enemy currentEnemy = level.enemies.get(i);
                     if (currentEnemy.alive != true) {
-                        enemies.remove(i);
+                        level.enemies.remove(i);
                         i--;
                         break;
                     }
@@ -408,7 +349,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         currentEnemy.movingLeft = true;
                     }
                     if (currentEnemy.movingRight) {
-                        if (currentEnemy.hitBox.x+currentEnemy.hitBox.width < floor.hitBox.width) {
+                        if (currentEnemy.hitBox.x+currentEnemy.hitBox.width < level.floor.hitBox.width) {
                             currentEnemy.moveRightBy(currentEnemy.moveSpeed);
                         } else {
                             currentEnemy.movingRight = false;
@@ -423,7 +364,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             currentEnemy.movingLeft = false;
                         }
                     }
-                    enemies.set(i, currentEnemy);
+                    level.enemies.set(i, currentEnemy);
                 }
 
                 // Set frame to 0 to reset counter, blah blah, see explanation in
@@ -495,22 +436,22 @@ public class BobertPanel extends JPanel implements Runnable,
                         // set the projectile to sit just above the floor.
                         // Otherwise, add gravity to velocity and then velocity to
                         // the projectile's y value normally.
-                        if (currentProjectile.isCollidingWith(floor)) {
-                            currentProjectile.setY(floor.hitBox.y - currentProjectile.hitBox.height);
+                        if (currentProjectile.isCollidingWith(level.floor)) {
+                            currentProjectile.setY(level.floor.hitBox.y - currentProjectile.hitBox.height);
                             currentProjectile.vertVelocity = Projectile.vertVelocityBounce;
                         } else {
                             currentProjectile.vertVelocity += gravity;
                             currentProjectile.moveVerticallyBy(currentProjectile.vertVelocity);
                         }
                         // Bounds check to see if the projectile is off the screen
-                        if (currentProjectile.hitBox.x+currentProjectile.hitBox.width < floor.hitBox.x 
-                                || currentProjectile.hitBox.x > floor.hitBox.width) {
+                        if (currentProjectile.hitBox.x+currentProjectile.hitBox.width < level.floor.hitBox.x 
+                                || currentProjectile.hitBox.x > level.floor.hitBox.width) {
                             
                             currentProjectile.destroyed = true;
                         }
-                        for (int j=0; j<enemies.size(); j++) {
-                            if (currentProjectile.isCollidingWith(enemies.get(j))) {
-                                final Enemy enem = enemies.get(j);
+                        for (int j=0; j<level.enemies.size(); j++) {
+                            if (currentProjectile.isCollidingWith(level.enemies.get(j))) {
+                                final Enemy enem = level.enemies.get(j);
                                 currentProjectile.setImage(Projectile.resourcesPath+"explosion.png");
                                 
                                 final Timer destroyTimer = new Timer(currentProjectile.toString());
@@ -540,10 +481,8 @@ public class BobertPanel extends JPanel implements Runnable,
                             onScreenProjectiles.set(i, currentProjectile);
                         }
                     }
-
                     // Reset frame
                     projectileFrame = 0;
-
                 } else {
                     // Increment frame counter
                     projectileFrame++;
@@ -567,11 +506,11 @@ public class BobertPanel extends JPanel implements Runnable,
 //                    && screenCam.getY() + screenCam.getHeight() <= Main.B_WINDOW_HEIGHT) {
 //                screenCam.moveVerticallyBy(bobert.vertVelocity * 2);
 //            }
-            if (screenCam.getX() + screenCam.getWidth() < floor.hitBox.width
+            if (screenCam.getX() + screenCam.getWidth() < level.floor.hitBox.width
                     && bobert.xPositionInCam(screenCam) > screenCam.getWidth() * 0.5) {
                 screenCam.moveRightBy(bobert.moveSpeed * Camera.scrollFactor);
             }
-            if (screenCam.getX() > floor.hitBox.x
+            if (screenCam.getX() > level.floor.hitBox.x
                     && bobert.xPositionInCam(screenCam) < screenCam.getWidth() * 0.5) {
                 screenCam.moveLeftBy(bobert.moveSpeed * Camera.scrollFactor);
             }
@@ -579,7 +518,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     && bobert.yPositionInCam(screenCam) > screenCam.getY() + (screenCam.getHeight()*0.5)){
                 screenCam.moveVerticallyBy(3);
             }
-            if (screenCam.getY() > background.drawBox.y 
+            if (screenCam.getY() > level.background.drawBox.y 
                     && bobert.yPositionInCam(screenCam) < screenCam.getY() + (screenCam.getHeight()*0.5)) {
                 screenCam.moveVerticallyBy(-3);
             }
@@ -668,14 +607,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 onScreenProjectiles.add(newProjectile);
                 defaultProjectile = new Projectile();
-                defaultProjectile.setX(bobert.hitBox.x - floor.hitBox.x);
+                defaultProjectile.setX(bobert.hitBox.x - level.floor.hitBox.x);
                 defaultProjectile.setY(bobert.hitBox.y);
             }
             shootingProjectile = true;
         }
         // Dev commands, debug commands
         if (e.getKeyChar() == 'n') {
-            enemies.add(new Enemy());
+            level.enemies.add(new Enemy(level, level.num));
         }
     }
 
