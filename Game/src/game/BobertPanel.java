@@ -42,6 +42,9 @@ public class BobertPanel extends JPanel implements Runnable,
     // Used for spacing in paintComponent(Graphics g) when displaying
     // text to the screen.
     static int debugTextHeight = 17;
+    static int consoleCommandTextHeight = 30;
+    static boolean typingConsoleCommand = false;
+    static String consoleCommand = "";
     
     // Important game vars. objectsDefined gets set to true once all of the
     // necessary obecjts have been initialized. gameRunning is a flag for the
@@ -168,6 +171,18 @@ public class BobertPanel extends JPanel implements Runnable,
             bobert.draw(g2d, screenCam);
 //            bobert.drawDebug(g2d, screenCam);
             
+            g2d.setColor(Color.black);
+            g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, consoleCommandTextHeight));
+            if (typingConsoleCommand) {
+                g2d.drawLine((int) (Main.B_WINDOW_WIDTH *0.3 -2), 
+                        (int) (Main.B_WINDOW_HEIGHT * 0.2) -consoleCommandTextHeight, 
+                        (int) (Main.B_WINDOW_WIDTH * 0.3 -2), 
+                        (int) (Main.B_WINDOW_HEIGHT * 0.2));
+                g2d.drawString(consoleCommand, 
+                        (int) (Main.B_WINDOW_WIDTH * 0.3), 
+                        (int) (Main.B_WINDOW_HEIGHT * 0.2));
+            }
+            
             // **Draw the currently held projectile's name
             int fontSize = 20;
             g2d.setColor(Color.black);
@@ -176,7 +191,7 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 420));
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 //            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
 //            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
 //            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
@@ -195,6 +210,7 @@ public class BobertPanel extends JPanel implements Runnable,
         while (gameRunning) {
             FPSStartOfLoop();
 
+            
             // **Handles all characters which are in the air.
             //<editor-fold defaultstate="collapsed" desc="In Air">
             /*
@@ -612,8 +628,32 @@ public class BobertPanel extends JPanel implements Runnable,
             shootingProjectile = true;
         }
         // Dev commands, debug commands
-        if (e.getKeyChar() == 'n') {
-            level.enemies.add(new Enemy(level, level.num));
+        if (typingConsoleCommand) {
+            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                System.out.println("backspaced");
+                // remove the last character
+                consoleCommand = consoleCommand.substring(0, consoleCommand.length());
+            } else {
+                consoleCommand += e.getKeyChar();
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!typingConsoleCommand) {
+                consoleCommand = ""; // Clear the input for the command
+                typingConsoleCommand = true; // Start grabbing characters
+            } else {
+                // deal with the console command, then clear it.
+                if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
+                    System.out.println("console command was: reset OR r");
+                    BobertPanel.defineObjects();
+                    level = new GameLevel(level.num, screenCam);
+                } else if (consoleCommand.substring(0, 2).equalsIgnoreCase("add")) {
+                    if (consoleCommand.substring(4).equalsIgnoreCase("enemy")) {
+                        level.enemies.add(new Enemy(level, level.num));
+                    }
+                }
+                typingConsoleCommand = false; // We're done typing.
+            }
         }
     }
 
