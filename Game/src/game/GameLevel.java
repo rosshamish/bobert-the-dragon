@@ -38,7 +38,7 @@ public class GameLevel {
                 int bgWidth =  Integer.parseInt(RossLib.parseXML(backgroundsDataPath, "background", 0, "width"));
                 background = new WorldObject(new Rectangle(0, Main.B_WINDOW_HEIGHT - bgHeight,
                         bgWidth, bgHeight));
-                String bgImgPath = RossLib.parseXML(backgroundsDataPath, "background", 0, "location");
+                String bgImgPath = resourcesPath + RossLib.parseXML(backgroundsDataPath, "background", 0, "location");
                 background.setImage(bgImgPath);
                 // TODO compress this file.
                 // ALWAYS DEFINE THE collidables FIRST
@@ -46,7 +46,7 @@ public class GameLevel {
                 int floorWidth = bgWidth;
                 Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
                         floorWidth, 100);
-                String floorImgPath = RossLib.parseXML(backgroundsDataPath, "floor", 0, "location");
+                String floorImgPath = resourcesPath + RossLib.parseXML(backgroundsDataPath, "floor", 0, "location");
                 floor = new Collidable(floorCollisionRect,
                         WorldObjectType.FLOOR, CollisionType.PLATFORM,
                         floorImgPath);
@@ -62,7 +62,7 @@ public class GameLevel {
                     int collWidth = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "width"));
                     int collX = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "x"));
                     int collY = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "y"));
-                    String collImgPath = RossLib.parseXML(collidablesDataPath, "collidable", i, "location");
+                    String collImgPath = resourcesPath + RossLib.parseXML(collidablesDataPath, "collidable", i, "location");
                     CollisionType collType = Collidable.parseCollisionType(
                             RossLib.parseXML(collidablesDataPath, "collidable", i, "type"));
                     platCollisRect = new Rectangle(collX, collY,

@@ -145,7 +145,6 @@ public class BobertPanel extends JPanel implements Runnable,
             level.background.draw(g2d, screenCam);
 //            background.drawDebug(g2d, screenCam);
 
-            
             // **Draw enemies
             for (int i=0; i<level.enemies.size();i++) {
                 level.enemies.get(i).draw(g2d, screenCam);
@@ -174,15 +173,15 @@ public class BobertPanel extends JPanel implements Runnable,
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
 //            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
-        
+            
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 15));
-            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
-            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
-            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
-            g2d.drawString("projectileTimerDelay: "+ this.projectileTimerDelay, 0, debugTextHeight*4);
-            g2d.drawString("defaultProjectile.hitBox.x:  " + defaultProjectile.hitBox.x, 0, debugTextHeight * 5);
+//            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
+//            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
+//            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
+//            g2d.drawString("projectileTimerDelay: "+ this.projectileTimerDelay, 0, debugTextHeight*4);
+//            g2d.drawString("defaultProjectile.hitBox.x:  " + defaultProjectile.hitBox.x, 0, debugTextHeight * 5);
 //            g2d.drawString("bobert.isAbove(collidables.get(i):  "+ bobert.isAbove(collidables.get(1)), 0, debugTextHeight*6);
 //            g2d.drawString("bobert.movingRight:     "+bobert.movingRight, 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);

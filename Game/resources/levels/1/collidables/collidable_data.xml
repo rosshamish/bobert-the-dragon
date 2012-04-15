@@ -1,7 +1,7 @@
 <collidable_data>
 	<collidable>
 
-		<location> resources/levels/1/collidables/platforms/orange.png </location>
+		<location> collidables/platforms/orange.png </location>
 		<x> 400 </x>
 		<y> 300 </y>
 		<width> 140 </width>

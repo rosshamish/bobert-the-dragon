@@ -25,6 +25,7 @@ public class Enemy extends Sprite
     
     public Enemy(GameLevel level, int iLevel) {
         String filePath = "resources/levels/"+iLevel+"/enemies/enemy_data.xml";
+        String locationRoot = "resources/levels/"+iLevel+"/enemies/";
         numEnemies = RossLib.parseXML(filePath, "enemy");
         imageCount++;
         if (imageCount >= numEnemies) {
@@ -33,7 +34,7 @@ public class Enemy extends Sprite
         //name
         name = RossLib.parseXML(filePath, "enemy", imageCount, "name");
         //location
-        String location = RossLib.parseXML(filePath, "enemy", imageCount, "location");
+        String location = locationRoot + RossLib.parseXML(filePath, "enemy", imageCount, "location");
         setImage(location);
         worldObjectType = WorldObjectType.HOSTILE;
         collisionType = CollisionType.IMPASSABLE;
@@ -48,8 +49,6 @@ public class Enemy extends Sprite
         initBoxes(new Rectangle(randX, level.floor.hitBox.y-this.hitBox.height,
                                 width, height)
                   );
-        // defaultHeight-drawHitOffset*1 is only multiplied by 1 because the
-        // feet need to touch the floor otherwise it doesn't make sense.
     }
     
     public Enemy(String imagePath, int x, int y,
