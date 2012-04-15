@@ -17,7 +17,7 @@ public class Enemy extends Sprite
     static String dataPath = resourcesPath + "enemy_data.xml";
     
     static int imageCount = 0;
-    static int numEnemies = 6;
+    static int numEnemies = 420;
     
     public boolean alive = true;
     
