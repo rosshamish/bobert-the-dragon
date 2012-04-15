@@ -186,7 +186,7 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Draw the currently held projectile's name
             int fontSize = 20;
             g2d.setColor(Color.black);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize));
+            g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, fontSize));
 //            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
             
             // **Debugging values on screen
