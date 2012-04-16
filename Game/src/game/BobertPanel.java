@@ -578,84 +578,83 @@ public class BobertPanel extends JPanel implements Runnable,
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == bobert.keyLeft) {
-            bobert.movingLeft = true;
-            bobert.facingLeft = true;
-            bobert.facingRight = false;
-        }
-        if (e.getKeyCode() == bobert.keyRight) {
-            bobert.movingRight = true;
-            bobert.facingLeft = false;
-            bobert.facingRight = true;
-        }
-        if (e.getKeyCode() == bobert.keyJump) {
-            // Make sure we aren't already jumping, then set isInAir to true
-            // as a flag that we are jumping, and then set the vertical 
-            // velocity to jumping.
-            if (!bobert.isInAir) {
-                bobert.isInAir = true;
-                bobert.vertVelocity = Character.vertVelocityJump;
-            } else if (!bobert.hasDoubleJumped) {
-                bobert.isInAir = true;
-                bobert.vertVelocity = Character.vertVelocityJump;
-                bobert.hasDoubleJumped = true;
+        if (!typingConsoleCommand) {
+            if (e.getKeyCode() == bobert.keyLeft) {
+                bobert.movingLeft = true;
+                bobert.facingLeft = true;
+                bobert.facingRight = false;
             }
-        }
-        if (e.getKeyCode() == bobert.keyShoot) {
-            // Make sure we aren't already shooting the projetile, then set
-            // shootingProjectile to true and set the projectile velocity
-            // to bouncing.
-            if (projectileTimer >= projectileTimerDelay) {
-                projectileTimer = 0;
-                Projectile newProjectile = defaultProjectile;
-                newProjectile.destroyed = false;
-                if (bobert.facingRight) {
-                    newProjectile.movingRight = true;
-                    if (bobert.movingRight) {
-                        newProjectile.movingQuickerSpeed = true;
-                    }
-                } else {
-                    newProjectile.movingRight = false;
-                    if (bobert.movingLeft) {
-                        newProjectile.movingQuickerSpeed = true;
-                    }
+            if (e.getKeyCode() == bobert.keyRight) {
+                bobert.movingRight = true;
+                bobert.facingLeft = false;
+                bobert.facingRight = true;
+            }
+            if (e.getKeyCode() == bobert.keyJump) {
+                // Make sure we aren't already jumping, then set isInAir to true
+                // as a flag that we are jumping, and then set the vertical 
+                // velocity to jumping.
+                if (!bobert.isInAir) {
+                    bobert.isInAir = true;
+                    bobert.vertVelocity = Character.vertVelocityJump;
+                } else if (!bobert.hasDoubleJumped) {
+                    bobert.isInAir = true;
+                    bobert.vertVelocity = Character.vertVelocityJump;
+                    bobert.hasDoubleJumped = true;
                 }
-                onScreenProjectiles.add(newProjectile);
-                defaultProjectile = new Projectile();
-                defaultProjectile.setX(bobert.hitBox.x - level.floor.hitBox.x);
-                defaultProjectile.setY(bobert.hitBox.y);
             }
-            shootingProjectile = true;
-        }
-        // Dev commands, debug commands
-        if (typingConsoleCommand) {
-            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                System.out.println("backspaced");
-                // remove the last character
-                consoleCommand = consoleCommand.substring(0, consoleCommand.length());
-            } else {
-                consoleCommand += e.getKeyChar();
-            }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (!typingConsoleCommand) {
+            if (e.getKeyCode() == bobert.keyShoot) {
+                // Make sure we aren't already shooting the projetile, then set
+                // shootingProjectile to true and set the projectile velocity
+                // to bouncing.
+                if (projectileTimer >= projectileTimerDelay) {
+                    projectileTimer = 0;
+                    Projectile newProjectile = defaultProjectile;
+                    newProjectile.destroyed = false;
+                    if (bobert.facingRight) {
+                        newProjectile.movingRight = true;
+                        if (bobert.movingRight) {
+                            newProjectile.movingQuickerSpeed = true;
+                        }
+                    } else {
+                        newProjectile.movingRight = false;
+                        if (bobert.movingLeft) {
+                            newProjectile.movingQuickerSpeed = true;
+                        }
+                    }
+                    onScreenProjectiles.add(newProjectile);
+                    defaultProjectile = new Projectile();
+                    defaultProjectile.setX(bobert.hitBox.x - level.floor.hitBox.x);
+                    defaultProjectile.setY(bobert.hitBox.y);
+                }
+                shootingProjectile = true;
+            } // Dev commands, debug commands
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 consoleCommand = ""; // Clear the input for the command
                 typingConsoleCommand = true; // Start grabbing characters
-            } else {
+            }
+        } else {
+            // Dev/debug commands
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // deal with the console command, then clear it.
+                if (consoleCommand.isEmpty()) return; // don't deal with it if it's empty
+                
                 if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
                     System.out.println("console command was: reset OR r");
                     BobertPanel.defineObjects();
                     level = new GameLevel(level.num, screenCam);
-                } else if (consoleCommand.substring(0, 2).equalsIgnoreCase("add")) {
+                } else if (consoleCommand.substring(0, 3).equalsIgnoreCase("add")) {
                     if (consoleCommand.substring(4).equalsIgnoreCase("enemy")) {
                         level.enemies.add(new Enemy(level, level.num));
                     }
                 }
                 typingConsoleCommand = false; // We're done typing.
+            } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                consoleCommand = consoleCommand.substring(0, consoleCommand.length()-1);
+            } else {
+                consoleCommand += e.getKeyChar();
             }
-        }
-    }
+        } // endif !typingConsoleCommand
+    } //endif keyPressed
 
     @Override
     public void keyReleased(KeyEvent e) {
