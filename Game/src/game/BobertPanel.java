@@ -646,6 +646,10 @@ public class BobertPanel extends JPanel implements Runnable,
                     if (consoleCommand.substring(4).equalsIgnoreCase("enemy")) {
                         level.enemies.add(new Enemy(level, level.num));
                     }
+                } else if (consoleCommand.substring(0, 7).equalsIgnoreCase("restart")) {
+                    if (consoleCommand.substring(4).equalsIgnoreCase("music")) {
+                       
+                    }
                 }
                 typingConsoleCommand = false; // We're done typing.
             } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {

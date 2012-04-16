@@ -119,10 +119,6 @@ public class Main {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-<<<<<<< HEAD
-            catch (Exception ex) {ex.printStackTrace();}
-=======
->>>>>>> 416f20942008f55b4e5bacaec9fe25a107abe775
         }
     };
 }
