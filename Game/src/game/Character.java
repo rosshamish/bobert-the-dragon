@@ -45,6 +45,7 @@ public class Character extends Sprite
                 RossLib.parseXML(resourcesPath + "character_data.xml",
                 "character", "bobert", "height")
                 );
+        name = RossLib.parseXML(dataPath, "character", "bobert", "name");
         worldObjectType = WorldObjectType.CHARACTER;
         collisionType = CollisionType.IMPASSABLE;
         moveSpeed = Integer.parseInt(RossLib.parseXML(dataPath, "character", "bobert", "speed"));

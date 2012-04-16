@@ -1,9 +1,8 @@
 package game;
 
-import javax.swing.JFrame;
-import java.io.*;
-import java.net.URL;
+import java.io.File;
 import javax.sound.sampled.*;
+import javax.swing.JFrame;
 
 /**
  * @author Ross-Desktop
@@ -25,7 +24,7 @@ public class Main {
         bFrame.setLocationRelativeTo(null);
         bFrame.setVisible(true);
         
-        sound = new File("SuaveBobertMusic.wav");
+        sound = new File("resources/audio/music/SuaveBobertMusic.wav");
         new Thread(play).start();
     }
     
@@ -40,10 +39,11 @@ public class Main {
     
     static int loopTimes = 0; //sets how many times you want sound to loop (dont need to have loopedForever set to true)
     static int loopsDone = 0; // just counts the times the sound has looped so it knows when to stop
-    
+        
     final static Runnable play = new Runnable() // this Thread/Runnable is for playing the sound
     {
-
+        public SourceDataLine line = null;
+        @Override
         public void run() {
             try {
                 // check if the audio file is a wav file
@@ -68,7 +68,7 @@ public class Main {
                             stream.getFormat(),
                             (int) (stream.getFrameLength() * format.getFrameSize()));
 
-                    SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+                    line = (SourceDataLine) AudioSystem.getLine(info);
 
                     line.open(stream.getFormat());
                     line.start();

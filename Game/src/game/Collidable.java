@@ -2,6 +2,7 @@ package game;
 
 import interfaces.Drawable;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class Collidable extends WorldObject
     public CollisionType collisionType = CollisionType.PASSABLE;
     public int drawHitOffset = 5;
     protected WorldObjectType worldObjectType;
+    public String name;
     
     public Collidable() {
         this.hitBox = new Rectangle();
@@ -306,6 +308,13 @@ public class Collidable extends WorldObject
             currentGraphics2DContext.setColor(Color.blue);
             currentGraphics2DContext.drawRect(this.xPositionInCam(cam), this.yPositionInCam(cam), 
                     this.drawBox.width, this.drawBox.height);
+            currentGraphics2DContext.setColor(Color.black);
+            currentGraphics2DContext.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+            if (this.name != null) {
+                currentGraphics2DContext.drawString(this.name, xPositionInCam(cam), yPositionInCam(cam));
+            } else {
+                currentGraphics2DContext.drawString("nullName", xPositionInCam(cam), yPositionInCam(cam));
+            }
 
             currentGraphics2DContext.setColor(Color.red);
             currentGraphics2DContext.drawRect(this.xPositionInCam(cam), this.yPositionInCam(cam), 

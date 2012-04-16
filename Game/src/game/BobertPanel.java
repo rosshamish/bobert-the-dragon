@@ -42,6 +42,7 @@ public class BobertPanel extends JPanel implements Runnable,
     // Used for spacing in paintComponent(Graphics g) when displaying
     // text to the screen.
     static int debugTextHeight = 17;
+    static boolean showDebugBoxes = false;
     static int consoleCommandTextHeight = 30;
     static boolean typingConsoleCommand = false;
     static String consoleCommand = "";
@@ -87,7 +88,7 @@ public class BobertPanel extends JPanel implements Runnable,
         // and you'll the see spot where we add a bPanel to the frame. This function
         // basically lets us create our game thread (game loop) and then add all
         // of our Listeners to the bFrame (the window).
-        // LISTENERS -- They do exactly what their name says. They sit around and
+        // LISTENERS -- They do exactly what their levelName says. They sit around and
         // wait for important things to happen, e.g. KeyListener waits around until
         // a key is pressed or something, and then the KeyListener will call
         // keyPressed(KeyEvent e) for us. Then we deal with the keyPress however 
@@ -105,7 +106,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel(1, screenCam);
+        level = new GameLevel("1", screenCam);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -145,31 +146,38 @@ public class BobertPanel extends JPanel implements Runnable,
         if (objectsDefined) {
 
             // **Draw background
-            level.background.draw(g2d, screenCam);
-//            background.drawDebug(g2d, screenCam);
+            if (showDebugBoxes) {
+                level.background.drawDebug(g2d, screenCam);
+            } else {
+                level.background.draw(g2d, screenCam);
+            }
 
             // **Draw enemies
             for (int i=0; i<level.enemies.size();i++) {
                 level.enemies.get(i).draw(g2d, screenCam);
-//                level.enemies.get(i).drawDebug(g2d, screenCam);
+                if (showDebugBoxes) 
+                    level.enemies.get(i).drawDebug(g2d, screenCam);
             }
 
             // **Draw Projectile
             if (shootingProjectile) {
                 for (int i = 0; i < onScreenProjectiles.size(); i++) {
                     onScreenProjectiles.get(i).draw(g2d, screenCam);
-//                    onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
+                    if (showDebugBoxes) 
+                        onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
                 }
             }
             // **Draw collidables
             for (int i=0; i<level.collidables.size(); i++) {
                 level.collidables.get(i).draw(g2d, screenCam);
-//                level.collidables.get(i).drawDebug(g2d, screenCam);
+                if (showDebugBoxes) 
+                    level.collidables.get(i).drawDebug(g2d, screenCam);
             }
             
             // **Draw bobert
             bobert.draw(g2d, screenCam);
-//            bobert.drawDebug(g2d, screenCam);
+            if (showDebugBoxes) 
+                bobert.drawDebug(g2d, screenCam);
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, consoleCommandTextHeight));
@@ -183,11 +191,11 @@ public class BobertPanel extends JPanel implements Runnable,
                         (int) (Main.B_WINDOW_HEIGHT * 0.2));
             }
             
-            // **Draw the currently held projectile's name
+            // **Draw the currently held projectile's levelName
             int fontSize = 20;
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, fontSize));
-//            g2d.drawString("Holding: "+defaultProjectile.name, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
+//            g2d.drawString("Holding: "+defaultProjectile.levelName, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
@@ -209,7 +217,13 @@ public class BobertPanel extends JPanel implements Runnable,
 
         while (gameRunning) {
             FPSStartOfLoop();
-
+            
+            /* TODO handle collision detection better. Update his future hit box
+             * once at the beginning of the game loop (here), and then keep udpating
+             * it throughout the loop. If, at the end, it's an invalid place, move
+             * him back to where he was BUT KEEP APPLYING GRAVITY.
+             */
+            
             
             // **Handles all characters which are in the air.
             //<editor-fold defaultstate="collapsed" desc="In Air">
@@ -637,24 +651,84 @@ public class BobertPanel extends JPanel implements Runnable,
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // deal with the console command, then clear it.
                 if (consoleCommand.isEmpty()) return; // don't deal with it if it's empty
+                // String to hold the second word in a command, 
+                // i.e. hold the "enemy" in "add enemy"
+                String cmdRemaining = consoleCommand; 
                 
                 if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
-                    System.out.println("console command was: reset OR r");
+                    // reset the current level, reloading everything from the XML files
                     BobertPanel.defineObjects();
-                    level = new GameLevel(level.num, screenCam);
-                } else if (consoleCommand.substring(0, 3).equalsIgnoreCase("add")) {
-                    if (consoleCommand.substring(4).equalsIgnoreCase("enemy")) {
-                        level.enemies.add(new Enemy(level, level.num));
+                    level = new GameLevel(level.levelName, screenCam);
+                } else if (consoleCommand.length() >= 3) { // if it has a command
+                    if (consoleCommand.substring(0, 4).equalsIgnoreCase("save")) {
+                        cmdRemaining = cmdRemaining.substring(5);
+                        // save stuff
+                        if (cmdRemaining.substring(0, 5).equalsIgnoreCase("level")) {
+                            cmdRemaining = cmdRemaining.substring(6);
+                            // save the level
+                            /*
+                             * TODO
+                             * 1)Create a folder named whatever is left in cmdRemaining
+                             *   i.e. save level MyLevelName
+                             * 2)Write backgrounds_data.xml with whatever is the background and floor
+                             * 3)Write collidable_data.xml with whatever is in collidables
+                             * 4)Write enemy_data.xml with whatever is in enemies
+                             */
+                        }
+                    } else if (consoleCommand.substring(0, 6).equalsIgnoreCase("toggle")) { 
+                        // toggle booleans and stuff
+                        cmdRemaining = cmdRemaining.substring(7);
+                        if (cmdRemaining.equalsIgnoreCase("debug")) {
+                            if (!showDebugBoxes) {
+                                showDebugBoxes = true;
+                            } else {
+                                showDebugBoxes = false;
+                            }
+                        }
                     }
-                } else if (consoleCommand.substring(0, 7).equalsIgnoreCase("restart")) {
-                    if (consoleCommand.substring(4).equalsIgnoreCase("music")) {
-                       
+                      else if (consoleCommand.substring(0, 3).equalsIgnoreCase("add")) {
+                        // add stuff
+                        cmdRemaining = cmdRemaining.substring(4);
+                        if (cmdRemaining.equalsIgnoreCase("enemy")) {
+                            // add an enemy
+                            level.enemies.add(new Enemy(level, level.levelName));
+                        }
+                    } else if (consoleCommand.substring(0, 7).equalsIgnoreCase("restart")) {
+                        // restart stuff
+                        cmdRemaining = cmdRemaining.substring(8);
+                        if (cmdRemaining.equalsIgnoreCase("music")) {
+                            // restart the music
+                        }
+                    } else if (consoleCommand.substring(0, 4).equalsIgnoreCase("move")) {
+                        // move stuff
+                        cmdRemaining = cmdRemaining.substring(5);
+                        if (cmdRemaining.substring(0, 9).equalsIgnoreCase("platforms")) {
+                            cmdRemaining = cmdRemaining.substring(10);
+                            if (cmdRemaining.substring(0, 4).equalsIgnoreCase("left")) {
+                                cmdRemaining = cmdRemaining.substring(5);
+                                for (int i=0; i<level.collidables.size(); i++) {
+                                    if (level.collidables.get(i).collisionType == CollisionType.PLATFORM) {
+                                        level.collidables.get(i).moveLeftBy(Integer.parseInt(cmdRemaining));
+                                    }
+                                }
+                            } else if (cmdRemaining.substring(0, 5).equalsIgnoreCase("right")) {
+                                cmdRemaining = cmdRemaining.substring(6);
+                                for (int i=0; i<level.collidables.size(); i++) {
+                                    if (level.collidables.get(i).collisionType == CollisionType.PLATFORM) {
+                                        level.collidables.get(i).moveRightBy(Integer.parseInt(cmdRemaining));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 typingConsoleCommand = false; // We're done typing.
             } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                // backspace: delete a character
                 consoleCommand = consoleCommand.substring(0, consoleCommand.length()-1);
             } else {
+                // if it isn't a key that indicates an actoin, 
+                // just add the letter to the String
                 consoleCommand += e.getKeyChar();
             }
         } // endif !typingConsoleCommand

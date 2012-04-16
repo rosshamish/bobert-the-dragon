@@ -3,8 +3,12 @@
 	<enemy>
 		<name> Garth </name>
 		<location> 0.png </location>
+		<x> 50 </x>
+		<y> 600 </y>
 		<width> 80 </width>
 		<height> 80</height>
+		
+		<distanceAllowed> 100 </distanceAllowed>
 		<speed> 1 </speed>
 	</enemy>
 

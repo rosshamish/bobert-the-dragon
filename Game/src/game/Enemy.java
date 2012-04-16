@@ -23,26 +23,26 @@ public class Enemy extends Sprite
     
     
     
-    public Enemy(GameLevel level, int iLevel) {
-        String filePath = "resources/levels/"+iLevel+"/enemies/enemy_data.xml";
-        String locationRoot = "resources/levels/"+iLevel+"/enemies/";
-        numEnemies = RossLib.parseXML(filePath, "enemy");
+    public Enemy(GameLevel level, String _levelName) {
+        String enemyDataPath = "resources/levels/"+_levelName+"/enemies/enemy_data.xml";
+        String locationRoot = "resources/levels/"+_levelName+"/enemies/";
+        numEnemies = RossLib.parseXML(enemyDataPath, "enemy");
         imageCount++;
         if (imageCount >= numEnemies) {
             imageCount = 0;
         }
         //name
-        name = RossLib.parseXML(filePath, "enemy", imageCount, "name");
+        name = RossLib.parseXML(enemyDataPath, "enemy", imageCount, "name");
         //location
-        String location = locationRoot + RossLib.parseXML(filePath, "enemy", imageCount, "location");
+        String location = locationRoot + RossLib.parseXML(enemyDataPath, "enemy", imageCount, "location");
         setImage(location);
         worldObjectType = WorldObjectType.HOSTILE;
         collisionType = CollisionType.IMPASSABLE;
-        moveSpeed = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "speed"));
+        moveSpeed = Integer.parseInt(RossLib.parseXML(enemyDataPath, "enemy", imageCount, "speed"));
         //width
-        int width = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "width"));
+        int width = Integer.parseInt(RossLib.parseXML(enemyDataPath, "enemy", imageCount, "width"));
         //height
-        int height = Integer.parseInt(RossLib.parseXML(filePath, "enemy", imageCount, "height"));
+        int height = Integer.parseInt(RossLib.parseXML(enemyDataPath, "enemy", imageCount, "height"));
         Random rn = new Random();
         int randX = rn.nextInt(level.floor.hitBox.width)+level.floor.hitBox.x;
         // TODO actually parse a logical y value
