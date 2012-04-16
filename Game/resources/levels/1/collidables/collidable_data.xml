@@ -1,11 +1,22 @@
 <collidable_data>
 	<collidable>
 
-		<location> collidables/platforms/orange.png </location>
-		<x> 400 </x>
-		<y> 300 </y>
+		<location> collidables/platforms/cloud0.png </location>
+		<x> 800 </x>
+		<y> 380 </y>
 		<width> 140 </width>
-		<height> 50 </height>
+		<height> 90 </height>
+		<type> platform </type>
+
+	</collidable>
+
+	<collidable>
+
+		<location> collidables/platforms/cloud1.png </location>
+		<x> 1400 </x>
+		<y> 200 </y>
+		<width> 160 </width>
+		<height> 120</height>
 		<type> platform </type>
 
 	</collidable>
