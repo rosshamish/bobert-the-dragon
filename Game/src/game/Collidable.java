@@ -66,7 +66,7 @@ public class Collidable extends WorldObject
     }
     
     private boolean isHigherThan(Collidable obj) {
-        if (this.bottomEdge() <= obj.bottomEdge()) {
+        if (this.bottomEdge() <= obj.topEdge() + obj.hitBox.height*0.5) {
             return true;
         } else {
             return false;

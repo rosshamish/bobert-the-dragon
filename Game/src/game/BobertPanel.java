@@ -106,7 +106,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("1", screenCam);
+        level = new GameLevel("menu", screenCam);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -133,7 +133,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
         gameRunning = true;
         objectsDefined = true;
-        System.out.println("Objects defined woohoo!");
     }
 
     @Override
@@ -223,7 +222,6 @@ public class BobertPanel extends JPanel implements Runnable,
              * it throughout the loop. If, at the end, it's an invalid place, move
              * him back to where he was BUT KEEP APPLYING GRAVITY.
              */
-            
             
             // **Handles all characters which are in the air.
             //<editor-fold defaultstate="collapsed" desc="In Air">
