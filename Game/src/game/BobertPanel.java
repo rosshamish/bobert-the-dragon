@@ -216,6 +216,7 @@ public class BobertPanel extends JPanel implements Runnable,
 
         while (gameRunning) {
             FPSStartOfLoop();
+            SoundEffects.JUMP.play();
             
             /* TODO handle collision detection better. Update his future hit box
              * once at the beginning of the game loop (here), and then keep udpating
