@@ -1,12 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package game;
 
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.Rectangle;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import rosslib.RossLib;
 
@@ -16,18 +16,72 @@ import rosslib.RossLib;
  */
 public class GameLevel {
 
-    String resourcesPath;
-    String levelName;
-    WorldObject background;
-    Collidable floor;
-    ArrayList<Collidable> collidables;
-    ArrayList<Enemy> enemies;
+    public String resourcesPath;
+    public String levelName;
+    public WorldObject background;
+    public Collidable floor;
+    public ArrayList<Collidable> collidables;
+    public ArrayList<Enemy> enemies;
 
-    public GameLevel(String _levelName, Camera cam) {
+    public GameLevel(String _levelName) {
+        levelName = _levelName;
+        background = new WorldObject();
+        background.name = "Tester Background";
+        background.drawBox = new Rectangle(0, 0,
+                420, 555);
+        RossLib.writeLevelData(this);
+    }
+    
+    /*
+     * // Create folders for resource types of format "resources/levels/_folderName/resourceType/"
+            String[] resourceTypes = {"backgrounds", "collidables", "enemies"};
+            for (int i = 0; i < resourceTypes.length; i++) {
+                if (!new File(totalFolderPath + resourceTypes[i]).exists()) {
+                    success = new File(totalFolderPath + resourceTypes[i]).mkdir();
+                    if (!success) {
+                        System.err.println("Directory creation error in GameLevel.java with "
+                                + "inputted level name \"" + _folderName + "\" while creating folder \""
+                                + resourceTypes[i] + "\".");
+                    }
+                } else { // If the folder exists
+                    System.err.println("Directory \"" + totalFolderPath + resourceTypes[i] + "\" already exists!");
+                }
+                // The folder exists at this point.
+                try {
+                    // Get the path to the new file
+                    String dFileName = totalFolderPath + resourceTypes[i] + "/" + resourceTypes[i] + "_data.xml";
+                    File dFile = new File(dFileName);
+                    if (!dFile.exists()) {
+                        // Create the file, since it doesn't exist
+                        dFile.createNewFile();
+                        // Set up the file writers
+                        FileWriter dFileWriter = new FileWriter(dFileName);
+                        BufferedWriter dBuffWriter = new BufferedWriter(dFileWriter);
+                        // Write the header
+                        String xmlHeader = "<" + resourceTypes[i] + "_data>";
+                        dBuffWriter.write(xmlHeader, 0, xmlHeader.length());
+                        // Write a few newlines
+                        for (int j = 0; j < 3; j++) {
+                            dBuffWriter.newLine();
+                        }
+                        // Write the footer
+                        String xmlFooter = "</" + resourceTypes[i] + "_data>";
+                        dBuffWriter.write(xmlFooter, 0, xmlFooter.length());
+
+                        // Close stream
+                        dBuffWriter.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+     */
+    
+    public GameLevel(String _levelName, boolean _newLevel) {
         resourcesPath = "resources/levels/" + _levelName + "/";
         levelName = _levelName;
-        String collidablesDataPath = resourcesPath + "collidables/collidable_data.xml";
-        String enemyDataPath = resourcesPath + "enemies/enemy_data.xml";
+        String collidablesDataPath = resourcesPath + "collidables/collidables_data.xml";
+        String enemyDataPath = resourcesPath + "enemies/enemies_data.xml";
         String backgroundsDataPath = resourcesPath + "backgrounds/backgrounds_data.xml";
         // This needs to be a jpg because the image file is HUGE and it doesn't
         // need transparency.

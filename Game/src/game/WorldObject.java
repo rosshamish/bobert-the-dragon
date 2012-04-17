@@ -28,7 +28,9 @@ public class WorldObject
     static String resourcesPathStem = "resources/";
     public Rectangle drawBox;
     
+    public String name;
     protected Image image;
+    protected String imageLocation;
     public ArrayList<String> imagePaths;
     
     public WorldObject() {
@@ -86,13 +88,40 @@ public class WorldObject
         this.image = image;
     }
     
-    public void setImage(String path) {
-        ImageIcon ii = new ImageIcon(path);
+    public void setImage(String _path) {
+        ImageIcon ii = new ImageIcon(_path);
         if (ii.getIconHeight() == 0) { 
             System.out.println("You messed up, the file at "+
-                path+" doesn't exist, bro.");
+                _path+" doesn't exist, bro.");
         } else {
+            imageLocation = _path;
             this.image = ii.getImage();
         }
     }
+    
+    public String getImageLocation() {
+        if (imageLocation != null) {
+            return imageLocation;
+        } else {
+            return "";
+        }
+    }
+
+    public String getName() {
+        if (name != null) {
+            return name;
+        } else {
+            return "";
+        }
+    }
+    
+    public int getWidth() {
+        return drawBox.width;
+    }
+    
+    public int getHeight() {
+        return drawBox.height;
+    }
+    
+    
 }

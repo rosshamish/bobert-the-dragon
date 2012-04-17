@@ -1,0 +1,12 @@
+
+<collidable>
+<name>  </name>
+<location> resources/levels/menu/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 671 </y>
+<width> 1200 </width>
+<height> 105 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+

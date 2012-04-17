@@ -1,6 +1,12 @@
 package rosslib;
 
+import game.Collidable;
+import game.Enemy;
+import game.GameLevel;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,7 +64,194 @@ public class RossLib {
      * XML Functions
      * 
      */
-     
+    
+    /**
+     * Creates a folder with the specified name in the path specified.
+     * @param _folderName -> Desired folder name.
+     * @param path -> Path leading up to the folder to be created.
+     * @return -> false: The folder does not exist after this function call.
+     *            true: The folder DOES exist after this function call
+     *                  -note: this could mean that it already existed.
+     */
+    public static boolean createFolder(String _folderName, String path) {
+        boolean success = true;
+        // Create folder with format "path/_folderName/"
+        String totalFolderPath = path + _folderName + "/";
+        if (!new File(totalFolderPath).exists()) {
+            // If the folder doesn't exist, create it for god's sake.
+            success = new File(totalFolderPath).mkdir();
+        } else {
+            System.err.println("Directory \"" + totalFolderPath + "\" already exists!");
+        }
+        if (!success) {
+            System.err.println("Directory creation error in GameLevel.java with "
+                    + "inputted level name \"" + _folderName + "\".");
+            return false;
+        } else { 
+            // If directory "path/_folderName" was created successfully
+            return true;
+        }
+    }
+    
+    public static boolean createBlankFile(String _fileName, String _path) {
+        boolean success = true;
+        try {
+                // Get the path to the new file
+                String dFileName = _path + _fileName;
+                File dFile = new File(dFileName);
+                if (!dFile.exists()) {
+                    // Create the file, since it doesn't exist
+                    dFile.createNewFile();
+                } else {
+                    // Clear the file (delete it, make a new one)
+                    dFile.delete();
+                    dFile = new File(dFileName);
+                    dFile.createNewFile();
+                }
+            } catch (IOException e) {
+                success = false;
+                e.printStackTrace();
+            }
+        return success;
+    }
+    
+    public static boolean writeLevelData(GameLevel _level) {
+        String curPath = "resources/levels/";
+
+        if (!RossLib.createFolder(_level.levelName, curPath)) {
+            return false;
+        }
+        String[] resourceTypes = {"backgrounds", "collidables", "enemies"};
+        curPath += _level.levelName + "/";
+        String levelPath = curPath;
+        for (int i = 0; i < resourceTypes.length; i++) {
+            if (!RossLib.createFolder(resourceTypes[i], levelPath)) {
+                return false;
+            }
+        }
+        // The folders all should exist at this point.
+        for (int i = 0; i < resourceTypes.length; i++) {
+            curPath = levelPath + resourceTypes[i] + "/";   
+            if (!RossLib.createBlankFile(resourceTypes[i]+"_data.xml", curPath)) {
+                return false;
+            }
+            String dFileName = curPath + resourceTypes[i] + "_data.xml";
+            String xmlBookName = resourceTypes[i]+"_data";
+            
+            RossLib.writeXmlHeader(dFileName, xmlBookName);
+            
+            if (resourceTypes[i].equalsIgnoreCase("backgrounds")) {
+                // Backgrounds_data.xml
+                if (_level.background != null) {
+                    RossLib.writeXmlHeader(dFileName, "background");
+                    RossLib.writeXmlTag(dFileName, "name", _level.background.getName());
+                    RossLib.writeXmlTag(dFileName, "location", _level.background.getImageLocation());
+                    RossLib.writeXmlTag(dFileName, "width", _level.background.getWidth());
+                    RossLib.writeXmlTag(dFileName, "height", _level.background.getHeight());
+                    RossLib.writeXmlFooter(dFileName, "background");
+                }
+                if (_level.floor != null) {
+                    RossLib.writeXmlHeader(dFileName, "floor");
+                    RossLib.writeXmlTag(dFileName, "name", _level.floor.getName());
+                    RossLib.writeXmlTag(dFileName, "location", _level.floor.getImageLocation());
+                    RossLib.writeXmlFooter(dFileName, "floor");
+                }
+                
+            } else if (resourceTypes[i].equalsIgnoreCase("collidables")) {
+                
+                if (_level.collidables != null) {
+                    for (int coll = 0; coll < _level.collidables.size(); coll++) {
+                        Collidable cur = _level.collidables.get(coll);
+                        RossLib.writeXmlHeader(dFileName, "collidable");
+                        RossLib.writeXmlTag(dFileName, "name", cur.getName());
+                        RossLib.writeXmlTag(dFileName, "location", cur.getImageLocation());
+                        RossLib.writeXmlTag(dFileName, "x", cur.hitBox.x);
+                        RossLib.writeXmlTag(dFileName, "y", cur.hitBox.y);
+                        RossLib.writeXmlTag(dFileName, "width", cur.hitBox.width);
+                        RossLib.writeXmlTag(dFileName, "height", cur.hitBox.height);
+                        RossLib.writeXmlTag(dFileName, "type", cur.collisionType.toString());
+                        RossLib.writeXmlFooter(dFileName, "collidable");
+                    }
+                }
+                
+            } else if (resourceTypes[i].equalsIgnoreCase("enemies")) {
+                if (_level.enemies != null) {
+                    for (int enem = 0; enem < _level.enemies.size(); enem++) {
+                        Enemy cur = _level.enemies.get(enem);
+                        RossLib.writeXmlHeader(dFileName, "enemy");
+                        RossLib.writeXmlTag(dFileName, "name", cur.getName());
+                        RossLib.writeXmlTag(dFileName, "location", cur.getImageLocation());
+                        RossLib.writeXmlTag(dFileName, "width", cur.hitBox.width);
+                        RossLib.writeXmlTag(dFileName, "height", cur.hitBox.height);
+                        RossLib.writeXmlFooter(dFileName, "enemy");
+                    }
+                }
+            }
+            RossLib.writeXmlFooter(dFileName, xmlBookName);
+        }
+
+
+        return true;
+    }
+    
+    public static boolean writeXmlHeader(String _file, String _header) {
+        String header = "<"+_header+">";
+        // Set up the file writers
+        try {
+            FileWriter dFileWriter = new FileWriter(_file, true);
+            BufferedWriter dBuffWriter = new BufferedWriter(dFileWriter);
+            dBuffWriter.newLine();
+            dBuffWriter.write(header);
+            dBuffWriter.newLine();
+            dBuffWriter.newLine();
+            dBuffWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean writeXmlFooter(String _file, String _footer) {
+        String footer = "</"+_footer+">";
+        // Set up the file writers
+        try {
+            FileWriter dFileWriter = new FileWriter(_file, true);
+            BufferedWriter dBuffWriter = new BufferedWriter(dFileWriter);
+            dBuffWriter.newLine();
+            dBuffWriter.write(footer);
+            dBuffWriter.newLine();
+            dBuffWriter.newLine();
+            dBuffWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean writeXmlTag(String _file, String _tag, int _value) {
+        return RossLib.writeXmlTag(_file, _tag, String.valueOf(_value));
+    }
+    
+    public static boolean writeXmlTag(String _file, String _tag, String _value) {
+        // Set up the file writers
+        String tagOpen = "<"+_tag+"> ";
+        String tagClose = " </"+_tag+">";
+        try {
+            FileWriter dFileWriter = new FileWriter(_file, true);
+            BufferedWriter dBuffWriter = new BufferedWriter(dFileWriter);
+            dBuffWriter.write(tagOpen);
+            dBuffWriter.write(_value);
+            dBuffWriter.write(tagClose);
+            dBuffWriter.newLine();
+            dBuffWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
     
     /**
      * @param xmlFilePath -> the file path to the XML data

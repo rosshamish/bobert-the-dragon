@@ -106,7 +106,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("menu", screenCam);
+        level = new GameLevel("menu", false);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -133,6 +133,8 @@ public class BobertPanel extends JPanel implements Runnable,
 
         gameRunning = true;
         objectsDefined = true;
+        level.levelName = "inside bobert panel!";
+        RossLib.writeLevelData(level);
     }
 
     @Override
@@ -655,7 +657,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
                     // reset the current level, reloading everything from the XML files
                     BobertPanel.defineObjects();
-                    level = new GameLevel(level.levelName, screenCam);
+                    level = new GameLevel(level.levelName, false);
                 } else if (consoleCommand.length() >= 3) { // if it has a command
                     if (consoleCommand.substring(0, 4).equalsIgnoreCase("save")) {
                         cmdRemaining = cmdRemaining.substring(5);
