@@ -70,7 +70,7 @@ public class BobertPanel extends JPanel implements Runnable,
     //</editor-fold>
     
     public BobertPanel(BobertFrame frame) {
-        setBackground(new Color(103, 187, 241));
+        setBackground(new Color(200, 200, 200));
         this.setDoubleBuffered(true);
         // Need to assign the BobertFrame to a static variable so that we 
         // can add Listeners to it in addNotify(). Explanation is in addNotify().
@@ -492,7 +492,6 @@ public class BobertPanel extends JPanel implements Runnable,
                                     }
                                 }
                                 , 200);
-                                
                                 
                                 break;
                             }
