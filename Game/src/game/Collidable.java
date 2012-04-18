@@ -36,9 +36,9 @@ public class Collidable extends WorldObject
     }
     
     public Collidable(Rectangle collisionRect, WorldObjectType objType, CollisionType colType, String imageLocation) {
-        this.hitBox = collisionRect;
-        this.drawBox = hitBox;
-        this.futureHitBox = hitBox;
+        this.hitBox = new Rectangle(collisionRect);
+        this.drawBox = new Rectangle(hitBox);
+        this.futureHitBox = new Rectangle(hitBox);
         this.worldObjectType = objType;
         this.collisionType = colType;
         this.setImage(imageLocation);

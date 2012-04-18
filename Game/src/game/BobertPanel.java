@@ -106,7 +106,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("menu", false);
+        level = new GameLevel("clouds", false);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -656,6 +656,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 
                 if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
                     // reset the current level, reloading everything from the XML files
+                    objectsDefined = false;
                     BobertPanel.defineObjects();
                 } else if (consoleCommand.length() >= 3) { // if it has a command
                     if (consoleCommand.substring(0, 4).equalsIgnoreCase("save")) {

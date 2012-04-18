@@ -1,12 +1,13 @@
 package editor;
 
-import game.Camera;
-import game.Collidable;
-import game.GameLevel;
-import game.Main;
+import game.*;
+import game.Collidable.CollisionType;
+import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Timer;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import rosslib.RossLib;
@@ -283,6 +284,29 @@ public class EditPanel extends JPanel
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
                 level = new GameLevel((String) chosenLevel, false);
+            }
+        } else if (action.equalsIgnoreCase("Add Platform")) {
+            String platformsPath = "resources/collidables/platforms/";
+            File dir = new File(platformsPath);
+            File[] levelFiles = dir.listFiles();
+            String[] fileNames = new String[levelFiles.length];
+            for (int i=0; i<levelFiles.length; i++) {
+                fileNames[i] = levelFiles[i].getName();
+            }
+            Object chosenPlatform = JOptionPane.showInputDialog(eFrame, 
+                    "Choose a platform:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenPlatform == null) {
+                System.out.println("chosenLevel is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                        120, 70);
+                level.collidables.add(new Collidable(platRect, WorldObjectType.NEUTRAL, CollisionType.PLATFORM, platformsPath + (String) (chosenPlatform) ));
             }
         } else {
             System.out.println("Action \"" + action + "\" not implemented yet!");

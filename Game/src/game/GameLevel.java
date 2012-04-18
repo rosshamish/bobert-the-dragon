@@ -81,6 +81,7 @@ public class GameLevel {
             this.floor = new Collidable(new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
                     background.getWidth(), 100), 
                     WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
+            this.floor.initBoxes(this.floor.hitBox);
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);
             if (!success) {
