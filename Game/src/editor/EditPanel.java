@@ -9,13 +9,14 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import rosslib.RossLib;
 
 /**
  *
  * @author Ross-Desktop
  */
 public class EditPanel extends JPanel
-                       implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+                       implements Runnable, KeyListener, MouseListener, MouseMotionListener, ActionListener {
     static EditFrame eFrame;
     
     public static boolean gameRunning;
@@ -252,5 +253,19 @@ public class EditPanel extends JPanel
         
         mouseX = e.getX();
         mouseY = e.getY();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+        if (action.equalsIgnoreCase("save")) {
+            RossLib.writeLevelData(level);
+        } else if (action.equalsIgnoreCase("save as")) {
+            String name = JOptionPane.showInputDialog("Level Name: ", level.levelName);
+            level.levelName = name;
+            RossLib.writeLevelData(level);
+        } else {
+            System.out.println("Action \""+action+"\" not implemented yet!");
+        }
     }
 }

@@ -75,6 +75,12 @@ public class GameLevel {
             }
         } else { // This is a new level, ,so create it.
             levelName = _levelName;
+            this.background = new WorldObject(new Rectangle(0, 0,
+                    (int) (Main.B_WINDOW_WIDTH*1.2), (int) (Main.B_WINDOW_HEIGHT*1.2)));
+            this.background.setImage(WorldObject.defaultImgPath);
+            this.floor = new Collidable(new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
+                    background.getWidth(), 100), 
+                    WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);
             if (!success) {

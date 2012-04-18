@@ -26,6 +26,7 @@ public class WorldObject
     };
     
     static String resourcesPathStem = "resources/";
+    public static String defaultImgPath = "resources/default.jpg";
     public Rectangle drawBox;
     
     public String name;
