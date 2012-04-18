@@ -23,7 +23,9 @@ public class Character extends Sprite
     public int keyJump = KeyEvent.VK_W;
     public int keyShoot = KeyEvent.VK_SPACE;
     
-    static int vertVelocityJump = -13;
+    static int vertVelocityJump = -20;
+    static int vertVelocityDoubleJump = (int) (vertVelocityJump * 0.7);
+    public boolean hasJumped = false;
     public boolean hasDoubleJumped = false;
     
     static int imageCount = 0;

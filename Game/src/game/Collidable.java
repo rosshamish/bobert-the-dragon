@@ -26,7 +26,6 @@ public class Collidable extends WorldObject
     public CollisionType collisionType = CollisionType.PASSABLE;
     public int drawHitOffset = 5;
     protected WorldObjectType worldObjectType;
-    public String name;
     
     public Collidable() {
         this.hitBox = new Rectangle();
@@ -66,29 +65,29 @@ public class Collidable extends WorldObject
     }
     
     private boolean isHigherThan(Collidable obj) {
-        if (this.bottomEdge() <= obj.topEdge() + obj.hitBox.height*0.5) {
+        if (this.bottomEdge() <= obj.topEdge()) {
             return true;
         } else {
             return false;
         }
     }
     
-    int topEdge() {
+    public int topEdge() {
         return this.hitBox.y;
     }
-    int bottomEdge() {
+    public int bottomEdge() {
         return this.hitBox.y+this.hitBox.height;
     }
-    int leftEdge() {
+    public int leftEdge() {
         return hitBox.x;
     }
-    int rightEdge() {
+    public int rightEdge() {
         return hitBox.x+hitBox.width;
     }
-    int middleVertically() {
+    public int middleVertically() {
         return (int) (hitBox.y + hitBox.height*0.5);
     }
-    int middleHorizontally() {
+    public int middleHorizontally() {
         return (int) (hitBox.x + hitBox.width*0.5);
     }
     
@@ -119,7 +118,6 @@ public class Collidable extends WorldObject
      * @return -> Whether or not this will collide with the object in the next frame.
      */
     boolean willCollideWith(Collidable obj) {
-        updateFutureHitBox();
         if (obj.collisionType == CollisionType.PASSABLE) {
             return false;
         } else if (obj.collisionType == CollisionType.IMPASSABLE) {
@@ -140,7 +138,7 @@ public class Collidable extends WorldObject
      * Sets the x value of the hit box, and updates the draw box accordingly.
      * @param newX -> The new x value of the collision box.
      */
-    void setX(int newX) {
+    public void setX(int newX) {
         hitBox.x = newX;
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
@@ -165,7 +163,7 @@ public class Collidable extends WorldObject
      * Sets the y value of the hit box, and updates the draw box accordingly.
      * @param newY -> The new y value of the collision box.
      */
-    void setY(int newY) {
+    public void setY(int newY) {
         hitBox.y = newY;
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
@@ -190,7 +188,7 @@ public class Collidable extends WorldObject
      * Moves a certain distance to the right.
      * @param distanceRight 
      */
-    void moveRightBy(int distanceRight) {
+    public void moveRightBy(int distanceRight) {
         hitBox.x += distanceRight;
         drawBox.x += distanceRight;
     }
@@ -199,7 +197,7 @@ public class Collidable extends WorldObject
      * Moves a certain distance to the left.
      * @param distanceLeft 
      */
-    void moveLeftBy(int distanceLeft) {
+    public void moveLeftBy(int distanceLeft) {
         hitBox.x -= distanceLeft;
         drawBox.x -= distanceLeft;
     }
@@ -208,9 +206,15 @@ public class Collidable extends WorldObject
      * @param distanceDown -> the distance to move. Positive indicates motion DOWN,
      *                    Negative indicates motion UP.
      */
-    void moveVerticallyBy(int distanceDown) {
+    public void moveVerticallyBy(int distanceDown) {
         hitBox.y += distanceDown;
         drawBox.y += distanceDown;
+    }
+    
+    public Rectangle hitBoxInCam(Camera _cam) {
+        Rectangle inCam = new Rectangle(this.xPositionInCam(_cam), this.yPositionInCam(_cam),
+                this.hitBox.width, this.hitBox.height);
+        return inCam;
     }
     
     /**
@@ -229,8 +233,8 @@ public class Collidable extends WorldObject
      *                      equivalent of both.
      */
     void initBoxes(Rectangle collisionBox) {
-        hitBox = collisionBox;
-        futureHitBox = hitBox;
+        hitBox = new Rectangle(collisionBox);
+        futureHitBox = new Rectangle(hitBox);
         if (this.worldObjectType == null) {
             this.worldObjectType = WorldObjectType.NEUTRAL;
         }
@@ -252,7 +256,7 @@ public class Collidable extends WorldObject
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
                 this.worldObjectType == WorldObjectType.NEUTRAL) {
             // Just return. The boxes are the same for each of these types.
-            drawBox = hitBox;
+            drawBox = new Rectangle(hitBox);
             return;
         }
         if (this.worldObjectType == WorldObjectType.FLOOR) {
@@ -266,7 +270,7 @@ public class Collidable extends WorldObject
     }
     
     void updateFutureHitBox() {
-        this.futureHitBox = this.hitBox;
+        this.futureHitBox = new Rectangle(this.hitBox);
     }
     int updateDefaultProjectileX() {
         return this.hitBox.x;

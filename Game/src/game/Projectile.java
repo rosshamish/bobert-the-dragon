@@ -17,7 +17,7 @@ public class Projectile extends Sprite
                         implements Drawable {
     
     static String resourcesPath = resourcesPathStem + "projectiles/";
-    static String dataPath = resourcesPath + "projectile_data.xml";
+    static String dataPath = resourcesPath + "projectiles_data.xml";
     
     static int imageCount = 0;
     static int numImages;
@@ -33,23 +33,23 @@ public class Projectile extends Sprite
     // bounce too high.
     public static final int vertVelocityBounce = -10;
 
-    public Projectile() {
-        String filePath = "resources/projectiles/projectile_data.xml";      
+    public Projectile() {   
         imageCount++;
+        numImages = RossLib.parseXML(dataPath, "projectile");
         if (imageCount >= numImages) {
             imageCount = 0;
         }
         //name
-        name = RossLib.parseXML(filePath, "projectile", imageCount, "name");
+        name = RossLib.parseXML(dataPath, "projectile", imageCount, "name");
         //location
-        String imgLocation = RossLib.parseXML(filePath, "projectile", imageCount, "location");
+        String imgLocation = RossLib.parseXML(dataPath, "projectile", imageCount, "location");
         setImage(imgLocation);
         worldObjectType = WorldObjectType.PROJECTILE;
         collisionType = CollisionType.IMPASSABLE;
         //width
-        int width = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "width"));
+        int width = Integer.parseInt(RossLib.parseXML(dataPath, "projectile", imageCount, "width"));
         //height
-        int height = Integer.parseInt(RossLib.parseXML(filePath, "projectile", imageCount, "height"));
+        int height = Integer.parseInt(RossLib.parseXML(dataPath, "projectile", imageCount, "height"));
         this.moveSpeed = defaultSpeed;
         this.drawHitOffset = (int) (width * 0.12);
         initBoxes(new Rectangle(0, 0,

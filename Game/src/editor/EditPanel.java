@@ -1,13 +1,13 @@
 package editor;
 
 import game.Camera;
+import game.Collidable;
 import game.GameLevel;
 import game.Main;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -26,7 +26,11 @@ public class EditPanel extends JPanel
     public static Camera editCam;
     
     public static int mouseX;
+    public static int mouseDeltaX;
     public static int mouseY;
+    public static int mouseDeltaY;
+    
+    public static Collidable heldObject;
     
     public EditPanel(EditFrame frame) {
         setBackground(new Color(200, 200, 200));
@@ -42,7 +46,59 @@ public class EditPanel extends JPanel
         editCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("Cabs");
+        String[] options = {
+            "New Level",
+            "Load Level"};
+        int newLevelOption = JOptionPane.showOptionDialog(eFrame,
+                "Woohoo you're using the level editor! Make something awesome!",
+                "Bobert Level Editor - BlockTwo Studios",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        boolean newLevel = true;
+        switch (newLevelOption) {
+            case JOptionPane.CLOSED_OPTION:
+                System.exit(0);
+                break;
+            case JOptionPane.YES_OPTION:
+                newLevel = true;
+                break;
+            case JOptionPane.NO_OPTION:
+                newLevel = false;
+                break;
+            default:
+                newLevel = true;
+                break;
+        }
+        if (newLevel) {
+            String name = JOptionPane.showInputDialog(eFrame, 
+                    "Name your fancy new level!",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.QUESTION_MESSAGE);
+            level = new GameLevel(name, true);
+        } else {
+            File dir = new File("resources/levels/");
+            File[] levelFiles = dir.listFiles();
+            String[] fileNames = new String[levelFiles.length];
+            for (int i=0; i<levelFiles.length; i++) {
+                fileNames[i] = levelFiles[i].getName();
+            }
+            Object chosenLevel = JOptionPane.showInputDialog(eFrame, 
+                    "Which level would you like to load?",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenLevel == null) {
+                System.out.println("chosenLevel is null");
+                System.exit(0);
+            } else {
+                level = new GameLevel((String) chosenLevel, false);
+            }
+        }
         
         gameRunning = true;
         objectsDefined = true;
@@ -69,12 +125,27 @@ public class EditPanel extends JPanel
             if (level.background != null) {
                 level.background.draw(g2d, editCam);
             }
+            
+            if (level.enemies != null) {
+                for (int i=0; i<level.enemies.size(); i++) {
+                    level.enemies.get(i).draw(g2d, editCam);
+                }
+            }
+            
+            if (level.collidables != null) {
+                for (int i=0; i<level.collidables.size(); i++) {
+                    level.collidables.get(i).draw(g2d, editCam);
+                }
+            }            
+            
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
             g2d.drawString("Mouse X: "+String.valueOf(mouseX), 10, 10);
             g2d.drawString("Mouse Y: "+String.valueOf(mouseY), 10, 20);
+            g2d.drawString("Mouse dX: "+String.valueOf(mouseDeltaX), 10, 30);
+            g2d.drawString("Mouse dY: "+String.valueOf(mouseDeltaY), 10, 40); 
             
-            
+            g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
         }
     }
     
@@ -102,17 +173,45 @@ public class EditPanel extends JPanel
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+        // Not needed
     }
 
+    /*
+     * When the mouse is clicked down.
+     */
     @Override
     public void mousePressed(MouseEvent e) {
+        // Check what we're clicking on.
+        Point mousePosInPanel = new Point(e.getPoint());
+        mousePosInPanel.y -= Main.B_WINDOW_BAR_HEIGHT;
         
+        // This loop goes the reverse direction from the paintComponent loop
+        // because we should grab the topmost objects if two are on top of
+        // one another.
+        if (level.collidables != null) {
+            for (int i = level.collidables.size()-1; i >= 0; i--) {
+                if (level.collidables.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
+                    heldObject = (Collidable) level.collidables.get(i);
+                    return;
+                }
+            }
+        }
+        if (level.enemies != null) {
+            for (int i = level.enemies.size()-1; i >= 0; i--) {
+                if (level.enemies.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
+                    heldObject = (Collidable) level.enemies.get(i);
+                    return;
+                }
+            }
+        }
     }
 
+    /*
+     * When the mouse is unclicked (let up).
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
-        
+        heldObject = null;
     }
 
     @Override
@@ -128,11 +227,29 @@ public class EditPanel extends JPanel
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mouseDeltaX = e.getX() - mouseX;
+        mouseDeltaY = e.getY() - mouseY;
         
+        // Move the x coordinate by the change in x.
+        if (heldObject != null) {
+            heldObject.moveRightBy(mouseDeltaX);
+            heldObject.moveVerticallyBy(mouseDeltaY);
+        }
+        
+        mouseX = e.getX();
+        mouseY = e.getY();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        mouseDeltaX = e.getX() - mouseX;
+        mouseDeltaY = e.getY() - mouseY;
+        
+        if (heldObject != null) {
+            heldObject.moveRightBy(mouseDeltaX);
+            heldObject.moveVerticallyBy(mouseDeltaY);
+        }
+        
         mouseX = e.getX();
         mouseY = e.getY();
     }

@@ -133,8 +133,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
         gameRunning = true;
         objectsDefined = true;
-        level.levelName = "inside bobert panel!";
-        RossLib.writeLevelData(level);
     }
 
     @Override
@@ -248,7 +246,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
                 bobert.updateFutureHitBox();
-                bobert.futureHitBox.y += bobert.vertVelocity;
+                bobert.futureHitBox.y += bobert.vertVelocity*2;
                 for (int i = 0; i < level.collidables.size(); i++) {
                     if (bobert.willCollideWith(level.collidables.get(i))) {
                         if (level.collidables.get(i).collisionType == CollisionType.PLATFORM) {
@@ -259,9 +257,10 @@ public class BobertPanel extends JPanel implements Runnable,
                             }
                         }
                         bobert.isInAir = false;
+                        bobert.hasJumped = false;
                         bobert.hasDoubleJumped = false;
-                        bobert.setY(level.collidables.get(i).drawBox.y - bobert.drawBox.height);
-                        defaultProjectile.setY(level.collidables.get(i).drawBox.y - bobert.drawBox.height);
+                        bobert.setY(level.collidables.get(i).hitBox.y - bobert.hitBox.height);
+                        defaultProjectile.setY(level.collidables.get(i).hitBox.y - bobert.hitBox.height);
                         // Set the character's vertical velocity to 0 because we are
                         // on the ground, goddamn it, and we aren't jumping, goddamn it.
                         bobert.vertVelocity = 1;
@@ -280,7 +279,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (bobert.isInAir) {
                     bobert.vertVelocity += gravity;
                     bobert.moveVerticallyBy(bobert.vertVelocity);
-                    // defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
+                     defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
                 }
                 
                 // DO ALL THIS AGAIN FOR EACH ENEMY
@@ -606,13 +605,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Make sure we aren't already jumping, then set isInAir to true
                 // as a flag that we are jumping, and then set the vertical 
                 // velocity to jumping.
-                if (!bobert.isInAir) {
+                if (!bobert.hasJumped) {
                     bobert.isInAir = true;
+                    bobert.hasJumped = true;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
                     bobert.isInAir = true;
-                    bobert.vertVelocity = Character.vertVelocityJump;
                     bobert.hasDoubleJumped = true;
+                    bobert.vertVelocity = Character.vertVelocityDoubleJump;
                 }
             }
             if (e.getKeyCode() == bobert.keyShoot) {
@@ -657,7 +657,6 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (consoleCommand.equalsIgnoreCase("reset") || consoleCommand.equalsIgnoreCase("r")) {
                     // reset the current level, reloading everything from the XML files
                     BobertPanel.defineObjects();
-                    level = new GameLevel(level.levelName, false);
                 } else if (consoleCommand.length() >= 3) { // if it has a command
                     if (consoleCommand.substring(0, 4).equalsIgnoreCase("save")) {
                         cmdRemaining = cmdRemaining.substring(5);

@@ -1,7 +1,6 @@
 package editor;
 
-import game.BobertFrame;
-import game.*;
+import game.Main;
 import javax.swing.JFrame;
 
 /**

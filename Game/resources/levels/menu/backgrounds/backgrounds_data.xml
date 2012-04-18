@@ -1,16 +1,24 @@
-<backgrounds_data>
-	<!-- Background -->
-	<background>
-		<name> Sunset </name>
-		<location> backgrounds/bground_mountains.jpg </location>
-		<width> 1200 </width>
-		<height> 900 </height>
-	</background>
 
-	<!-- Floor -->
-	<floor>
-		<name> Floor, duh </name>
-		<location> backgrounds/floor.png </location>
-	</floor>
+<backgrounds_data>
+
+
+<background>
+
+<name>  </name>
+<location> resources/backgrounds/bground_mountains.jpg </location>
+<width> 1200 </width>
+<height> 900 </height>
+
+</background>
+
+
+<floor>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+
+</floor>
+
 
 </backgrounds_data>
+
