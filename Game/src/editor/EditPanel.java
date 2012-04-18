@@ -264,8 +264,28 @@ public class EditPanel extends JPanel
             String name = JOptionPane.showInputDialog("Level Name: ", level.levelName);
             level.levelName = name;
             RossLib.writeLevelData(level);
+        } else if (action.equalsIgnoreCase("open")) {
+            File dir = new File("resources/levels/");
+            File[] levelFiles = dir.listFiles();
+            String[] fileNames = new String[levelFiles.length];
+            for (int i=0; i<levelFiles.length; i++) {
+                fileNames[i] = levelFiles[i].getName();
+            }
+            Object chosenLevel = JOptionPane.showInputDialog(eFrame, 
+                    "Open File:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenLevel == null) {
+                System.out.println("chosenLevel is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                level = new GameLevel((String) chosenLevel, false);
+            }
         } else {
-            System.out.println("Action \""+action+"\" not implemented yet!");
+            System.out.println("Action \"" + action + "\" not implemented yet!");
         }
     }
 }
