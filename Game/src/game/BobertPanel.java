@@ -106,7 +106,7 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("clouds", false);
+        level = new GameLevel("100 PERCENT NINJA", false);
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();

@@ -184,6 +184,16 @@ public class Collidable extends WorldObject
         }
     }
     
+    public void setWidth(int _width) {
+        hitBox.width = _width;
+        drawBox.width = _width;
+    }
+    
+    public void setHeight(int _height) {
+        hitBox.height = _height;
+        drawBox.height = _height;
+    }
+    
     /**
      * Moves a certain distance to the right.
      * @param distanceRight 

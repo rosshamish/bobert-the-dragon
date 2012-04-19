@@ -1,5 +1,6 @@
 package editor;
 
+import game.Main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,30 +23,66 @@ public class EditFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         String[] buttons = {
-            "",
+            "Label File",
+            "New",
             "Save",
             "Save as",
             "Open",
             "",
             "Change Background",
+            "Label Level Width",
+            "Slider Level Width",
+            "Label Level Height",
+            "Slider Level Height",
+            "",
             "Add Platform",
             "Add Hard Object",
             "",
             "Add Collectable",
             "",
-            "Add Enemy"
+            "Add Enemy",
+            "Label Selected Object Width",
+            "Slider Selected Object Width",
+            "Label Selected Object Height",
+            "Slider Selected Object Height"
         };
         int buttonWidth = 180;
         int buttonHeight = 30;
         int buttonFontSize = 15;
+        
+        int levelWidthMin = Main.B_WINDOW_WIDTH;
+        int levelWidthMax = Main.B_WINDOW_WIDTH*30;
+        int levelHeightMin = Main.B_WINDOW_HEIGHT;
+        int levelHeightMax = Main.B_WINDOW_HEIGHT*20;
+        
+        int generalWidthMin = 10;
+        int generalWidthMax = Main.B_WINDOW_WIDTH*2;
+        int generalHeightMin = 10;
+        int generalHeightMax = Main.B_WINDOW_HEIGHT*20;
         for (int i=0; i<buttons.length; i++) {
-            if (!buttons[i].isEmpty()) {
+            if (buttons[i].contains("slider") || buttons[i].contains("Slider")) {
+                JSlider slider = new JSlider(JSlider.HORIZONTAL, 
+                        generalWidthMin, generalWidthMax, (int) ((generalWidthMin+generalWidthMax)*0.5));
+                slider.setName(buttons[i].substring("slider ".length()));
+                slider.setMajorTickSpacing((int)((generalWidthMax-generalWidthMin)*0.2));
+                slider.setPaintTicks(true);
+                slider.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                slider.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                slider.setAlignmentX(LEFT_ALIGNMENT);
+                slider.addChangeListener(ePanel);
+                buttonPanel.add(slider);
+            } else if (buttons[i].contains("label") || buttons[i].contains("Label")) {
+                JLabel label = new JLabel(buttons[i].substring("label ".length()));
+                label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                buttonPanel.add(label);
+            } else if (!buttons[i].isEmpty()) {
                 JButton button = new JButton(buttons[i]);
-                button.addActionListener(ePanel);
                 button.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                 button.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
                 button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, buttonFontSize));
                 button.setHorizontalAlignment(SwingConstants.LEFT);
+                button.addActionListener(ePanel);
                 buttonPanel.add(button);
             } else {
                 JLabel extraSpace = new JLabel();
