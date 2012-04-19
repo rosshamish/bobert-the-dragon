@@ -52,7 +52,7 @@ public class EditFrame extends JFrame {
         
         int levelWidthMin = Main.B_WINDOW_WIDTH;
         int levelWidthMax = Main.B_WINDOW_WIDTH*30;
-        int levelHeightMin = Main.B_WINDOW_HEIGHT;
+        int levelHeightMin = (int)(Main.B_WINDOW_HEIGHT*1.3); // Have faith.
         int levelHeightMax = Main.B_WINDOW_HEIGHT*20;
         
         int generalWidthMin = 10;
@@ -61,10 +61,36 @@ public class EditFrame extends JFrame {
         int generalHeightMax = Main.B_WINDOW_HEIGHT*20;
         for (int i=0; i<buttons.length; i++) {
             if (buttons[i].contains("slider") || buttons[i].contains("Slider")) {
-                JSlider slider = new JSlider(JSlider.HORIZONTAL, 
-                        generalWidthMin, generalWidthMax, (int) ((generalWidthMin+generalWidthMax)*0.5));
+                JSlider slider;
+                switch (buttons[i].substring("slider ".length())) {
+                    case "Level Width":
+                        slider = new JSlider(JSlider.HORIZONTAL,
+                                levelWidthMin, levelWidthMax, (int) ((levelWidthMin + levelWidthMax) * 0.5));
+                        slider.setMajorTickSpacing((int) ((levelWidthMax - levelWidthMin) * 0.05));
+                        break;
+                    case "Level Height":
+                        slider = new JSlider(JSlider.HORIZONTAL,
+                                levelHeightMin, levelHeightMax, (int) ((levelHeightMin + levelHeightMax) * 0.5));
+                        slider.setMajorTickSpacing((int) ((levelHeightMax - levelHeightMin) * 0.05));
+                        break;
+                    case "Selected Object Width":
+                        slider = new JSlider(JSlider.HORIZONTAL,
+                                generalWidthMin, generalWidthMax, (int) ((generalWidthMin + generalWidthMax) * 0.5));
+                        slider.setMajorTickSpacing((int) ((generalWidthMax - generalWidthMin) * 0.05));
+                        break;
+                    case "Selected Object Height":
+                        slider = new JSlider(JSlider.HORIZONTAL,
+                                generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
+                        slider.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
+                        break;
+                    default:
+                        slider = new JSlider(JSlider.HORIZONTAL,
+                                generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
+                        slider.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
+                        slider.setName("default in the switch case");
+                        break;
+                }
                 slider.setName(buttons[i].substring("slider ".length()));
-                slider.setMajorTickSpacing((int)((generalWidthMax-generalWidthMin)*0.2));
                 slider.setPaintTicks(true);
                 slider.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                 slider.setMaximumSize(new Dimension(buttonWidth, buttonHeight));

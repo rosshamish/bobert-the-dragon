@@ -301,13 +301,33 @@ public class EditPanel extends JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        if (action.equalsIgnoreCase("save")) {
+        if (action.equalsIgnoreCase("new")) {
+            selectedObject = null;
+            heldObject = null;
+            int optionChosen = JOptionPane.showConfirmDialog(eFrame, 
+                    "Save this level before starting a new one?", "Bobert the Dragon Level Editor (c) BlockTwo Studios",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (optionChosen == JOptionPane.CLOSED_OPTION) {
+                return; // Just get out of here.
+            } else if (optionChosen == JOptionPane.YES_OPTION) {
+                String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
+                level.levelName = name;
+                RossLib.writeLevelData(level);
+                String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
+                level = new GameLevel(newLevelName, true);
+            } else if (optionChosen == JOptionPane.NO_OPTION) {
+                String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
+                level = new GameLevel(newLevelName, true);
+            }
+        } else if (action.equalsIgnoreCase("save")) {
             RossLib.writeLevelData(level);
         } else if (action.equalsIgnoreCase("save as")) {
-            String name = JOptionPane.showInputDialog("Level Name: ", level.levelName);
+            String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
             level.levelName = name;
             RossLib.writeLevelData(level);
         } else if (action.equalsIgnoreCase("open")) {
+            selectedObject = null;
+            heldObject = null;
             File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
             String[] fileNames = new String[levelFiles.length];
@@ -380,7 +400,10 @@ public class EditPanel extends JPanel
     public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource();
         String name = source.getName();
-        if (name.equalsIgnoreCase("Level Width")) {
+        if (name == null) {
+            System.out.println("name is null");
+        }
+        if (source.getName().equalsIgnoreCase("Level Width")) {
             level.background.drawBox.width = source.getValue();
         } else if (name.equalsIgnoreCase("Level Height")) {
             level.background.drawBox.height = source.getValue();
