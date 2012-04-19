@@ -15,6 +15,7 @@ public class EditFrame extends JFrame {
     
     static EditPanel ePanel;
     
+    public JLabel fileNameLabel;
     public JSlider sliderLevelWidth;
     public JSlider sliderLevelHeight;
     public JSlider sliderSelectedObjWidth;
@@ -34,6 +35,7 @@ public class EditFrame extends JFrame {
             "Save",
             "Save as",
             "Open",
+            "Test",
             "",
             "Label Level",
             "Change Background",
@@ -66,9 +68,9 @@ public class EditFrame extends JFrame {
         int levelHeightMax = Main.B_WINDOW_HEIGHT*20;
         
         int generalWidthMin = 10;
-        int generalWidthMax = Main.B_WINDOW_WIDTH*2;
+        int generalWidthMax = (int)(Main.B_WINDOW_WIDTH*0.5);
         int generalHeightMin = 10;
-        int generalHeightMax = Main.B_WINDOW_HEIGHT*2;
+        int generalHeightMax = (int)(Main.B_WINDOW_HEIGHT*0.5);
         for (int i=0; i<buttonPanelComponents.length; i++) {
             if (buttonPanelComponents[i].contains("slider") || buttonPanelComponents[i].contains("Slider")) {
                 String sliderName = buttonPanelComponents[i].substring("slider ".length());
@@ -130,11 +132,20 @@ public class EditFrame extends JFrame {
                 }
                 
             } else if (buttonPanelComponents[i].contains("label") || buttonPanelComponents[i].contains("Label")) {
-                JLabel label = new JLabel(buttonPanelComponents[i].substring("label".length()));
-                label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-                label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                label.setHorizontalAlignment(SwingConstants.LEFT);
-                buttonPanel.add(label);
+                String labelName = buttonPanelComponents[i].substring("label".length());
+                JLabel label = new JLabel(labelName);
+                if (labelName.trim().equalsIgnoreCase("File")) {
+                    fileNameLabel = new JLabel(labelName);
+                    fileNameLabel.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    fileNameLabel.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    fileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                    buttonPanel.add(fileNameLabel);
+                } else {
+                    label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    label.setHorizontalAlignment(SwingConstants.LEFT);
+                    buttonPanel.add(label);
+                }
             } else if (!buttonPanelComponents[i].isEmpty()) {
                 JButton button = new JButton(buttonPanelComponents[i]);
                 button.setMinimumSize(new Dimension(buttonWidth, buttonHeight));

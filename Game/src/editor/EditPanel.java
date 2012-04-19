@@ -123,7 +123,8 @@ public class EditPanel extends JPanel
     @Override
     public void addNotify() {
         super.addNotify();
-        // Now that the level is definitely init'ed, init the level width/height sliders.
+        // Now that the level is definitely init'ed, init the button label's values.
+        eFrame.fileNameLabel.setText(level.levelName);
         eFrame.sliderLevelWidth.setValue(level.background.drawBox.width);
         eFrame.sliderLevelHeight.setValue(level.background.drawBox.height);
         gameThread = new Thread(this);
@@ -178,6 +179,7 @@ public class EditPanel extends JPanel
     @Override
     public void run() {
         while (gameRunning) {
+            eFrame.fileNameLabel.setText(level.levelName);
             repaint();
         }
     }
