@@ -14,7 +14,12 @@ import javax.swing.*;
 public class EditFrame extends JFrame {
     
     static EditPanel ePanel;
-
+    
+    public JSlider sliderLevelWidth;
+    public JSlider sliderLevelHeight;
+    public JSlider sliderSelectedObjWidth;
+    public JSlider sliderSelectedObjHeight;
+    
     public EditFrame() {
         // Create game panel
         ePanel = new EditPanel(this);
@@ -22,88 +27,116 @@ public class EditFrame extends JFrame {
         // Create button panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        String[] buttons = {
+        buttonPanel.setPreferredSize(new Dimension(160, Main.B_WINDOW_CANVAS_HEIGHT));
+        String[] buttonPanelComponents = {
             "Label File",
             "New",
             "Save",
             "Save as",
             "Open",
             "",
+            "Label Level",
             "Change Background",
             "Label Level Width",
             "Slider Level Width",
             "Label Level Height",
             "Slider Level Height",
             "",
+            "Label World Objects",
             "Add Platform",
             "Add Hard Object",
-            "",
             "Add Collectable",
-            "",
             "Add Enemy",
+            "",
+            "Label Selected Object",
+            "Change Image",
+            "Delete Object",
             "Label Selected Object Width",
             "Slider Selected Object Width",
             "Label Selected Object Height",
-            "Slider Selected Object Height"
+            "Slider Selected Object Height",
         };
-        int buttonWidth = 180;
-        int buttonHeight = 30;
-        int buttonFontSize = 15;
+        int buttonWidth = 160;
+        int buttonHeight = 24;
+        int buttonFontSize = 13;
         
         int levelWidthMin = Main.B_WINDOW_WIDTH;
         int levelWidthMax = Main.B_WINDOW_WIDTH*30;
-        int levelHeightMin = (int)(Main.B_WINDOW_HEIGHT*1.3); // Have faith.
+        int levelHeightMin = (int)(Main.B_WINDOW_HEIGHT*1.3); // Have faith. 
         int levelHeightMax = Main.B_WINDOW_HEIGHT*20;
         
         int generalWidthMin = 10;
         int generalWidthMax = Main.B_WINDOW_WIDTH*2;
         int generalHeightMin = 10;
-        int generalHeightMax = Main.B_WINDOW_HEIGHT*20;
-        for (int i=0; i<buttons.length; i++) {
-            if (buttons[i].contains("slider") || buttons[i].contains("Slider")) {
-                JSlider slider;
-                switch (buttons[i].substring("slider ".length())) {
-                    case "Level Width":
-                        slider = new JSlider(JSlider.HORIZONTAL,
-                                levelWidthMin, levelWidthMax, (int) ((levelWidthMin + levelWidthMax) * 0.5));
-                        slider.setMajorTickSpacing((int) ((levelWidthMax - levelWidthMin) * 0.05));
-                        break;
-                    case "Level Height":
-                        slider = new JSlider(JSlider.HORIZONTAL,
-                                levelHeightMin, levelHeightMax, (int) ((levelHeightMin + levelHeightMax) * 0.5));
-                        slider.setMajorTickSpacing((int) ((levelHeightMax - levelHeightMin) * 0.05));
-                        break;
-                    case "Selected Object Width":
-                        slider = new JSlider(JSlider.HORIZONTAL,
-                                generalWidthMin, generalWidthMax, (int) ((generalWidthMin + generalWidthMax) * 0.5));
-                        slider.setMajorTickSpacing((int) ((generalWidthMax - generalWidthMin) * 0.05));
-                        break;
-                    case "Selected Object Height":
-                        slider = new JSlider(JSlider.HORIZONTAL,
-                                generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
-                        slider.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
-                        break;
-                    default:
-                        slider = new JSlider(JSlider.HORIZONTAL,
-                                generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
-                        slider.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
-                        slider.setName("default in the switch case");
-                        break;
+        int generalHeightMax = Main.B_WINDOW_HEIGHT*2;
+        for (int i=0; i<buttonPanelComponents.length; i++) {
+            if (buttonPanelComponents[i].contains("slider") || buttonPanelComponents[i].contains("Slider")) {
+                String sliderName = buttonPanelComponents[i].substring("slider ".length());
+                if (sliderName.equalsIgnoreCase("Level Width")) {
+                    sliderLevelWidth = new JSlider(JSlider.HORIZONTAL,
+                            levelWidthMin, levelWidthMax, (int) ((levelWidthMin + levelWidthMax) * 0.5));
+                    sliderLevelWidth.setMajorTickSpacing((int) ((levelWidthMax - levelWidthMin) * 0.05));
+                    sliderLevelWidth.setName(sliderName);
+                    sliderLevelWidth.setPaintTicks(true);
+                    sliderLevelWidth.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderLevelWidth.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderLevelWidth.setAlignmentX(LEFT_ALIGNMENT);
+                    sliderLevelWidth.addChangeListener(ePanel);
+                    buttonPanel.add(sliderLevelWidth);
+                } else if (sliderName.equalsIgnoreCase("Level Height")) {
+                    sliderLevelHeight = new JSlider(JSlider.HORIZONTAL,
+                            levelHeightMin, levelHeightMax, (int) ((levelHeightMin + levelHeightMax) * 0.5));
+                    sliderLevelHeight.setMajorTickSpacing((int) ((levelHeightMax - levelHeightMin) * 0.05));
+                    sliderLevelHeight.setName(sliderName);
+                    sliderLevelHeight.setPaintTicks(true);
+                    sliderLevelHeight.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderLevelHeight.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderLevelHeight.setAlignmentX(LEFT_ALIGNMENT);
+                    sliderLevelHeight.addChangeListener(ePanel);
+                    buttonPanel.add(sliderLevelHeight);
+                } else if (sliderName.equalsIgnoreCase("Selected Object Width")) {
+                    sliderSelectedObjWidth = new JSlider(JSlider.HORIZONTAL,
+                            generalWidthMin, generalWidthMax, (int) ((generalWidthMin + generalWidthMax) * 0.5));
+                    sliderSelectedObjWidth.setMajorTickSpacing((int) ((generalWidthMax - generalWidthMin) * 0.05));
+                    sliderSelectedObjWidth.setName(sliderName);
+                    sliderSelectedObjWidth.setPaintTicks(true);
+                    sliderSelectedObjWidth.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedObjWidth.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedObjWidth.setAlignmentX(LEFT_ALIGNMENT);
+                    sliderSelectedObjWidth.addChangeListener(ePanel);
+                    buttonPanel.add(sliderSelectedObjWidth);
+                } else if (sliderName.equalsIgnoreCase("Selected Object Height")) {
+                    sliderSelectedObjHeight = new JSlider(JSlider.HORIZONTAL,
+                            generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
+                    sliderSelectedObjHeight.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
+                    sliderSelectedObjHeight.setName(sliderName);
+                    sliderSelectedObjHeight.setPaintTicks(true);
+                    sliderSelectedObjHeight.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedObjHeight.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedObjHeight.setAlignmentX(LEFT_ALIGNMENT);
+                    sliderSelectedObjHeight.addChangeListener(ePanel);
+                    buttonPanel.add(sliderSelectedObjHeight);
+                } else {
+                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                            generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
+                    slider.setMajorTickSpacing((int) ((generalHeightMax - generalHeightMin) * 0.05));
+                    slider.setName("Unspecified Slider Name");
+                    slider.setPaintTicks(true);
+                    slider.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    slider.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    slider.setAlignmentX(LEFT_ALIGNMENT);
+                    slider.addChangeListener(ePanel);
+                    buttonPanel.add(slider);
                 }
-                slider.setName(buttons[i].substring("slider ".length()));
-                slider.setPaintTicks(true);
-                slider.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-                slider.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                slider.setAlignmentX(LEFT_ALIGNMENT);
-                slider.addChangeListener(ePanel);
-                buttonPanel.add(slider);
-            } else if (buttons[i].contains("label") || buttons[i].contains("Label")) {
-                JLabel label = new JLabel(buttons[i].substring("label ".length()));
+                
+            } else if (buttonPanelComponents[i].contains("label") || buttonPanelComponents[i].contains("Label")) {
+                JLabel label = new JLabel(buttonPanelComponents[i].substring("label".length()));
                 label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                 label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                label.setHorizontalAlignment(SwingConstants.LEFT);
                 buttonPanel.add(label);
-            } else if (!buttons[i].isEmpty()) {
-                JButton button = new JButton(buttons[i]);
+            } else if (!buttonPanelComponents[i].isEmpty()) {
+                JButton button = new JButton(buttonPanelComponents[i]);
                 button.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                 button.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
                 button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, buttonFontSize));

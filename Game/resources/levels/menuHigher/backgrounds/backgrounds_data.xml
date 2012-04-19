@@ -1,0 +1,24 @@
+
+<backgrounds_data>
+
+
+<background>
+
+<name>  </name>
+<location> resources/backgrounds/bground_mountains.jpg </location>
+<width> 1200 </width>
+<height> 1147 </height>
+
+</background>
+
+
+<floor>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+
+</floor>
+
+
+</backgrounds_data>
+

@@ -21,7 +21,7 @@ public class Camera {
      * Moves a certain distance to the right.
      * @param distanceRight 
      */
-    void moveRightBy(int distanceRight) {
+    public void moveRightBy(int distanceRight) {
         x += distanceRight;
     }
     
@@ -29,15 +29,15 @@ public class Camera {
      * Moves a certain distance to the left.
      * @param distanceLeft 
      */
-    void moveLeftBy(int distanceLeft) {
+    public void moveLeftBy(int distanceLeft) {
         x -= distanceLeft;
     }
     
-    void moveVerticallyBy(int distanceDown) {
+    public void moveVerticallyBy(int distanceDown) {
         y += distanceDown;
     }
     
-    void moveVerticallyTowards(Collidable obj) {
+    public void moveVerticallyTowards(Collidable obj) {
         if (this.getY() + this.getHeight()*0.5 <= obj.middleVertically()) {
             // if this camera's centre is higher on screen than the object's centre
             this.moveVerticallyBy(+3);

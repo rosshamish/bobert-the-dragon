@@ -8,10 +8,9 @@ import game.Main;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import rosslib.RossLib;
@@ -22,7 +21,7 @@ import rosslib.RossLib;
  */
 public class EditPanel extends JPanel
                        implements Runnable, 
-                       KeyListener, MouseListener, MouseMotionListener, 
+                       MouseListener, MouseMotionListener, 
                        ActionListener, ChangeListener {
     static EditFrame eFrame;
     
@@ -38,8 +37,16 @@ public class EditPanel extends JPanel
     public static int mouseY;
     public static int mouseDeltaY;
     
+    // Readable names for keys
+    public static int keyLeft = KeyEvent.VK_A;
+    public static int keyRight = KeyEvent.VK_D;
+    public static int keyUp = KeyEvent.VK_W;
+    public static int keyDown = KeyEvent.VK_S;
+    
     public static Collidable heldObject;
     public static Collidable selectedObject;
+    
+    public static Icon collidableIcon;
     
     public EditPanel(EditFrame frame) {
         setBackground(new Color(200, 200, 200));
@@ -116,9 +123,11 @@ public class EditPanel extends JPanel
     @Override
     public void addNotify() {
         super.addNotify();
+        // Now that the level is definitely init'ed, init the level width/height sliders.
+        eFrame.sliderLevelWidth.setValue(level.background.drawBox.width);
+        eFrame.sliderLevelHeight.setValue(level.background.drawBox.height);
         gameThread = new Thread(this);
         gameThread.start();
-        eFrame.addKeyListener(this);
         eFrame.addMouseListener(this);
         eFrame.addMouseMotionListener(this);
     }
@@ -172,21 +181,6 @@ public class EditPanel extends JPanel
             repaint();
         }
     }
-    
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Is this unnecessary? Not sure.
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // Not implemented yet.
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // Not implemented yet.
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -201,6 +195,8 @@ public class EditPanel extends JPanel
             for (int i = level.collidables.size()-1; i >= 0; i--) {
                 if (level.collidables.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
                     selectedObject = (Collidable) level.collidables.get(i);
+                    eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
+                    eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
                     return;
                 }
             }
@@ -209,6 +205,8 @@ public class EditPanel extends JPanel
             for (int i = level.enemies.size()-1; i >= 0; i--) {
                 if (level.enemies.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
                     selectedObject = (Collidable) level.enemies.get(i);
+                    eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
+                    eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
                     return;
                 }
             }
@@ -235,6 +233,8 @@ public class EditPanel extends JPanel
                 if (level.collidables.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
                     heldObject = (Collidable) level.collidables.get(i);
                     selectedObject = (Collidable) level.collidables.get(i);
+                    eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
+                    eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
                     return;
                 }
             }
@@ -244,6 +244,8 @@ public class EditPanel extends JPanel
                 if (level.enemies.get(i).hitBoxInCam(editCam).contains(mousePosInPanel)) {
                     heldObject = (Collidable) level.enemies.get(i);
                     selectedObject = (Collidable) level.enemies.get(i);
+                    eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
+                    eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
                     return;
                 }
             }
