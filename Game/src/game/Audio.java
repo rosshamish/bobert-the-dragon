@@ -14,6 +14,7 @@ public enum Audio {
 
         MUTE, LOW, MEDIUM, HIGH
     }
+    
     public static Volume volume = Volume.HIGH;
     private Clip clip;
 
@@ -50,9 +51,8 @@ public enum Audio {
     }
     
     public void loop(){
-        if (!clip.isActive()){
-            System.out.println("HEYYYYYYYO");
+       
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
             
     }
     }
-}

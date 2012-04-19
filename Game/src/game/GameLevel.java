@@ -20,7 +20,9 @@ public class GameLevel {
     public ArrayList<Enemy> enemies;
     
     public GameLevel (String _levelName, boolean _newLevel) {
-        Audio.BACKGROUNDMUSIC.play();
+        
+       Audio.BACKGROUNDMUSIC.loop();
+        
         if (!_newLevel) { // If this is an old level, then load it from its data.
             resourcesPath = "resources/levels/" + _levelName + "/";
             levelName = _levelName;
