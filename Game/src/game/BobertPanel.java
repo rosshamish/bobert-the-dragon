@@ -606,10 +606,12 @@ public class BobertPanel extends JPanel implements Runnable,
                 // as a flag that we are jumping, and then set the vertical 
                 // velocity to jumping.
                 if (!bobert.hasJumped) {
+                    Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
+                    Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasDoubleJumped = true;
                     bobert.vertVelocity = Character.vertVelocityDoubleJump;
