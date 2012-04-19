@@ -7,11 +7,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -106,7 +108,25 @@ public class BobertPanel extends JPanel implements Runnable,
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
-        level = new GameLevel("100 PERCENT NINJA", false);
+        File dir = new File("resources/levels/");
+            File[] levelFiles = dir.listFiles();
+            String[] fileNames = new String[levelFiles.length];
+            for (int i=0; i<levelFiles.length; i++) {
+                fileNames[i] = levelFiles[i].getName();
+            }
+            Object chosenLevel = JOptionPane.showInputDialog(bFrame, 
+                    "Which level would you like to play on?",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenLevel == null) {
+                System.out.println("chosenLevel is null");
+                System.exit(0);
+            } else {
+                level = new GameLevel((String) chosenLevel, false);
+            }
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
