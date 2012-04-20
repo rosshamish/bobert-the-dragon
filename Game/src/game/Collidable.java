@@ -119,7 +119,7 @@ public class Collidable extends WorldObject
      */
     boolean willCollideWith(Collidable obj) {
         if (obj.collisionType == CollisionType.PASSABLE) {
-            return false;
+            return true;
         } else if (obj.collisionType == CollisionType.IMPASSABLE) {
             if (this.futureHitBox.intersects(obj.hitBox)) {
                 return true;
@@ -128,6 +128,12 @@ public class Collidable extends WorldObject
             if (this.isAbove(obj)) {
                 if (this.futureHitBox.intersects(obj.hitBox)) {
                     return true;
+                }
+            } else {
+                if (this.rightEdge() <= obj.leftEdge() || this.leftEdge() >= obj.rightEdge()) {
+                    if (this.futureHitBox.intersects(obj.hitBox)) {
+                        return true;
+                    }
                 }
             }
         }

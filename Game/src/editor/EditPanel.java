@@ -29,6 +29,16 @@ public class EditPanel extends JPanel
     public static GameLevel level;
     public static Camera editCam;
     
+    public static boolean movingLeft;
+    public static boolean movingUp;
+    public static boolean movingRight;
+    public static boolean movingDown;
+    
+    public static Rectangle borderLeft;
+    public static Rectangle borderTop;
+    public static Rectangle borderRight;
+    public static Rectangle borderBottom;
+    
     public static int mouseX;
     public static int mouseDeltaX;
     public static int mouseY;
@@ -43,7 +53,6 @@ public class EditPanel extends JPanel
     public static Collidable heldObject;
     public static Collidable selectedObject;
     
-    public static Icon collidableIcon;
     
     public EditPanel(EditFrame frame) {
         setBackground(new Color(200, 200, 200));
@@ -58,6 +67,14 @@ public class EditPanel extends JPanel
     public static void defineObjects() {
         editCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        borderLeft = new Rectangle(0, 0,
+                100, Main.B_WINDOW_HEIGHT);
+        borderTop = new Rectangle(0,0,
+                Main.B_WINDOW_WIDTH, 100);
+        borderRight = new Rectangle(Main.B_WINDOW_WIDTH-100-EditFrame.buttonPanelWidth, 0,
+                100, Main.B_WINDOW_HEIGHT);
+        borderBottom = new Rectangle(0, Main.B_WINDOW_HEIGHT-100,
+                Main.B_WINDOW_WIDTH, 100);
         String[] options = {
             "New Level",
             "Load Level"};
@@ -171,6 +188,11 @@ public class EditPanel extends JPanel
                         selectedObject.hitBox.width, selectedObject.hitBox.height, 
                         20, 20);
             }
+            g2d.setColor(Color.blue);
+            g2d.draw(borderLeft);
+            g2d.draw(borderTop);
+            g2d.draw(borderRight);
+            g2d.draw(borderBottom);
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
@@ -188,6 +210,17 @@ public class EditPanel extends JPanel
     public void run() {
         while (gameRunning) {
             eFrame.fileNameLabel.setText(level.levelName);
+            
+//            if (movingUp) {
+//                editCam.moveVerticallyBy(-1);
+//            } else if (movingDown) {
+//                editCam.moveVerticallyBy(1);
+//            }
+//            if (movingLeft) {
+//                editCam.moveLeftBy(1);
+//            } else if (movingRight) {
+//                editCam.moveRightBy(1);
+//            }
             repaint();
         }
     }
@@ -217,6 +250,13 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.enemies.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
+                    if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                        Enemy enem = level.enemies.get(i);
+                        eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
+                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
+                    } else {
+                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
+                    }
                     return;
                 }
             }
@@ -256,6 +296,13 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.enemies.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
+                    if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                        Enemy enem = level.enemies.get(i);
+                        eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
+                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
+                    } else {
+                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
+                    }
                     return;
                 }
             }
@@ -308,6 +355,33 @@ public class EditPanel extends JPanel
         
         mouseX = e.getX();
         mouseY = e.getY();
+        boolean moving = false;
+        if (borderLeft.contains(e.getPoint())) {
+            movingLeft = true;
+            movingRight = false;
+            moving = true;
+        }
+        if (borderRight.contains(e.getPoint())) {
+            movingRight = true;
+            movingLeft = false;
+            moving = true;
+        }
+        if (borderTop.contains(e.getPoint())) {
+            movingUp = true;
+            movingDown = false;
+            moving = true;
+        }
+        if (borderBottom.contains(e.getPoint())) {
+            movingDown = true;
+            movingUp = false;
+            moving = true;
+        }
+        if (!moving) {
+            movingLeft = false;
+            movingUp = false;
+            movingRight = false;
+            movingDown = false;
+        }
     }
     
     /*
@@ -363,7 +437,8 @@ public class EditPanel extends JPanel
             } else {
                 level = new GameLevel((String) chosenLevel, false);
             }
-        } else if (action.equalsIgnoreCase("Test")) {
+        } else if (action.equalsIgnoreCase("Save & Test")) {
+            RossLib.writeLevelData(level);
             String[] curLevel = {level.levelName};
             Main.main(curLevel); // Call the game's main method.
         } else if (action.equalsIgnoreCase("Change Background")) {

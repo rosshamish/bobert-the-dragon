@@ -1,8 +1,6 @@
 package game;
 
 import interfaces.Drawable;
-import java.awt.Color;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -24,5 +22,15 @@ public abstract class Sprite extends Collidable
     // Which way the character is moving
     public boolean movingRight;
     public boolean movingLeft;
+    
+    public void switchHorizontalDirection() {
+        if (movingRight) {
+            movingRight = false;
+            movingLeft = true;
+        } else if (movingLeft) {
+            movingLeft = false;
+            movingRight = true;
+        }
+    }
     
 }

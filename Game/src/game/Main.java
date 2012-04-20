@@ -1,10 +1,8 @@
 package game;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import javax.swing.JFrame;
 
 /**
@@ -22,9 +20,11 @@ public class Main {
 
     public static void main(String[] args) {
         if (args != null) {
-            curArgs = args;
-        } else {
-            curArgs = null;
+            if (args.length != 0) {
+                curArgs = args;
+            } else {
+                args = null;
+            }
         }
         bFrame = new BobertFrame();
         bFrame.setTitle("Bobert the Dragon (c) 2012 BlockTwo Studios");
@@ -77,7 +77,7 @@ public class Main {
                 //</editor-fold>
             });
         } else {
-            bFrame.setLocationRelativeTo(null);
+            bFrame.setLocationByPlatform(true);
             bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         bFrame.setSize(B_WINDOW_WIDTH, B_WINDOW_HEIGHT);

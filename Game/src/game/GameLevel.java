@@ -89,9 +89,17 @@ public class GameLevel {
                 int height = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "height"));
                 Rectangle enemCollisRect = new Rectangle(x, y, width, height);
                 String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
-                int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movement distance"));
-                
-                enemies.add(new Enemy(enemCollisRect, imgPath, movementDistance));
+                int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movementDistance"));
+                Enemy newEnem = new Enemy(enemCollisRect, imgPath, movementDistance);
+                newEnem.initBoxes(enemCollisRect);
+                if (movementDistance >= 0) {
+                    newEnem.movingRight = true;
+                    newEnem.movingLeft = false;
+                } else {
+                    newEnem.movingRight = false;
+                    newEnem.movingLeft = true;
+                }
+                enemies.add(newEnem);
                 }
             }
             

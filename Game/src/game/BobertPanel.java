@@ -218,14 +218,14 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-            g2d.drawString("bobert.vertVelocity: " + bobert.vertVelocity, 0, debugTextHeight * 1);
-            g2d.drawString("gravity: " + gravity, 0, debugTextHeight * 2);
-//            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
-//            g2d.drawString("projectileTimerDelay: "+ this.projectileTimerDelay, 0, debugTextHeight*4);
-//            g2d.drawString("defaultProjectile.hitBox.x:  " + defaultProjectile.hitBox.x, 0, debugTextHeight * 5);
-//            g2d.drawString("bobert.isAbove(collidables.get(i):  "+ bobert.isAbove(collidables.get(1)), 0, debugTextHeight*6);
-//            g2d.drawString("bobert.movingRight:     "+bobert.movingRight, 0, debugTextHeight*7);
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
+//            g2d.drawString("level.enemies.get(0).movingRight: " + level.enemies.get(0).movingRight, 0, debugTextHeight * 1);
+//            g2d.drawString("level.enemies.get(0).movingLeft: " + level.enemies.get(0).movingLeft, 0, debugTextHeight * 2);
+//            g2d.drawString("level.enemies.get(0).drawBox.x: "+ level.enemies.get(0).drawBox.x, 0, debugTextHeight*3);
+//            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
+//            g2d.drawString("level.enemies.get(0).xPositionInCam(screenCam):  " + level.enemies.get(0).xPositionInCam(screenCam), 0, debugTextHeight * 5);
+//            g2d.drawString("level.enemies.get(0).isAlive:  "+ level.enemies.get(0).isAlive, 0, debugTextHeight*6);
+//            g2d.drawString("level.enemies.get(0).isInViewOf(screenCam):     "+level.enemies.get(0).isInViewOf(screenCam), 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
         }
 
@@ -307,16 +307,23 @@ public class BobertPanel extends JPanel implements Runnable,
                 // we should set the character to be standing directly on top of
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
+                
                 for (int i = 0; i < level.enemies.size(); i++) {
                     for (int j = 0; j < level.collidables.size(); j++) {
                         Enemy currentEnemy = level.enemies.get(i);
-                        currentEnemy.futureHitBox.y += currentEnemy.vertVelocity;
+                        currentEnemy.updateFutureHitBox();
+                        currentEnemy.futureHitBox.y += currentEnemy.vertVelocity*2;
                         if (currentEnemy.willCollideWith(level.collidables.get(j))) {
+                            if (level.collidables.get(j).collisionType == CollisionType.PLATFORM) {
+                                if (currentEnemy.vertVelocity < 0) {
+                                    break;
+                                }
+                            }
                             currentEnemy.isInAir = false;
                             currentEnemy.setY(level.collidables.get(j).hitBox.y - currentEnemy.hitBox.height);
                             // Set the character's vertical velocity to 0 because we are
                             // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                            currentEnemy.vertVelocity = 2;
+                            currentEnemy.vertVelocity = 1;
                             break;
                         } else {
                             // If we aren't going to be on the ground right away, then
@@ -354,19 +361,45 @@ public class BobertPanel extends JPanel implements Runnable,
                 // If the character is moving to the right (as set in the
                 // keyPressed and keyReleased methods), then move it to the right.
                 // Duh.
-                if (bobert.hitBox.x > 0
-                        && bobert.hitBox.x + bobert.hitBox.width < level.background.drawBox.width) {
+                if (bobert.leftEdge() > level.background.drawBox.x
+                        && bobert.rightEdge() < level.background.drawBox.x + level.background.drawBox.width) {
+                    boolean canMove = true;
                     if (bobert.movingRight) {
-                        bobert.moveRightBy(bobert.moveSpeed);
+                        bobert.updateFutureHitBox();
+                        bobert.futureHitBox.x += bobert.moveSpeed;
+
+                        for (int i = 0; i < level.collidables.size(); i++) {
+                            if (bobert.willCollideWith(level.collidables.get(i))) {
+                                canMove = false;
+                                break;
+                            } else {
+                                canMove = true;
+                            }
+                        }
+                        if (canMove) {
+                            bobert.moveRightBy(bobert.moveSpeed);
+                        }
                     }
                     // If the character is moving to the left (as set in the
                     // keyPressed and keyReleased methods), then move it to the left.
                     // Duh.
                     if (bobert.movingLeft) {
-                        bobert.moveLeftBy(bobert.moveSpeed);
+                        bobert.updateFutureHitBox();
+                        bobert.futureHitBox.x -= bobert.moveSpeed;
+                        for (int i = 0; i < level.collidables.size(); i++) {
+                            if (bobert.willCollideWith(level.collidables.get(i))) {
+                                canMove = false;
+                                break;
+                            } else {
+                                canMove = true;
+                            }
+                        }
+                        if (canMove) {
+                            bobert.moveLeftBy(bobert.moveSpeed);
+                        }
                     }
                 } else {
-                    if (bobert.hitBox.x <= 0) {
+                    if (bobert.leftEdge() <= 0) {
                         bobert.moveRightBy(bobert.moveSpeed);
                     } else {
                         bobert.moveLeftBy(bobert.moveSpeed);
@@ -385,32 +418,24 @@ public class BobertPanel extends JPanel implements Runnable,
                         i--;
                         break;
                     }
-                    
+
                     // Randomly decide if the enemy should turn around or not.
-                    int changePos = (int) ((Math.random() * 1000));
-                    if (changePos == 1) {
-                        currentEnemy.movingRight = true;
-                        currentEnemy.movingLeft = false;
+                    if (currentEnemy.movementDistance > 0) {
+                        if (currentEnemy.hitBox.x > currentEnemy.startX + currentEnemy.movementDistance
+                                || currentEnemy.hitBox.x < currentEnemy.startX) {
+                            currentEnemy.switchHorizontalDirection();
+                        }
+                    } else {
+                        if (currentEnemy.hitBox.x < currentEnemy.startX + currentEnemy.movementDistance
+                                || currentEnemy.hitBox.x > currentEnemy.startX) {
+                            currentEnemy.switchHorizontalDirection();
+                        }
                     }
-                    if (changePos == 2) {
-                        currentEnemy.movingRight = false;
-                        currentEnemy.movingLeft = true;
-                    }
+                    
                     if (currentEnemy.movingRight) {
-                        if (currentEnemy.hitBox.x+currentEnemy.hitBox.width < level.floor.hitBox.width) {
-                            currentEnemy.moveRightBy(currentEnemy.moveSpeed);
-                        } else {
-                            currentEnemy.movingRight = false;
-                            currentEnemy.movingLeft = true;
-                        }
-                    }
-                    if (currentEnemy.movingLeft) {
-                        if (currentEnemy.hitBox.x > 0) {
-                            currentEnemy.moveLeftBy(currentEnemy.moveSpeed);
-                        } else {
-                            currentEnemy.movingRight = true;
-                            currentEnemy.movingLeft = false;
-                        }
+                        currentEnemy.moveRightBy(currentEnemy.moveSpeed);
+                    } else if (currentEnemy.movingLeft) {
+                        currentEnemy.moveLeftBy(currentEnemy.moveSpeed);
                     }
                     level.enemies.set(i, currentEnemy);
                 }

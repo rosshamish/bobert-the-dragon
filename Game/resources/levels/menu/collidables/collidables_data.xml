@@ -7,6 +7,188 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
 <y> 671 </y>
 <width> 1200 </width>
 <height> 105 </height>
@@ -45,8 +227,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_BL.png </location>
-<x> 50 </x>
-<y> 200 </y>
+<x> 106 </x>
+<y> 210 </y>
 <width> 250 </width>
 <height> 120 </height>
 <type> PLATFORM </type>
@@ -58,8 +240,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_OC.png </location>
-<x> 290 </x>
-<y> 258 </y>
+<x> 342 </x>
+<y> 272 </y>
 <width> 220 </width>
 <height> 60 </height>
 <type> PLATFORM </type>
@@ -71,8 +253,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_KT.png </location>
-<x> 485 </x>
-<y> 209 </y>
+<x> 523 </x>
+<y> 225 </y>
 <width> 300 </width>
 <height> 110 </height>
 <type> PLATFORM </type>
@@ -84,8 +266,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_WO.png </location>
-<x> 700 </x>
-<y> 250 </y>
+<x> 728 </x>
+<y> 262 </y>
 <width> 300 </width>
 <height> 70 </height>
 <type> PLATFORM </type>
@@ -110,8 +292,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blue.png </location>
-<x> 700 </x>
-<y> 580 </y>
+<x> 40 </x>
+<y> 466 </y>
 <width> 180 </width>
 <height> 30 </height>
 <type> PLATFORM </type>

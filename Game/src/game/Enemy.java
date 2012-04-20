@@ -2,7 +2,6 @@ package game;
 
 import interfaces.Drawable;
 import java.awt.Rectangle;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -16,7 +15,9 @@ public class Enemy extends Sprite
     
     public int movementDistance = 10;
     public static int defaultMovementDistance = 10;
-    public static int defaultMoveSpeed = 7;
+    public static int defaultMoveSpeed = 1;
+    
+    public int startX;
     
     public boolean isAlive = true;
     
@@ -28,23 +29,10 @@ public class Enemy extends Sprite
         moveSpeed = defaultMoveSpeed;
         movementDistance = howFarCanMoveRightFromLocation;
         hitBox = new Rectangle(collisionRect);
+        startX = collisionRect.x;
         this.initBoxes(collisionRect);
         worldObjectType = WorldObjectType.ENEMY;
         collisionType = CollisionType.IMPASSABLE;
     }
     
-    public Enemy(String imagePath, int x, int y,
-            int width, int height, boolean moveRight) {
-        ImageIcon iiP = new ImageIcon(imagePath);
-        image = iiP.getImage();
-        hitBox = new Rectangle(x, y,
-                width, height);
-        if (moveRight) {
-            movingRight = true;
-            movingLeft = false;
-        } else {
-            movingRight = false;
-            movingLeft = true;
-        }
-    }
 }

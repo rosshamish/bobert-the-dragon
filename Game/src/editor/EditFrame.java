@@ -15,6 +15,8 @@ public class EditFrame extends JFrame {
     
     static EditPanel ePanel;
     
+    public static int buttonPanelWidth = 160;
+    
     public JLabel fileNameLabel;
     public JSlider sliderLevelWidth;
     public JSlider sliderLevelHeight;
@@ -36,7 +38,7 @@ public class EditFrame extends JFrame {
             "Save",
             "Save as",
             "Open",
-            "Test",
+            "Save & Test",
             "",
             "Change Background",
             "Label Level Width",
@@ -44,22 +46,23 @@ public class EditFrame extends JFrame {
             "Label Level Height",
             "Slider Level Height",
             "",
-            "Label World Objects",
+            "Label ----World Objects----",
             "Add Platform",
             "Add Obstacle",
             "Add Collectable",
             "Add Enemy",
             "",
-            "Label Selected Object",
+            "Label ----Selected Object----",
             "Change Image",
             "Delete Object",
-            "Label Selected Object Width",
+            "Label Width",
             "Slider Selected Object Width",
-            "Label Selected Object Height",
+            "Label Height",
             "Slider Selected Object Height",
+            "Label Movement Distance",
             "Slider Selected Enemy Movement Distance"
         };
-        int buttonWidth = 160;
+        int buttonWidth = buttonPanelWidth;
         int buttonHeight = 24;
         int buttonFontSize = 13;
         

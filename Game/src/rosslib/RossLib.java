@@ -80,8 +80,6 @@ public class RossLib {
         if (!new File(totalFolderPath).exists()) {
             // If the folder doesn't exist, create it for god's sake.
             success = new File(totalFolderPath).mkdir();
-        } else {
-            System.err.println("Directory \"" + totalFolderPath + "\" already exists!");
         }
         if (!success) {
             System.err.println("Directory creation error in GameLevel.java with "
@@ -181,9 +179,11 @@ public class RossLib {
                         RossLib.writeXmlHeader(dFileName, "enemy");
                         RossLib.writeXmlTag(dFileName, "name", cur.getName());
                         RossLib.writeXmlTag(dFileName, "location", cur.getImageLocation());
+                        RossLib.writeXmlTag(dFileName, "x", cur.hitBox.x);
+                        RossLib.writeXmlTag(dFileName, "y", cur.hitBox.y);
                         RossLib.writeXmlTag(dFileName, "width", cur.hitBox.width);
                         RossLib.writeXmlTag(dFileName, "height", cur.hitBox.height);
-                        RossLib.writeXmlTag(dFileName, "movement distance", cur.movementDistance);
+                        RossLib.writeXmlTag(dFileName, "movementDistance", cur.movementDistance);
                         RossLib.writeXmlFooter(dFileName, "enemy");
                     }
                 }

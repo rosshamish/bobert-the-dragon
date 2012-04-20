@@ -6,11 +6,9 @@
 
 <name>  </name>
 <location> resources/enemies/0.png </location>
-<x> 400 </x>
-<y> 560 </y>
-<width> 110 </width>
-<height> 105 </height>
-<movementDistance> 299 </movementDistance>
+<width> 100 </width>
+<height> 100 </height>
+<movement distance> 322 </movement distance>
 
 </enemy>
 
