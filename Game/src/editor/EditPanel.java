@@ -1,10 +1,7 @@
 package editor;
 
-import game.Camera;
-import game.Collidable;
+import game.*;
 import game.Collidable.CollisionType;
-import game.GameLevel;
-import game.Main;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.*;
@@ -61,7 +58,6 @@ public class EditPanel extends JPanel
     public static void defineObjects() {
         editCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-        
         String[] options = {
             "New Level",
             "Load Level"};
@@ -89,19 +85,23 @@ public class EditPanel extends JPanel
                 break;
         }
         if (newLevel) {
-            String name = JOptionPane.showInputDialog(eFrame, 
-                    "Name your fancy new level!",
+            String name = JOptionPane.showInputDialog(eFrame,
+                    "Name your fancy new level! Only use letters and spaces or this program will crash.",
                     "Bobert Level Editor - BlockTwo Studios",
                     JOptionPane.QUESTION_MESSAGE);
-            level = new GameLevel(name, true);
+            if (name.isEmpty()) {
+                System.exit(0);
+            } else {
+                level = new GameLevel(name, true);
+            }
         } else {
             File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
             String[] fileNames = new String[levelFiles.length];
-            for (int i=0; i<levelFiles.length; i++) {
+            for (int i = 0; i < levelFiles.length; i++) {
                 fileNames[i] = levelFiles[i].getName();
             }
-            Object chosenLevel = JOptionPane.showInputDialog(eFrame, 
+            Object chosenLevel = JOptionPane.showInputDialog(eFrame,
                     "Which level would you like to load?",
                     "Bobert Level Editor - BlockTwo Studios",
                     JOptionPane.QUESTION_MESSAGE,
@@ -148,6 +148,14 @@ public class EditPanel extends JPanel
             if (level.enemies != null) {
                 for (int i=0; i<level.enemies.size(); i++) {
                     level.enemies.get(i).draw(g2d, editCam);
+                    Enemy cur = level.enemies.get(i);
+                    g2d.setColor(Color.green);
+                    g2d.drawLine(cur.middleHorizontally(), cur.middleVertically(), 
+                            cur.middleHorizontally()+cur.movementDistance, cur.middleVertically());
+                    g2d.drawRect(cur.xPositionInCam(editCam)+cur.movementDistance, 
+                            cur.yPositionInCam(editCam), 
+                            cur.getWidth(), 
+                            cur.getHeight());
                 }
             }
             
@@ -301,7 +309,11 @@ public class EditPanel extends JPanel
         mouseX = e.getX();
         mouseY = e.getY();
     }
-
+    
+    /*
+     * Use Ctrl-F (or Cmd-F, you filthy Mac users :) ) to search for the button 
+     * you want to view or change or whatever.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
@@ -351,6 +363,9 @@ public class EditPanel extends JPanel
             } else {
                 level = new GameLevel((String) chosenLevel, false);
             }
+        } else if (action.equalsIgnoreCase("Test")) {
+            String[] curLevel = {level.levelName};
+            Main.main(curLevel); // Call the game's main method.
         } else if (action.equalsIgnoreCase("Change Background")) {
             String backgroundsPath = "resources/backgrounds/";
             File dir = new File(backgroundsPath);
@@ -375,10 +390,10 @@ public class EditPanel extends JPanel
         } else if (action.equalsIgnoreCase("Add Platform")) {
             String platformsPath = "resources/collidables/platforms/";
             File dir = new File(platformsPath);
-            File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
-            for (int i=0; i<levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
+            File[] platformFiles = dir.listFiles();
+            String[] fileNames = new String[platformFiles.length];
+            for (int i=0; i<platformFiles.length; i++) {
+                fileNames[i] = platformFiles[i].getName();
             }
             Object chosenPlatform = JOptionPane.showInputDialog(eFrame, 
                     "Choose a platform:",
@@ -388,12 +403,153 @@ public class EditPanel extends JPanel
                     fileNames,
                     fileNames[0]);
             if (chosenPlatform == null) {
+                System.out.println("chosenPlatform is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                        120, 70);
+                level.collidables.add(new Collidable(platRect, WorldObjectType.PLATFORM, CollisionType.PLATFORM, platformsPath + (String) (chosenPlatform) ));
+            }
+        } else if (action.equalsIgnoreCase("Add Obstacle")) {
+            String obstaclesPath = "resources/collidables/obstacles/";
+            File dir = new File(obstaclesPath);
+            File[] obstacleFiles = dir.listFiles();
+            String[] fileNames = new String[obstacleFiles.length];
+            for (int i=0; i<obstacleFiles.length; i++) {
+                fileNames[i] = obstacleFiles[i].getName();
+            }
+            Object chosenObstacle = JOptionPane.showInputDialog(eFrame, 
+                    "Choose an obstacle:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenObstacle == null) {
+                System.out.println("chosenObstacle is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                        120, 70);
+                level.collidables.add(new Collidable(platRect, WorldObjectType.OBSTACLE, CollisionType.IMPASSABLE, obstaclesPath + (String) (chosenObstacle) ));
+            }
+        } else if (action.equalsIgnoreCase("Add Collectable")) {
+            String collectablesPath = "resources/collidables/collectables/";
+            File dir = new File(collectablesPath);
+            File[] collectableFiles = dir.listFiles();
+            String[] fileNames = new String[collectableFiles.length];
+            for (int i=0; i<collectableFiles.length; i++) {
+                fileNames[i] = collectableFiles[i].getName();
+            }
+            Object chosenCollectable = JOptionPane.showInputDialog(eFrame, 
+                    "Choose a collectable:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenCollectable == null) {
                 System.out.println("chosenLevel is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
                 Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
                         120, 70);
-                level.collidables.add(new Collidable(platRect, WorldObjectType.NEUTRAL, CollisionType.PLATFORM, platformsPath + (String) (chosenPlatform) ));
+                level.collidables.add(new Collidable(platRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
+            }
+        } else if (action.equalsIgnoreCase("Add Enemy")) {
+            String enemiesPath = "resources/enemies/";
+            File dir = new File(enemiesPath);
+            File[] enemyFiles = dir.listFiles();
+            String[] fileNames = new String[enemyFiles.length];
+            for (int i=0; i<enemyFiles.length; i++) {
+                fileNames[i] = enemyFiles[i].getName();
+            }
+            Object chosenEnemy = JOptionPane.showInputDialog(eFrame, 
+                    "Choose an enemy:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenEnemy == null) {
+                System.out.println("chosenEnemy is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                String moveDistance = JOptionPane.showInputDialog("How far should he be able to move? Please enter a number, don't play games here.", 
+                        "5");
+                Rectangle enemCollisRect = new Rectangle(50, 50, 100, 100);
+                level.enemies.add(new Enemy(enemCollisRect, enemiesPath+(String)chosenEnemy, Integer.parseInt(moveDistance)));
+            }
+        } else if (action.equalsIgnoreCase("Change Image")) {
+            String imagePath = "";
+            String inputDialogMessage = "Available images: ";
+            if (selectedObject.worldObjectType == WorldObjectType.PLATFORM) {
+                imagePath = "resources/collidables/platforms/";
+                inputDialogMessage = "Available platforms: ";
+            } else if (selectedObject.worldObjectType == WorldObjectType.OBSTACLE) {
+                imagePath = "resources/collidables/obstacles/";
+                inputDialogMessage = "Available obstacles: ";
+            } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
+                imagePath = "resources/collidables/collectables/";
+                inputDialogMessage = "Available collectables: ";
+            } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                imagePath = "resources/enemies/";
+                inputDialogMessage = "Available enemies: ";
+            }
+            File dir = new File(imagePath);
+            File[] imageFiles = dir.listFiles();
+            String[] fileNames = new String[imageFiles.length];
+            for (int i=0; i<imageFiles.length; i++) {
+                fileNames[i] = imageFiles[i].getName();
+            }
+            Object chosenImagePath = JOptionPane.showInputDialog(eFrame, 
+                    inputDialogMessage,
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            if (chosenImagePath == null) {
+                System.out.println("background is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                selectedObject.setImage(imagePath+(String)chosenImagePath);
+            }
+        } else if (action.equalsIgnoreCase("Delete Object")) {
+            int youSureBro = JOptionPane.showConfirmDialog(eFrame, 
+                                            "You sure bro?", 
+                                            "Bobert Level Editor - BlockTwo Studios", 
+                                            JOptionPane.OK_CANCEL_OPTION);
+            if (youSureBro == JOptionPane.OK_OPTION) {
+                if (selectedObject.worldObjectType == WorldObjectType.PLATFORM) {
+                    for (int i=0; i<level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.OBSTACLE) {
+                    for (int i=0; i<level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
+                    for (int i=0; i<level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                    for (int i=0; i<level.enemies.size(); i++) {
+                        if (level.enemies.get(i).equals(selectedObject)) {
+                            level.enemies.remove(i);
+                        }
+                    }
+                }
+                // We can't be selecting anything anymore because the current selection just got deleted.
+                selectedObject = null; 
+            } else {
+                return; // They hit cancel, get the hell out of this function eh.
             }
         } else {
             System.out.println("Action \"" + action + "\" not implemented yet!");
@@ -407,14 +563,23 @@ public class EditPanel extends JPanel
         if (name == null) {
             System.out.println("name is null");
         }
+        
         if (source.getName().equalsIgnoreCase("Level Width")) {
-            level.background.drawBox.width = source.getValue();
+            if (level.background != null) {
+                level.background.drawBox.width = source.getValue();
+            }
         } else if (name.equalsIgnoreCase("Level Height")) {
-            level.background.drawBox.height = source.getValue();
+            if (level.background != null) {
+                level.background.drawBox.height = source.getValue();
+            }
         } else if (name.equalsIgnoreCase("Selected Object Width")) {
-            selectedObject.setWidth(source.getValue());
+            if (selectedObject != null) {
+                selectedObject.setWidth(source.getValue());
+            }
         } else if (name.equalsIgnoreCase("Selected Object Height")) {
-            selectedObject.setHeight(source.getValue());
+            if (selectedObject != null) {
+                selectedObject.setHeight(source.getValue());
+            }
         } else {
             System.out.println("Slider "+name+" doesn't have behaviour set up yet!");
         }

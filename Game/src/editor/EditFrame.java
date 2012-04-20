@@ -46,7 +46,7 @@ public class EditFrame extends JFrame {
             "",
             "Label World Objects",
             "Add Platform",
-            "Add Hard Object",
+            "Add Obstacle",
             "Add Collectable",
             "Add Enemy",
             "",
@@ -165,6 +165,5 @@ public class EditFrame extends JFrame {
         // Add all the panels to the frame.
         add(buttonPanel, BorderLayout.EAST);
         add(ePanel);
-        
     }
 }

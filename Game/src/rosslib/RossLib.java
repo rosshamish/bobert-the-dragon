@@ -183,6 +183,7 @@ public class RossLib {
                         RossLib.writeXmlTag(dFileName, "location", cur.getImageLocation());
                         RossLib.writeXmlTag(dFileName, "width", cur.hitBox.width);
                         RossLib.writeXmlTag(dFileName, "height", cur.hitBox.height);
+                        RossLib.writeXmlTag(dFileName, "movement distance", cur.movementDistance);
                         RossLib.writeXmlFooter(dFileName, "enemy");
                     }
                 }

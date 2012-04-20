@@ -12,7 +12,7 @@ public class LevelEditor {
     
     public static void main(String[] args) {
         eFrame = new EditFrame();
-        eFrame.setTitle("Bobert the Dragon Level Editor (c) 2012 BlockTwo Studios");
+        eFrame.setTitle("Level Editor, Bobert the Dragon (c) 2012 BlockTwo Studios");
         eFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         eFrame.setSize(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         eFrame.setResizable(false);

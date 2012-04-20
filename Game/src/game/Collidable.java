@@ -25,13 +25,13 @@ public class Collidable extends WorldObject
     public Rectangle futureHitBox; // For collision detection
     public CollisionType collisionType = CollisionType.PASSABLE;
     public int drawHitOffset = 5;
-    protected WorldObjectType worldObjectType;
+    public WorldObjectType worldObjectType;
     
     public Collidable() {
         this.hitBox = new Rectangle();
         this.drawBox = hitBox;
         this.futureHitBox = hitBox;
-        this.worldObjectType = WorldObjectType.NEUTRAL;
+        this.worldObjectType = WorldObjectType.OBSTACLE;
         this.collisionType = CollisionType.IMPASSABLE;
     }
     
@@ -141,19 +141,19 @@ public class Collidable extends WorldObject
     public void setX(int newX) {
         hitBox.x = newX;
         if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.NEUTRAL;
+            this.worldObjectType = WorldObjectType.OBSTACLE;
         }
         if (this.worldObjectType == WorldObjectType.FRIENDLY) {
             drawBox.x = hitBox.x + this.drawHitOffset;
             return;
         }
-        if (this.worldObjectType == WorldObjectType.HOSTILE || 
+        if (this.worldObjectType == WorldObjectType.ENEMY || 
                 this.worldObjectType == WorldObjectType.PROJECTILE) {
             drawBox.x = hitBox.x - this.drawHitOffset;
             return;
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
-                this.worldObjectType == WorldObjectType.NEUTRAL) {
+                this.worldObjectType == WorldObjectType.OBSTACLE) {
             drawBox.x = hitBox.x;
             return;
         }
@@ -166,19 +166,19 @@ public class Collidable extends WorldObject
     public void setY(int newY) {
         hitBox.y = newY;
         if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.NEUTRAL;
+            this.worldObjectType = WorldObjectType.OBSTACLE;
         }
         if (this.worldObjectType == WorldObjectType.FRIENDLY) {
             drawBox.y = hitBox.y + this.drawHitOffset;
             return;
         }
-        if (this.worldObjectType == WorldObjectType.HOSTILE || 
+        if (this.worldObjectType == WorldObjectType.ENEMY || 
                 this.worldObjectType == WorldObjectType.PROJECTILE) {
             drawBox.y = hitBox.y - this.drawHitOffset;
             return;
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
-                this.worldObjectType == WorldObjectType.NEUTRAL) {
+                this.worldObjectType == WorldObjectType.OBSTACLE) {
             drawBox.y = hitBox.y;
             return;
         }
@@ -246,7 +246,7 @@ public class Collidable extends WorldObject
         hitBox = new Rectangle(collisionBox);
         futureHitBox = new Rectangle(hitBox);
         if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.NEUTRAL;
+            this.worldObjectType = WorldObjectType.OBSTACLE;
         }
         if (this.worldObjectType == WorldObjectType.FRIENDLY || 
                 this.worldObjectType == WorldObjectType.PROJECTILE) {
@@ -256,7 +256,7 @@ public class Collidable extends WorldObject
             drawBox.height = hitBox.height - (this.drawHitOffset); // The feet need to touch ground.
             return;
         }
-        if (this.worldObjectType == WorldObjectType.HOSTILE) {
+        if (this.worldObjectType == WorldObjectType.ENEMY) {
             drawBox.x = hitBox.x - this.drawHitOffset;
             drawBox.y = hitBox.y - this.drawHitOffset;
             drawBox.width = hitBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.
@@ -264,7 +264,7 @@ public class Collidable extends WorldObject
             return;
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
-                this.worldObjectType == WorldObjectType.NEUTRAL) {
+                this.worldObjectType == WorldObjectType.OBSTACLE) {
             // Just return. The boxes are the same for each of these types.
             drawBox = new Rectangle(hitBox);
             return;

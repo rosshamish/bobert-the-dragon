@@ -27,7 +27,7 @@ public class GameLevel {
             resourcesPath = "resources/levels/" + _levelName + "/";
             levelName = _levelName;
             String collidablesDataPath = resourcesPath + "collidables/collidables_data.xml";
-            String enemyDataPath = resourcesPath + "enemies/enemies_data.xml";
+            String enemiesDataPath = resourcesPath + "enemies/enemies_data.xml";
             String backgroundsDataPath = resourcesPath + "backgrounds/backgrounds_data.xml";
             // This needs to be a jpg because the image file is HUGE and it doesn't
             // need transparency.
@@ -63,8 +63,16 @@ public class GameLevel {
                         RossLib.parseXML(collidablesDataPath, "collidable", i, "type"));
                 platCollisRect = new Rectangle(collX, collY,
                         collWidth, collHeight);
+                WorldObjectType objType = WorldObjectType.OBSTACLE;
+                if (collType == CollisionType.PLATFORM) {
+                    objType = WorldObjectType.PLATFORM;
+                } else if (collType == CollisionType.IMPASSABLE) {
+                    objType = WorldObjectType.OBSTACLE;
+                } else if (collType == CollisionType.PASSABLE) {
+                    objType = WorldObjectType.COLLECTABLE;
+                }
                 platform = new Collidable(platCollisRect,
-                        WorldObjectType.NEUTRAL, collType,
+                        objType, collType,
                         collImgPath);
                 platform.name = RossLib.parseXML(collidablesDataPath, "collidable", i, "name");
                 platform.initBoxes(platform.hitBox);
@@ -72,10 +80,21 @@ public class GameLevel {
             }
             //** Enemies
             enemies = new ArrayList<Enemy>();
-            int numEnemies = RossLib.parseXML(enemyDataPath, "enemy");
-            for (int i = 0; i < numEnemies; i++) {
-                enemies.add(new Enemy(this, _levelName));
+            int numEnemies = RossLib.parseXML(enemiesDataPath, "enemy");
+            if (numEnemies > 0) {
+                for (int i = 0; i < numEnemies; i++) {
+                int x = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "x"));
+                int y = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "y"));
+                int width = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "width"));
+                int height = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "height"));
+                Rectangle enemCollisRect = new Rectangle(x, y, width, height);
+                String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
+                int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movement distance"));
+                
+                enemies.add(new Enemy(enemCollisRect, imgPath, movementDistance));
+                }
             }
+            
         } else { // This is a new level, ,so create it.
             levelName = _levelName;
             this.background = new WorldObject(new Rectangle(0, 0,
@@ -85,6 +104,9 @@ public class GameLevel {
                     background.getWidth(), 100), 
                     WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
             this.floor.initBoxes(this.floor.hitBox);
+            
+            this.collidables = new ArrayList<Collidable>();
+            this.enemies = new ArrayList<Enemy>();
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);
             if (!success) {

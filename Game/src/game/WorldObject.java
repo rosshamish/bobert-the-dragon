@@ -17,11 +17,12 @@ public class WorldObject
 
     public enum WorldObjectType {
         FRIENDLY,
-        NEUTRAL,
+        OBSTACLE,
+        PLATFORM,
         FLOOR,
         CHARACTER,
         PROJECTILE,
-        HOSTILE,
+        ENEMY,
         COLLECTABLE
     };
     

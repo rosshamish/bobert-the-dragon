@@ -1,10 +1,7 @@
 package game;
 
 import game.Collidable.CollisionType;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -107,7 +104,7 @@ public class BobertPanel extends JPanel implements Runnable,
         
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-        
+        if (Main.curArgs == null) { // If this is regular game run
         File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
             String[] fileNames = new String[levelFiles.length];
@@ -127,6 +124,9 @@ public class BobertPanel extends JPanel implements Runnable,
             } else {
                 level = new GameLevel((String) chosenLevel, false);
             }
+        } else { // If this is a level editor test
+            level = new GameLevel(Main.curArgs[0], false);
+        }
         
         bobert = new Character();
         bobert.imagePaths = new ArrayList<String>();
@@ -219,8 +219,8 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-//            g2d.drawString("onScreenProjectiles.size(): " + onScreenProjectiles.size(), 0, debugTextHeight * 1);
-//            g2d.drawString("shootingProjectile: " + shootingProjectile, 0, debugTextHeight * 2);
+            g2d.drawString("bobert.vertVelocity: " + bobert.vertVelocity, 0, debugTextHeight * 1);
+            g2d.drawString("gravity: " + gravity, 0, debugTextHeight * 2);
 //            g2d.drawString("projectileTimer: "+ projectileTimer, 0, debugTextHeight*3);
 //            g2d.drawString("projectileTimerDelay: "+ this.projectileTimerDelay, 0, debugTextHeight*4);
 //            g2d.drawString("defaultProjectile.hitBox.x:  " + defaultProjectile.hitBox.x, 0, debugTextHeight * 5);
@@ -380,7 +380,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 //**Enemy movement
                 for (int i = 0; i < level.enemies.size(); i++) {
                     Enemy currentEnemy = level.enemies.get(i);
-                    if (currentEnemy.alive != true) {
+                    if (currentEnemy.isAlive != true) {
                         level.enemies.remove(i);
                         i--;
                         break;
@@ -507,7 +507,7 @@ public class BobertPanel extends JPanel implements Runnable,
                                     final Projectile proj = currentProjectile;
                                     @Override
                                     public void run() {
-                                        enem.alive = false;
+                                        enem.isAlive = false;
                                         proj.destroyed = true;
                                         destroyTimer.cancel();
                                     }
@@ -712,7 +712,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         cmdRemaining = cmdRemaining.substring(4);
                         if (cmdRemaining.equalsIgnoreCase("enemy")) {
                             // add an enemy
-                            level.enemies.add(new Enemy(level, level.levelName));
+                            level.enemies.add(new Enemy(new Rectangle(0,0,100,100), Enemy.defaultImgPath, Enemy.defaultMovementDistance));
                         }
                     } else if (consoleCommand.substring(0, 7).equalsIgnoreCase("restart")) {
                         // restart stuff
