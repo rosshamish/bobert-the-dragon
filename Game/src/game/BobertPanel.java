@@ -112,8 +112,8 @@ public class BobertPanel extends JPanel implements Runnable,
                 fileNames[i] = levelFiles[i].getName();
             }
             Object chosenLevel = JOptionPane.showInputDialog(bFrame, 
-                    "Which level would you like to play on?",
-                    "Bobert Level Editor - BlockTwo Studios",
+                    "Pick a level!",
+                    "Bobert the Dragon - BlockTwo Studios",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     fileNames,

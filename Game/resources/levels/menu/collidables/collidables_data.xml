@@ -7,7 +7,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -20,7 +20,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -33,7 +33,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -46,7 +46,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -59,7 +59,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -72,7 +72,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -85,7 +85,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -98,7 +98,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -111,7 +111,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -124,7 +124,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -137,7 +137,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -150,7 +150,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -163,7 +163,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -176,7 +176,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 676 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <type> IMPASSABLE </type>
@@ -189,7 +189,33 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 671 </y>
+<y> 910 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/backgrounds/floor.png </location>
+<x> 0 </x>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 105 </height>
 <type> IMPASSABLE </type>
@@ -202,7 +228,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 671 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 105 </height>
 <type> IMPASSABLE </type>
@@ -215,7 +241,7 @@
 <name>  </name>
 <location> resources/backgrounds/floor.png </location>
 <x> 0 </x>
-<y> 671 </y>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 105 </height>
 <type> IMPASSABLE </type>
@@ -227,8 +253,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_BL.png </location>
-<x> 106 </x>
-<y> 210 </y>
+<x> 95 </x>
+<y> -131 </y>
 <width> 250 </width>
 <height> 120 </height>
 <type> PLATFORM </type>
@@ -240,8 +266,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_OC.png </location>
-<x> 342 </x>
-<y> 272 </y>
+<x> 1830 </x>
+<y> 303 </y>
 <width> 220 </width>
 <height> 60 </height>
 <type> PLATFORM </type>
@@ -253,8 +279,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_KT.png </location>
-<x> 523 </x>
-<y> 225 </y>
+<x> 2745 </x>
+<y> 227 </y>
 <width> 300 </width>
 <height> 110 </height>
 <type> PLATFORM </type>
@@ -266,8 +292,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_WO.png </location>
-<x> 728 </x>
-<y> 262 </y>
+<x> 5490 </x>
+<y> 303 </y>
 <width> 300 </width>
 <height> 70 </height>
 <type> PLATFORM </type>
@@ -279,8 +305,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/orange.png </location>
-<x> 900 </x>
-<y> 450 </y>
+<x> 5490 </x>
+<y> 455 </y>
 <width> 200 </width>
 <height> 40 </height>
 <type> PLATFORM </type>
@@ -292,10 +318,49 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blue.png </location>
-<x> 40 </x>
-<y> 466 </y>
+<x> 183 </x>
+<y> 910 </y>
 <width> 180 </width>
 <height> 30 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 705 </x>
+<y> 396 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 456 </x>
+<y> 245 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/magenta.png </location>
+<x> 262 </x>
+<y> 84 </y>
+<width> 120 </width>
+<height> 70 </height>
 <type> PLATFORM </type>
 
 </collidable>

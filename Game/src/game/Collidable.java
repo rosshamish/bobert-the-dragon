@@ -98,7 +98,9 @@ public class Collidable extends WorldObject
      */
     boolean isCollidingWith(Collidable obj) {
         if (obj.collisionType == CollisionType.PASSABLE) {
-            return false;
+            if (this.hitBox.intersects(obj.hitBox)) {
+                return true;
+            }
         } else if (obj.collisionType == CollisionType.IMPASSABLE) {
             if (this.hitBox.intersects(obj.hitBox)) {
                 return true;
@@ -119,7 +121,9 @@ public class Collidable extends WorldObject
      */
     boolean willCollideWith(Collidable obj) {
         if (obj.collisionType == CollisionType.PASSABLE) {
-            return true;
+            if (this.futureHitBox.intersects(obj.hitBox)) {
+                return true;
+            }
         } else if (obj.collisionType == CollisionType.IMPASSABLE) {
             if (this.futureHitBox.intersects(obj.hitBox)) {
                 return true;
@@ -159,6 +163,7 @@ public class Collidable extends WorldObject
             return;
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER || 
+                this.worldObjectType == WorldObjectType.PLATFORM ||
                 this.worldObjectType == WorldObjectType.OBSTACLE) {
             drawBox.x = hitBox.x;
             return;
@@ -183,7 +188,8 @@ public class Collidable extends WorldObject
             drawBox.y = hitBox.y - this.drawHitOffset;
             return;
         }
-        if (this.worldObjectType == WorldObjectType.CHARACTER || 
+        if (this.worldObjectType == WorldObjectType.CHARACTER ||
+                this.worldObjectType == WorldObjectType.PLATFORM ||
                 this.worldObjectType == WorldObjectType.OBSTACLE) {
             drawBox.y = hitBox.y;
             return;

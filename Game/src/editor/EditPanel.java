@@ -203,6 +203,9 @@ public class EditPanel extends JPanel
             
             g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
             g2d.drawString("selectedObject: "+String.valueOf(selectedObject), 10, 70);
+            
+            g2d.drawString("movingLeft: "+movingLeft, 10, 90);
+            g2d.drawString("movinUp: "+movingUp, 10, 100);
         }
     }
     
@@ -211,16 +214,18 @@ public class EditPanel extends JPanel
         while (gameRunning) {
             eFrame.fileNameLabel.setText(level.levelName);
             
-//            if (movingUp) {
-//                editCam.moveVerticallyBy(-1);
-//            } else if (movingDown) {
-//                editCam.moveVerticallyBy(1);
-//            }
-//            if (movingLeft) {
-//                editCam.moveLeftBy(1);
-//            } else if (movingRight) {
-//                editCam.moveRightBy(1);
-//            }
+            if (movingRight && editCam.getX() + editCam.getWidth() < level.floor.hitBox.width) {
+                editCam.moveRightBy(3);
+            }
+            if (movingLeft && editCam.getX() > level.floor.hitBox.x) {
+                editCam.moveLeftBy(3);
+            }
+            if (movingDown && editCam.getY() < 0) {
+                editCam.moveVerticallyBy(3);
+            }
+            if (movingUp && editCam.getY() > level.background.drawBox.y) {
+                editCam.moveVerticallyBy(-3);
+            }
             repaint();
         }
     }
@@ -360,8 +365,7 @@ public class EditPanel extends JPanel
             movingLeft = true;
             movingRight = false;
             moving = true;
-        }
-        if (borderRight.contains(e.getPoint())) {
+        } else if (borderRight.contains(e.getPoint())) {
             movingRight = true;
             movingLeft = false;
             moving = true;
@@ -370,8 +374,7 @@ public class EditPanel extends JPanel
             movingUp = true;
             movingDown = false;
             moving = true;
-        }
-        if (borderBottom.contains(e.getPoint())) {
+        } else if (borderBottom.contains(e.getPoint())) {
             movingDown = true;
             movingUp = false;
             moving = true;
@@ -641,11 +644,29 @@ public class EditPanel extends JPanel
         
         if (source.getName().equalsIgnoreCase("Level Width")) {
             if (level.background != null) {
-                level.background.drawBox.width = source.getValue();
+                int newWidth = source.getValue();
+                int oldWidth = level.background.drawBox.width;
+                for (int i=0; i<level.collidables.size(); i++) {
+                    if (level.collidables.get(i).hitBox.x != 0) {
+                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
+                        level.collidables.get(i).setX((int) (newWidth / ratio));
+                    }
+                }
+                
+                level.background.drawBox.width = newWidth;
             }
         } else if (name.equalsIgnoreCase("Level Height")) {
             if (level.background != null) {
-                level.background.drawBox.height = source.getValue();
+                
+                int newHeight = source.getValue();
+                int oldHeight = level.background.drawBox.height;
+                for (int i=0; i<level.collidables.size(); i++) {
+                    if (level.collidables.get(i).hitBox.y != 0) {
+                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
+                        level.collidables.get(i).setY((int) (newHeight / ratio));
+                    }
+                }
+                level.background.drawBox.height = newHeight;
             }
         } else if (name.equalsIgnoreCase("Selected Object Width")) {
             if (selectedObject != null) {

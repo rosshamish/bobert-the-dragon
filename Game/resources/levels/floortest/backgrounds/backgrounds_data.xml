@@ -5,8 +5,8 @@
 <background>
 
 <name>  </name>
-<location> resources/backgrounds/bground_mountains.jpg </location>
-<width> 5490 </width>
+<location> resources/backgrounds/sunset.jpg </location>
+<width> 1440 </width>
 <height> 910 </height>
 
 </background>
@@ -15,7 +15,7 @@
 <floor>
 
 <name>  </name>
-<location> resources/backgrounds/floor.png </location>
+<location> resources/default.jpg </location>
 
 </floor>
 
