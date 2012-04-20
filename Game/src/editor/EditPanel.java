@@ -580,6 +580,13 @@ public class EditPanel extends JPanel
             if (selectedObject != null) {
                 selectedObject.setHeight(source.getValue());
             }
+        } else if (name.equalsIgnoreCase("Selected Enemy Movement Distance")) {
+            if (selectedObject != null) {
+                if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                    Enemy enem = (Enemy) selectedObject;
+                    enem.movementDistance = source.getValue();
+                }
+            }
         } else {
             System.out.println("Slider "+name+" doesn't have behaviour set up yet!");
         }

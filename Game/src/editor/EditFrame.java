@@ -20,6 +20,7 @@ public class EditFrame extends JFrame {
     public JSlider sliderLevelHeight;
     public JSlider sliderSelectedObjWidth;
     public JSlider sliderSelectedObjHeight;
+    public JSlider sliderSelectedEnemyMoveDistance;
     
     public EditFrame() {
         // Create game panel
@@ -37,7 +38,6 @@ public class EditFrame extends JFrame {
             "Open",
             "Test",
             "",
-            "Label Level",
             "Change Background",
             "Label Level Width",
             "Slider Level Width",
@@ -57,6 +57,7 @@ public class EditFrame extends JFrame {
             "Slider Selected Object Width",
             "Label Selected Object Height",
             "Slider Selected Object Height",
+            "Slider Selected Enemy Movement Distance"
         };
         int buttonWidth = 160;
         int buttonHeight = 24;
@@ -71,6 +72,9 @@ public class EditFrame extends JFrame {
         int generalWidthMax = (int)(Main.B_WINDOW_WIDTH*0.5);
         int generalHeightMin = 10;
         int generalHeightMax = (int)(Main.B_WINDOW_HEIGHT*0.5);
+        
+        int enemyMovementMin = (-1*(int)(Main.B_WINDOW_WIDTH*0.7));
+        int enemyMovementMax = (int)(Main.B_WINDOW_WIDTH*0.7);
         for (int i=0; i<buttonPanelComponents.length; i++) {
             if (buttonPanelComponents[i].contains("slider") || buttonPanelComponents[i].contains("Slider")) {
                 String sliderName = buttonPanelComponents[i].substring("slider ".length());
@@ -118,6 +122,17 @@ public class EditFrame extends JFrame {
                     sliderSelectedObjHeight.setAlignmentX(LEFT_ALIGNMENT);
                     sliderSelectedObjHeight.addChangeListener(ePanel);
                     buttonPanel.add(sliderSelectedObjHeight);
+                } else if (sliderName.equalsIgnoreCase("Selected Enemy Movement Distance")) {
+                    sliderSelectedEnemyMoveDistance = new JSlider(JSlider.HORIZONTAL,
+                            enemyMovementMin, enemyMovementMax, (int) ((enemyMovementMin + enemyMovementMax) * 0.5));
+                    sliderSelectedEnemyMoveDistance.setMajorTickSpacing((int) ((enemyMovementMax - enemyMovementMin) * 0.05));
+                    sliderSelectedEnemyMoveDistance.setName(sliderName);
+                    sliderSelectedEnemyMoveDistance.setPaintTicks(true);
+                    sliderSelectedEnemyMoveDistance.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedEnemyMoveDistance.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    sliderSelectedEnemyMoveDistance.setAlignmentX(LEFT_ALIGNMENT);
+                    sliderSelectedEnemyMoveDistance.addChangeListener(ePanel);
+                    buttonPanel.add(sliderSelectedEnemyMoveDistance);
                 } else {
                     JSlider slider = new JSlider(JSlider.HORIZONTAL,
                             generalHeightMin, generalHeightMax, (int) ((generalHeightMin + generalHeightMax) * 0.5));
