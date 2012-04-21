@@ -48,7 +48,7 @@ public class GameLevel {
                     floorWidth, 100);
             String floorImgPath = Collidable.defaultImgPath;
             floor = new Collidable(floorCollisionRect,
-                    WorldObjectType.FLOOR, CollisionType.IMPASSABLE,
+                    WorldObjectType.FLOOR, CollisionType.PLATFORM,
                     floorImgPath);
             floor.name = "Floor, eh?";
             floor.initBoxes(floor.hitBox);

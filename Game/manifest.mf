@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: game.Main
+Main-Class: game.LevelEditor

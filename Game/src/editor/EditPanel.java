@@ -237,16 +237,16 @@ public class EditPanel extends JPanel
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-            g2d.drawString("Mouse X: "+String.valueOf(mouseX), 10, 10);
-            g2d.drawString("Mouse Y: "+String.valueOf(mouseY), 10, 20);
-            g2d.drawString("Mouse dX: "+String.valueOf(mouseDeltaX), 10, 30);
-            g2d.drawString("Mouse dY: "+String.valueOf(mouseDeltaY), 10, 40); 
-            
-            g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
-            g2d.drawString("selectedObject: "+String.valueOf(selectedObject), 10, 70);
-            
-            g2d.drawString("movingLeft: "+movingLeft, 10, 90);
-            g2d.drawString("movinUp: "+movingUp, 10, 100);
+//            g2d.drawString("Mouse X: "+String.valueOf(mouseX), 10, 10);
+//            g2d.drawString("Mouse Y: "+String.valueOf(mouseY), 10, 20);
+//            g2d.drawString("Mouse dX: "+String.valueOf(mouseDeltaX), 10, 30);
+//            g2d.drawString("Mouse dY: "+String.valueOf(mouseDeltaY), 10, 40); 
+//            
+//            g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
+//            g2d.drawString("selectedObject: "+String.valueOf(selectedObject), 10, 70);
+//            
+//            g2d.drawString("movingLeft: "+movingLeft, 10, 90);
+//            g2d.drawString("movinUp: "+movingUp, 10, 100);
         }
     }
     

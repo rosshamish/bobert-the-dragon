@@ -10,6 +10,32 @@
 <y> 2345 </y>
 <width> 1440 </width>
 <height> 100 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 2345 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 2345 </y>
+<width> 1440 </width>
+<height> 100 </height>
 <type> IMPASSABLE </type>
 
 </collidable>
@@ -24,6 +50,32 @@
 <width> 1440 </width>
 <height> 100 </height>
 <type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/lightgreen.png </location>
+<x> 612 </x>
+<y> 400 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 179 </x>
+<y> 301 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
 
 </collidable>
 

@@ -18,8 +18,8 @@ public class LevelEditor {
     public static void main(String[] args) {
         eFrame = new EditFrame();
         eFrame.setTitle("Level Editor, Bobert the Dragon (c) 2012 BlockTwo Studios");
-        eFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         eFrame.setSize(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        eFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         eFrame.setResizable(false);
         eFrame.setLocationRelativeTo(null);
         
@@ -31,14 +31,16 @@ public class LevelEditor {
                         "Save changes?", "Bobert the Dragon Level Editor (c) BlockTwo Studios",
                         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (optionChosen == JOptionPane.CLOSED_OPTION) {
-                    System.exit(0);
+                    // Do nothing
                 } else if (optionChosen == JOptionPane.YES_OPTION) {
                     String name = JOptionPane.showInputDialog("Save as: ", EditPanel.level.levelName);
                     EditPanel.level.levelName = name;
                     RossLib.writeLevelData(EditPanel.level);
+                    System.exit(0);
                 } else if (optionChosen == JOptionPane.NO_OPTION) {
                     System.exit(0);
                 }
+                
             }
 
             //<editor-fold defaultstate="collapsed" desc="Unused WindowListener stuff">
