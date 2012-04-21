@@ -5,6 +5,9 @@ import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.ColorModel;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import javax.swing.*;
@@ -29,15 +32,23 @@ public class EditPanel extends JPanel
     public static GameLevel level;
     public static Camera editCam;
     
+    public static int camMovementFrame = 0;
+    public static final int camMovementDelay = 10000;
+    
     public static boolean movingLeft;
     public static boolean movingUp;
     public static boolean movingRight;
     public static boolean movingDown;
     
+    public static int borderSize = 50;
     public static Rectangle borderLeft;
+    public static Image borderLeftImg;
     public static Rectangle borderTop;
+    public static Image borderTopImg;
     public static Rectangle borderRight;
+    public static Image borderRightImg;
     public static Rectangle borderBottom;
+    public static Image borderBottomImg;
     
     public static int mouseX;
     public static int mouseDeltaX;
@@ -67,14 +78,18 @@ public class EditPanel extends JPanel
     public static void defineObjects() {
         editCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-        borderLeft = new Rectangle(0, 0,
-                100, Main.B_WINDOW_HEIGHT);
-        borderTop = new Rectangle(0,0,
-                Main.B_WINDOW_WIDTH, 100);
-        borderRight = new Rectangle(Main.B_WINDOW_WIDTH-100-EditFrame.buttonPanelWidth, 0,
-                100, Main.B_WINDOW_HEIGHT);
-        borderBottom = new Rectangle(0, Main.B_WINDOW_HEIGHT-100,
-                Main.B_WINDOW_WIDTH, 100);
+        borderLeft = new Rectangle(0, Main.B_WINDOW_BAR_HEIGHT,
+                borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
+        borderLeftImg = new ImageIcon("resources/editor/border_facingLeft.png").getImage();
+        borderTop = new Rectangle(0, Main.B_WINDOW_BAR_HEIGHT,
+                Main.B_WINDOW_WIDTH, borderSize);
+        borderTopImg = new ImageIcon("resources/editor/border_facingUp.png").getImage();
+        borderRight = new Rectangle(Main.B_WINDOW_WIDTH-borderSize-EditFrame.buttonPanelWidth, Main.B_WINDOW_BAR_HEIGHT,
+                borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
+        borderRightImg = new ImageIcon("resources/editor/border_facingRight.png").getImage();
+        borderBottom = new Rectangle(0, Main.B_WINDOW_HEIGHT-borderSize,
+                Main.B_WINDOW_WIDTH, borderSize);
+        borderBottomImg = new ImageIcon("resources/editor/border_facingDown.png").getImage();
         String[] options = {
             "New Level",
             "Load Level"};
@@ -106,7 +121,7 @@ public class EditPanel extends JPanel
                     "Name your fancy new level! Only use letters and spaces or this program will crash.",
                     "Bobert Level Editor - BlockTwo Studios",
                     JOptionPane.QUESTION_MESSAGE);
-            if (name.isEmpty()) {
+            if (name == null) {
                 System.exit(0);
             } else {
                 level = new GameLevel(name, true);
@@ -141,7 +156,7 @@ public class EditPanel extends JPanel
     public void addNotify() {
         super.addNotify();
         // Now that the level is definitely init'ed, init the button label's values.
-        eFrame.fileNameLabel.setText(level.levelName);
+        eFrame.labelFileName.setText(level.levelName);
         eFrame.sliderLevelWidth.setValue(level.background.drawBox.width);
         eFrame.sliderLevelHeight.setValue(level.background.drawBox.height);
         gameThread = new Thread(this);
@@ -166,13 +181,18 @@ public class EditPanel extends JPanel
                 for (int i=0; i<level.enemies.size(); i++) {
                     level.enemies.get(i).draw(g2d, editCam);
                     Enemy cur = level.enemies.get(i);
-                    g2d.setColor(Color.green);
-                    g2d.drawLine(cur.middleHorizontally(), cur.middleVertically(), 
-                            cur.middleHorizontally()+cur.movementDistance, cur.middleVertically());
-                    g2d.drawRect(cur.xPositionInCam(editCam)+cur.movementDistance, 
-                            cur.yPositionInCam(editCam), 
-                            cur.getWidth(), 
-                            cur.getHeight());
+                    if (selectedObject != null) {
+                        if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                            g2d.setColor(Color.green);
+                            g2d.drawLine(cur.xPositionInCam(editCam) + cur.getWidth() / 2, cur.yPositionInCam(editCam) + cur.getHeight() / 2,
+                                    cur.xPositionInCam(editCam) + cur.getWidth() / 2 + cur.movementDistance, cur.yPositionInCam(editCam) + cur.getHeight() / 2);
+                            g2d.drawRect(cur.xPositionInCam(editCam) + cur.movementDistance,
+                                    cur.yPositionInCam(editCam),
+                                    cur.getWidth(),
+                                    cur.getHeight());
+                        }
+                    }
+                    
                 }
             }
             
@@ -189,10 +209,31 @@ public class EditPanel extends JPanel
                         20, 20);
             }
             g2d.setColor(Color.blue);
-            g2d.draw(borderLeft);
-            g2d.draw(borderTop);
-            g2d.draw(borderRight);
-            g2d.draw(borderBottom);
+            AlphaComposite full = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+            AlphaComposite med = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f);
+            AlphaComposite low = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+            g2d.setComposite(low); // drop the opacity
+            g2d.drawImage(borderLeftImg, borderLeft.x, borderLeft.y, borderLeft.width, borderLeft.height, null);
+            g2d.drawImage(borderTopImg, borderTop.x, borderTop.y-Main.B_WINDOW_BAR_HEIGHT, borderTop.width, borderTop.height, null);
+            g2d.drawImage(borderRightImg, borderRight.x, borderRight.y, borderRight.width, borderRight.height, null);
+            g2d.drawImage(borderBottomImg, borderBottom.x, borderBottom.y-Main.B_WINDOW_BAR_HEIGHT, borderBottom.width, borderBottom.height, null);
+
+            // Up the opacity
+            g2d.setComposite(med);
+            if (movingLeft) {
+                g2d.drawImage(borderLeftImg, borderLeft.x, borderLeft.y, borderLeft.width, borderLeft.height, null);
+            }
+            if (movingUp) {
+                g2d.drawImage(borderTopImg, borderTop.x, borderTop.y-Main.B_WINDOW_BAR_HEIGHT, borderTop.width, borderTop.height, null);
+            }
+            if (movingRight) {
+                g2d.drawImage(borderRightImg, borderRight.x, borderRight.y, borderRight.width, borderRight.height, null);
+            }
+            if (movingDown) {
+                g2d.drawImage(borderBottomImg, borderBottom.x, borderBottom.y-Main.B_WINDOW_BAR_HEIGHT, borderBottom.width, borderBottom.height, null);
+            }
+            // reset the opacity
+            g2d.setComposite(full);
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
@@ -212,20 +253,29 @@ public class EditPanel extends JPanel
     @Override
     public void run() {
         while (gameRunning) {
-            eFrame.fileNameLabel.setText(level.levelName);
+            eFrame.labelFileName.setText(level.levelName);
             
-            if (movingRight && editCam.getX() + editCam.getWidth() < level.floor.hitBox.width) {
-                editCam.moveRightBy(3);
+            if (camMovementFrame >= camMovementDelay) {
+                if (movingRight && (editCam.getX() + editCam.getWidth() < level.background.drawBox.width)) {
+                    editCam.moveRightBy(1);
+                }
+                if (movingLeft && editCam.getX() > level.floor.hitBox.x) {
+                    editCam.moveLeftBy(1);
+                }
+                if (movingDown && 
+                        editCam.getY() + editCam.getHeight() < level.background.drawBox.y + level.background.drawBox.height) {
+                    editCam.moveVerticallyBy(1);
+                }
+                if (movingUp && editCam.getY() > level.background.drawBox.y) {
+                    editCam.moveVerticallyBy(-1);
+                }
+                camMovementFrame = 0;
+            } else {
+                camMovementFrame++;
             }
-            if (movingLeft && editCam.getX() > level.floor.hitBox.x) {
-                editCam.moveLeftBy(3);
-            }
-            if (movingDown && editCam.getY() < 0) {
-                editCam.moveVerticallyBy(3);
-            }
-            if (movingUp && editCam.getY() > level.background.drawBox.y) {
-                editCam.moveVerticallyBy(-3);
-            }
+            level.floor.setY(level.background.getHeight());
+            level.floor.setWidth(level.background.getWidth());
+            
             repaint();
         }
     }
@@ -245,6 +295,8 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.collidables.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
+                    eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
+                    eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
                     return;
                 }
             }
@@ -255,20 +307,18 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.enemies.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
-                    if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
-                        Enemy enem = level.enemies.get(i);
-                        eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
-                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
-                    } else {
-                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
-                    }
+                    Enemy enem = level.enemies.get(i);
+                    eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
+                    eFrame.labelSelectedEnemyMoveDistance.setVisible(true);
+                    eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
                     return;
                 }
             }
         }
         // If we aren't actually clicking on an object, then set selectedObject to null
         selectedObject = null;
-        return;
+        eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
+        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
     }
 
     /*
@@ -290,6 +340,8 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.collidables.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
+                    eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
+                    eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
                     return;
                 }
             }
@@ -301,17 +353,16 @@ public class EditPanel extends JPanel
                     selectedObject = (Collidable) level.enemies.get(i);
                     eFrame.sliderSelectedObjWidth.setValue(selectedObject.getWidth());
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
-                    if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
-                        Enemy enem = level.enemies.get(i);
-                        eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
-                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
-                    } else {
-                        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
-                    }
+                    Enemy enem = level.enemies.get(i);
+                    eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
+                    eFrame.labelSelectedEnemyMoveDistance.setVisible(true);
+                    eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
                     return;
                 }
             }
         }
+        eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
+        eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
     }
 
     /*
@@ -330,7 +381,10 @@ public class EditPanel extends JPanel
 
     @Override
     public void mouseExited(MouseEvent e) {
-        
+        movingLeft = false;
+        movingUp = false;
+        movingRight = false;
+        movingDown = false;
     }
 
     @Override
@@ -363,21 +417,27 @@ public class EditPanel extends JPanel
         boolean moving = false;
         if (borderLeft.contains(e.getPoint())) {
             movingLeft = true;
-            movingRight = false;
             moving = true;
-        } else if (borderRight.contains(e.getPoint())) {
-            movingRight = true;
+        } else {
             movingLeft = false;
+        }
+        if (borderRight.contains(e.getPoint())) {
+            movingRight = true;
             moving = true;
+        } else {
+            movingRight = false;
         }
         if (borderTop.contains(e.getPoint())) {
             movingUp = true;
-            movingDown = false;
             moving = true;
-        } else if (borderBottom.contains(e.getPoint())) {
-            movingDown = true;
+        } else {
             movingUp = false;
+        }
+        if (borderBottom.contains(e.getPoint())) {
+            movingDown = true;
             moving = true;
+        } else {
+            movingDown = false;
         }
         if (!moving) {
             movingLeft = false;
@@ -553,10 +613,8 @@ public class EditPanel extends JPanel
                 System.out.println("chosenEnemy is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                String moveDistance = JOptionPane.showInputDialog("How far should he be able to move? Please enter a number, don't play games here.", 
-                        "5");
                 Rectangle enemCollisRect = new Rectangle(50, 50, 100, 100);
-                level.enemies.add(new Enemy(enemCollisRect, enemiesPath+(String)chosenEnemy, Integer.parseInt(moveDistance)));
+                level.enemies.add(new Enemy(enemCollisRect, enemiesPath+(String)chosenEnemy, Enemy.defaultMovementDistance));
             }
         } else if (action.equalsIgnoreCase("Change Image")) {
             String imagePath = "";
@@ -573,6 +631,9 @@ public class EditPanel extends JPanel
             } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
                 imagePath = "resources/enemies/";
                 inputDialogMessage = "Available enemies: ";
+            } else if (selectedObject.worldObjectType == WorldObjectType.TRIGGER) {
+                imagePath = "resources/collidables/triggers/";
+                inputDialogMessage = "Available triggers: ";
             }
             File dir = new File(imagePath);
             File[] imageFiles = dir.listFiles();
@@ -599,13 +660,10 @@ public class EditPanel extends JPanel
                                             "Bobert Level Editor - BlockTwo Studios", 
                                             JOptionPane.OK_CANCEL_OPTION);
             if (youSureBro == JOptionPane.OK_OPTION) {
-                if (selectedObject.worldObjectType == WorldObjectType.PLATFORM) {
-                    for (int i=0; i<level.collidables.size(); i++) {
-                        if (level.collidables.get(i).equals(selectedObject)) {
-                            level.collidables.remove(i);
-                        }
-                    }
-                } else if (selectedObject.worldObjectType == WorldObjectType.OBSTACLE) {
+                if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
+                        || selectedObject.worldObjectType == WorldObjectType.OBSTACLE
+                        || selectedObject.worldObjectType == WorldObjectType.TRIGGER
+                        || selectedObject.worldObjectType == WorldObjectType.FLOOR) {
                     for (int i=0; i<level.collidables.size(); i++) {
                         if (level.collidables.get(i).equals(selectedObject)) {
                             level.collidables.remove(i);
@@ -652,6 +710,12 @@ public class EditPanel extends JPanel
                         level.collidables.get(i).setX((int) (newWidth / ratio));
                     }
                 }
+                for (int i=0; i<level.enemies.size(); i++) {
+                    if (level.enemies.get(i).hitBox.x != 0) {
+                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
+                        level.enemies.get(i).setX((int) (newWidth / ratio));
+                    }
+                }
                 
                 level.background.drawBox.width = newWidth;
             }
@@ -664,6 +728,13 @@ public class EditPanel extends JPanel
                     if (level.collidables.get(i).hitBox.y != 0) {
                         double ratio = oldHeight / level.collidables.get(i).hitBox.y;
                         level.collidables.get(i).setY((int) (newHeight / ratio));
+                    }
+                }
+                for (int i=0; i<level.enemies.size(); i++) {
+                    if (level.enemies.get(i).hitBox.y != 0) {
+                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
+                        System.out.println("(int) (newHeight / ratio): "+(int) (newHeight / ratio));
+                        level.enemies.get(i).setY((int) (newHeight / ratio));
                     }
                 }
                 level.background.drawBox.height = newHeight;

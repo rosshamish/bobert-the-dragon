@@ -2,6 +2,7 @@ package game;
 
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import rosslib.RossLib;
@@ -18,6 +19,9 @@ public class GameLevel {
     public Collidable floor;
     public ArrayList<Collidable> collidables;
     public ArrayList<Enemy> enemies;
+    
+    public Point startLocation;
+    public Collidable triggerEndLevel;
     
     public GameLevel (String _levelName, boolean _newLevel) {
         
@@ -42,11 +46,11 @@ public class GameLevel {
             int floorWidth = bgWidth;
             Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
                     floorWidth, 100);
-            String floorImgPath = RossLib.parseXML(backgroundsDataPath, "floor", 0, "location");
+            String floorImgPath = Collidable.defaultImgPath;
             floor = new Collidable(floorCollisionRect,
                     WorldObjectType.FLOOR, CollisionType.IMPASSABLE,
                     floorImgPath);
-            floor.name = RossLib.parseXML(backgroundsDataPath, "floor", 0, "name");
+            floor.name = "Floor, eh?";
             floor.initBoxes(floor.hitBox);
             collidables.add(floor);
 
@@ -105,6 +109,10 @@ public class GameLevel {
             
         } else { // This is a new level, ,so create it.
             levelName = _levelName;
+            
+            this.enemies = new ArrayList<Enemy>();
+            
+            this.collidables = new ArrayList<Collidable>();
             this.background = new WorldObject(new Rectangle(0, 0,
                     (int) (Main.B_WINDOW_WIDTH*1.2), (int) (Main.B_WINDOW_HEIGHT*1.2)));
             this.background.setImage(WorldObject.defaultImgPath);
@@ -112,9 +120,15 @@ public class GameLevel {
                     background.getWidth(), 100), 
                     WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
             this.floor.initBoxes(this.floor.hitBox);
+            this.collidables.add(floor);
             
-            this.collidables = new ArrayList<Collidable>();
-            this.enemies = new ArrayList<Enemy>();
+            startLocation = new Point(Main.B_WINDOW_WIDTH*1/4, background.getHeight()*3/4);
+            Rectangle triggerEndLevelRect = new Rectangle(Main.B_WINDOW_WIDTH*3/4, background.getHeight()*1/2,
+                    50, 100);
+            triggerEndLevel = new Collidable(triggerEndLevelRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
+                    "resources/collidables/triggers/green_flag.png");
+            this.collidables.add(triggerEndLevel);
+            
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);
             if (!success) {

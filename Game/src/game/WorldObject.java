@@ -23,7 +23,8 @@ public class WorldObject
         CHARACTER,
         PROJECTILE,
         ENEMY,
-        COLLECTABLE
+        COLLECTABLE,
+        TRIGGER
     };
     
     static String resourcesPathStem = "resources/";

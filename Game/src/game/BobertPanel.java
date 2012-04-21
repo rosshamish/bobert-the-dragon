@@ -1,6 +1,7 @@
 package game;
 
 import game.Collidable.CollisionType;
+import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -387,9 +388,19 @@ public class BobertPanel extends JPanel implements Runnable,
                         bobert.updateFutureHitBox();
                         bobert.futureHitBox.x -= bobert.moveSpeed;
                         for (int i = 0; i < level.collidables.size(); i++) {
-                            if (bobert.willCollideWith(level.collidables.get(i))) {
-                                canMove = false;
-                                break;
+                            Collidable cur = level.collidables.get(i);
+                            if (bobert.willCollideWith(cur)) {
+                                if (cur.collisionType == CollisionType.PASSABLE) {
+                                    canMove = true;
+                                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                                        System.out.println("Hit trigger!");
+                                    } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
+                                        System.out.println("Collected something!");
+                                    }
+                                } else {
+                                    canMove = false;
+                                    break;
+                                }
                             } else {
                                 canMove = true;
                             }

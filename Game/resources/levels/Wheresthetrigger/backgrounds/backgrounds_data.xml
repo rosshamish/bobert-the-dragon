@@ -5,9 +5,9 @@
 <background>
 
 <name>  </name>
-<location> resources/backgrounds/bground_mountains.jpg </location>
+<location> resources/backgrounds/Default.jpg </location>
 <width> 1440 </width>
-<height> 2345 </height>
+<height> 840 </height>
 
 </background>
 

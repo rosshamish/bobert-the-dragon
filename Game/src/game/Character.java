@@ -81,9 +81,5 @@ public class Character extends Sprite
                         null);
             }
         }
-//        currentGraphics2DContext.drawImage(this.getImage(), 
-//                floorX+this.this.xPositionInCam(cam), this.this.yPositionInCam(cam),
-//                this.drawBox.width, this.drawBox.height, 
-//                null);
     }
 }

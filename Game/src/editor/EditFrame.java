@@ -17,11 +17,12 @@ public class EditFrame extends JFrame {
     
     public static int buttonPanelWidth = 160;
     
-    public JLabel fileNameLabel;
+    public JLabel labelFileName;
     public JSlider sliderLevelWidth;
     public JSlider sliderLevelHeight;
     public JSlider sliderSelectedObjWidth;
     public JSlider sliderSelectedObjHeight;
+    public JLabel labelSelectedEnemyMoveDistance;
     public JSlider sliderSelectedEnemyMoveDistance;
     
     public EditFrame() {
@@ -135,6 +136,7 @@ public class EditFrame extends JFrame {
                     sliderSelectedEnemyMoveDistance.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
                     sliderSelectedEnemyMoveDistance.setAlignmentX(LEFT_ALIGNMENT);
                     sliderSelectedEnemyMoveDistance.addChangeListener(ePanel);
+                    sliderSelectedEnemyMoveDistance.setVisible(false);
                     buttonPanel.add(sliderSelectedEnemyMoveDistance);
                 } else {
                     JSlider slider = new JSlider(JSlider.HORIZONTAL,
@@ -153,11 +155,18 @@ public class EditFrame extends JFrame {
                 String labelName = buttonPanelComponents[i].substring("label".length());
                 JLabel label = new JLabel(labelName);
                 if (labelName.trim().equalsIgnoreCase("File")) {
-                    fileNameLabel = new JLabel(labelName);
-                    fileNameLabel.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-                    fileNameLabel.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                    fileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                    buttonPanel.add(fileNameLabel);
+                    labelFileName = new JLabel(labelName);
+                    labelFileName.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelFileName.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelFileName.setHorizontalAlignment(SwingConstants.CENTER);
+                    buttonPanel.add(labelFileName);
+                } else if (labelName.trim().equalsIgnoreCase("Movement Distance")) {
+                    labelSelectedEnemyMoveDistance = new JLabel(labelName);
+                    labelSelectedEnemyMoveDistance.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelSelectedEnemyMoveDistance.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelSelectedEnemyMoveDistance.setHorizontalAlignment(SwingConstants.LEFT);
+                    labelSelectedEnemyMoveDistance.setVisible(false);
+                    buttonPanel.add(labelSelectedEnemyMoveDistance);
                 } else {
                     label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                     label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));

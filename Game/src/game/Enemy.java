@@ -21,8 +21,6 @@ public class Enemy extends Sprite
     
     public boolean isAlive = true;
     
-    
-    
     public Enemy(Rectangle collisionRect, String imgPath, int howFarCanMoveRightFromLocation) {
         name = "DefaultName";
         setImage(defaultImgPath);

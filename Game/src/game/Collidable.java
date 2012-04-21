@@ -190,7 +190,8 @@ public class Collidable extends WorldObject
         }
         if (this.worldObjectType == WorldObjectType.CHARACTER ||
                 this.worldObjectType == WorldObjectType.PLATFORM ||
-                this.worldObjectType == WorldObjectType.OBSTACLE) {
+                this.worldObjectType == WorldObjectType.OBSTACLE ||
+                this.worldObjectType == WorldObjectType.FLOOR) {
             drawBox.y = hitBox.y;
             return;
         }
@@ -310,21 +311,6 @@ public class Collidable extends WorldObject
             return CollisionType.PLATFORM;
         } else {
             return CollisionType.PASSABLE;
-        }
-    }
-    
-    /**
-     * @param currentGraphics2DContext -> the parameter passed by paint()
-     * @param floorX -> the current x-coordinate of the floor
-     */
-    @Override
-    public void draw(Graphics2D currentGraphics2DContext, Camera cam) {
-        // Check to see if this object is inside the camera's view
-        if (this.isInViewOf(cam)) {
-            currentGraphics2DContext.drawImage(this.getImage(),
-                    this.xPositionInCam(cam), this.yPositionInCam(cam),
-                    this.drawBox.width, this.drawBox.height,
-                    null);
         }
     }
     

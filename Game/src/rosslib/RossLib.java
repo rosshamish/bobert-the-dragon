@@ -148,12 +148,6 @@ public class RossLib {
                     RossLib.writeXmlTag(dFileName, "height", _level.background.getHeight());
                     RossLib.writeXmlFooter(dFileName, "background");
                 }
-                if (_level.floor != null) {
-                    RossLib.writeXmlHeader(dFileName, "floor");
-                    RossLib.writeXmlTag(dFileName, "name", _level.floor.getName());
-                    RossLib.writeXmlTag(dFileName, "location", _level.floor.getImageLocation());
-                    RossLib.writeXmlFooter(dFileName, "floor");
-                }
                 
             } else if (resourceTypes[i].equalsIgnoreCase("collidables")) {
                 

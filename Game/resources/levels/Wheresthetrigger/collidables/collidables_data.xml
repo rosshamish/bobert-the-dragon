@@ -4,13 +4,13 @@
 
 <collidable>
 
-<name> Floor, eh? </name>
+<name>  </name>
 <location> resources/default.jpg </location>
 <x> 0 </x>
-<y> 2345 </y>
+<y> 840 </y>
 <width> 1440 </width>
 <height> 100 </height>
-<type> IMPASSABLE </type>
+<type> PLATFORM </type>
 
 </collidable>
 
@@ -18,12 +18,12 @@
 <collidable>
 
 <name>  </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 2345 </y>
-<width> 1440 </width>
-<height> 100 </height>
-<type> PLATFORM </type>
+<location> resources/collidables/triggers/green_flag.png </location>
+<x> 376 </x>
+<y> 488 </y>
+<width> 50 </width>
+<height> 101 </height>
+<type> PASSABLE </type>
 
 </collidable>
 
