@@ -1,0 +1,32 @@
+
+<collidables_data>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 676 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/triggers/green_flag.png </location>
+<x> 900 </x>
+<y> 420 </y>
+<width> 50 </width>
+<height> 100 </height>
+<type> PASSABLE </type>
+
+</collidable>
+
+
+</collidables_data>
+

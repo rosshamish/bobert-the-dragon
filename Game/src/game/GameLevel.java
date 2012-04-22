@@ -54,7 +54,7 @@ public class GameLevel {
             floor.initBoxes(floor.hitBox);
             collidables.add(floor);
 
-            Collidable platform;
+            Collidable collidable;
             Rectangle platCollisRect;
             int numCollidables = RossLib.parseXML(collidablesDataPath, "collidable");
             for (int i = 0; i < numCollidables; i++) {
@@ -75,12 +75,13 @@ public class GameLevel {
                 } else if (collType == CollisionType.PASSABLE) {
                     objType = WorldObjectType.COLLECTABLE;
                 }
-                platform = new Collidable(platCollisRect,
+                collidable = new Collidable(platCollisRect,
                         objType, collType,
                         collImgPath);
-                platform.name = RossLib.parseXML(collidablesDataPath, "collidable", i, "name");
-                platform.initBoxes(platform.hitBox);
-                collidables.add(platform);
+                
+                collidable.name = RossLib.parseXML(collidablesDataPath, "collidable", i, "name");
+                collidable.initBoxes(collidable.hitBox);
+                collidables.add(collidable);
             }
             //** Enemies
             enemies = new ArrayList<Enemy>();

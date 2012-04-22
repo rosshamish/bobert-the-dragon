@@ -8,7 +8,7 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
-<width> 1440 </width>
+<width> 2153 </width>
 <height> 100 </height>
 <type> PLATFORM </type>
 
@@ -21,7 +21,20 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
-<width> 1440 </width>
+<width> 2153 </width>
+<height> 100 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 2153 </width>
 <height> 100 </height>
 <type> PLATFORM </type>
 
@@ -34,7 +47,7 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
-<width> 1440 </width>
+<width> 1200 </width>
 <height> 100 </height>
 <type> PLATFORM </type>
 
@@ -45,8 +58,8 @@
 
 <name>  </name>
 <location> resources/collidables/triggers/green_flag.png </location>
-<x> 1440 </x>
-<y> 910 </y>
+<x> 2153 </x>
+<y> 455 </y>
 <width> 50 </width>
 <height> 100 </height>
 <type> PASSABLE </type>
@@ -57,8 +70,99 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_BL.png </location>
-<x> 80 </x>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 717 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 717 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 2153 </x>
+<y> 303 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 2153 </x>
+<y> 455 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 2153 </x>
 <y> 455 </y>
 <width> 120 </width>
 <height> 70 </height>
@@ -70,24 +174,11 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_OC.png </location>
-<x> 193 </x>
-<y> 471 </y>
-<width> 107 </width>
-<height> 52 </height>
-<type> PLATFORM </type>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_KT.png </location>
-<x> 285 </x>
-<y> 436 </y>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 358 </x>
+<y> 910 </y>
 <width> 120 </width>
-<height> 85 </height>
+<height> 70 </height>
 <type> PLATFORM </type>
 
 </collidable>
@@ -96,11 +187,11 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_WO.png </location>
-<x> 371 </x>
-<y> 467 </y>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 430 </x>
+<y> 455 </y>
 <width> 120 </width>
-<height> 52 </height>
+<height> 70 </height>
 <type> PLATFORM </type>
 
 </collidable>
@@ -109,8 +200,60 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/darkgreen.png </location>
-<x> 720 </x>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 86 </x>
+<y> 455 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 82 </x>
+<y> 130 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 717 </x>
+<y> 82 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/white.png </location>
+<x> 1076 </x>
+<y> 227 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 2153 </x>
 <y> 910 </y>
 <width> 120 </width>
 <height> 70 </height>
@@ -122,8 +265,8 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/magenta.png </location>
-<x> 180 </x>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 717 </x>
 <y> 910 </y>
 <width> 120 </width>
 <height> 70 </height>
@@ -135,8 +278,60 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/orange.png </location>
-<x> 480 </x>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 717 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 1076 </x>
+<y> 910 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> IMPASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/blue.png </location>
+<x> 2153 </x>
 <y> 910 </y>
 <width> 120 </width>
 <height> 70 </height>

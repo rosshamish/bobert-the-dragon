@@ -33,7 +33,7 @@ public class EditPanel extends JPanel
     public static Camera editCam;
     
     public static int camMovementFrame = 0;
-    public static final int camMovementDelay = 10000;
+    public static final int camMovementDelay = 8000;
     
     public static boolean movingLeft;
     public static boolean movingUp;

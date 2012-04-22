@@ -32,7 +32,7 @@ public class Projectile extends Sprite
     // Should be just high enough of a bounce that there's a possibility it could
     // bounce too high.
     public static final int vertVelocityBounce = -10;
-
+    
     public Projectile() {   
         imageCount++;
         numImages = RossLib.parseXML(dataPath, "projectile");

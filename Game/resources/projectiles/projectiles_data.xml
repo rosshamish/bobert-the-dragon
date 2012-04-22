@@ -42,8 +42,8 @@
 	<projectile>
 		<name> Spatula </name>
 		<location> resources/projectiles/3.png </location>
-		<width> 90 </width>
-		<height> 130 </height>
+		<width> 50</width>
+		<height> 95</height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -51,8 +51,8 @@
 	<projectile>
 		<name> Tire </name>
 		<location> resources/projectiles/4.png </location>
-		<width>	120 </width>
-		<height> 120 </height>
+		<width>	80</width>
+		<height> 80</height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -75,15 +75,6 @@
 	</projectile>
 
 	<!-- Projectile 7 -->
-	<projectile>
-		<name> Mega Bobert </name>
-		<location> resources/character0.png </location>
-		<width> 150 </width>
-		<height> 200 </height>
-		<speed> 7 </speed>
-	</projectile>
-
-	<!-- Projectile 8 -->
 	<projectile>
 		<name> Birdemic Cover </name>
 		<location> resources/projectiles/birdemic.png </location>
