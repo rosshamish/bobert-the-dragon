@@ -200,6 +200,7 @@ public class RossLib {
             dBuffWriter.newLine();
             dBuffWriter.newLine();
             dBuffWriter.close();
+            dFileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -218,6 +219,7 @@ public class RossLib {
             dBuffWriter.newLine();
             dBuffWriter.newLine();
             dBuffWriter.close();
+            dFileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -241,6 +243,7 @@ public class RossLib {
             dBuffWriter.write(tagClose);
             dBuffWriter.newLine();
             dBuffWriter.close();
+            dFileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

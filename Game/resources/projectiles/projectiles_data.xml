@@ -10,6 +10,9 @@
 	-->
 	<!-- This is an example comment-->
 
+	<!-- IMPORTANT NOTES -->
+	<!-- Do not make anything taller than bobert is. Just don't. It will fuck up the collision detection. -->
+
 
 	<!-- Projectile 0 -->
 	<projectile>
@@ -42,8 +45,8 @@
 	<projectile>
 		<name> Spatula </name>
 		<location> resources/projectiles/3.png </location>
-		<width> 50</width>
-		<height> 95</height>
+		<width> 40</width>
+		<height> 70</height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -51,8 +54,8 @@
 	<projectile>
 		<name> Tire </name>
 		<location> resources/projectiles/4.png </location>
-		<width>	80</width>
-		<height> 80</height>
+		<width>	70</width>
+		<height> 70</height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -60,8 +63,8 @@
 	<projectile>
 		<name> Tennis Racquet </name>
 		<location> resources/projectiles/5.png </location>
-		<width> 120 </width>
-		<height> 80 </height>
+		<width> 75</width>
+		<height> 60</height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -69,7 +72,7 @@
 	<projectile>
 		<name> Mushroom </name>
 		<location> resources/projectiles/6.png </location>
-		<width> 80 </width>
+		<width> 65</width>
 		<height> 65 </height>
 		<speed> 7 </speed>
 	</projectile>
@@ -79,7 +82,7 @@
 		<name> Birdemic Cover </name>
 		<location> resources/projectiles/birdemic.png </location>
 		<width> 50 </width>
-		<height> 80 </height>
+		<height> 70 </height>
 		<speed> 7 </speed>
 	</projectile>
 
@@ -96,8 +99,8 @@
 	<projectile>
 		<name> Ladder </name>
 		<location> resources/projectiles/ladder.png </location>
-		<width> 100 </width>
-		<height> 80 </height>
+		<width> 93 </width>
+		<height> 75</height>
 		<speed> 7 </speed>
 	</projectile>
 

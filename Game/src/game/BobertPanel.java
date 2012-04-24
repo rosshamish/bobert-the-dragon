@@ -5,6 +5,7 @@ import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -527,38 +528,29 @@ public class BobertPanel extends JPanel implements Runnable,
                             curProjectile.futureHitBox.y += curProjectile.vertVelocity;
                             if (curProjectile.futureHitBox.intersects(curCollidable.hitBox)) {
                                 if (curProjectile.isAbove(curCollidable)) {
-                                    curProjectile.setY(curCollidable.hitBox.y - curProjectile.hitBox.height);
+                                    curProjectile.setY(curCollidable.hitBox.y - curProjectile.hitBox.height-5);
                                     curProjectile.vertVelocity = Projectile.vertVelocityBounce;
+                                    curProjectile.numBounces++;
+                                    curProjectile.isInAir = false;
                                     break;
                                 }
                             } else {
                                 curProjectile.isInAir = true;
                             }
-                            // Bounds check to see if the projectile is off the screen
-                            if (curProjectile.hitBox.x + curProjectile.hitBox.width < level.background.drawBox.x
-                                    || curProjectile.hitBox.x > level.background.drawBox.width) {
-
-                                curProjectile.destroyed = true;
-                            }
+                            
                         }
 
                         // **Horizontal Movement
                         // Move the projectile in the direction it's moving.
                         // If the character was moving at the time it shot the projectile,
                         // move the projectile twice as fast.
-                        if (curProjectile.isInAir) {
-                            for (int j = 0; j < level.collidables.size(); j++) {
-                                Collidable curCollidable = level.collidables.get(j);
-                                if (curProjectile.hitBox.intersects(curCollidable.hitBox)) {
-                                    curProjectile.switchHorizontalDirection();
-                                }
-                            }
-                        }
+                        
+                        
                         for (int j = 0; j < level.enemies.size(); j++) {
                             curProjectile.updateFutureHitBox();
                             if (curProjectile.willCollideWith(level.enemies.get(j))) {
-                                final Enemy enem = level.enemies.get(j);
                                 curProjectile.setImage(Projectile.resourcesPath + "explosion.png");
+                                level.enemies.get(j).isAlive = false;
 
                                 final Timer destroyTimer = new Timer(curProjectile.toString());
                                 destroyTimer.schedule(new TimerTask() {
@@ -567,15 +559,58 @@ public class BobertPanel extends JPanel implements Runnable,
 
                                     @Override
                                     public void run() {
-                                        enem.isAlive = false;
                                         proj.destroyed = true;
                                         destroyTimer.cancel();
                                     }
-                                }, 200);
+                                }, 100);
 
                                 break;
                             }
                         }
+                        
+                        if (curProjectile.numBounces > Projectile.numBouncesAllowed) {
+                            curProjectile.setImage(Projectile.resourcesPath + "poof.png");
+                            
+                            final Timer poofTimer = new Timer(curProjectile.toString());
+                            poofTimer.schedule(new TimerTask() {
+                                
+                                final Projectile proj = curProjectile;
+                                
+                                @Override
+                                public void run() {
+                                    proj.destroyed = true;
+                                    poofTimer.cancel();
+                                }
+                            }, 100);
+                        }
+
+                        if (curProjectile.isInAir) {
+                            for (int j = 0; j < level.collidables.size(); j++) {
+                                Collidable curCollidable = level.collidables.get(j);
+                                if (curProjectile.movingRight) {
+                                    if (curCollidable.hitBox.intersectsLine(curProjectile.rightEdge(), curProjectile.topEdge(),
+                                            curProjectile.rightEdge(), curProjectile.bottomEdge())) {
+                                        curProjectile.switchHorizontalDirection();
+                                        curProjectile.numBounces++;
+                                        break;
+                                    }
+                                } else if (curProjectile.movingLeft) {
+                                    if (curCollidable.hitBox.intersectsLine(curProjectile.leftEdge(), curProjectile.topEdge(),
+                                            curProjectile.leftEdge(), curProjectile.bottomEdge())) {
+                                        curProjectile.switchHorizontalDirection();
+                                        curProjectile.numBounces++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Bounds check to see if the projectile is off the screen
+                            if (curProjectile.hitBox.x + curProjectile.hitBox.width < level.background.drawBox.x
+                                    || curProjectile.hitBox.x > level.background.drawBox.x + level.background.drawBox.width) {
+
+                                curProjectile.destroyed = true;
+                            }
                         
                         if (curProjectile.isInAir) {
                             curProjectile.vertVelocity += gravity;
