@@ -10,6 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -132,9 +133,15 @@ public class EditPanel extends JPanel
         } else {
             File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
+            String[] fileNames = new String[levelFiles.length-1]; //to account for the xml file
+            ArrayList<String> tempFileNames = new ArrayList<String>();
             for (int i = 0; i < levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
+                if (levelFiles[i].isDirectory()) {
+                    tempFileNames.add(levelFiles[i].getName());
+                }
+            }
+            for (int i=0; i<tempFileNames.size(); i++) {
+                fileNames[i] = tempFileNames.get(i);
             }
             Object chosenLevel = JOptionPane.showInputDialog(eFrame,
                     "Which level would you like to load?",
@@ -517,7 +524,7 @@ public class EditPanel extends JPanel
                     fileNames,
                     fileNames[0]);
             if (chosenLevel == null) {
-                System.out.println("chosenLevel is null");
+                System.err.println("chosenLevel is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
                 level = new GameLevel((String) chosenLevel, false);

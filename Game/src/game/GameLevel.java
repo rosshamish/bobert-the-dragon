@@ -85,7 +85,6 @@ public class GameLevel {
                 int height = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "height"));
                 Rectangle enemCollisRect = new Rectangle(x, y, width, height);
                 String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
-                System.out.println("enemy #"+(i)+"\n\timage location: "+imgPath);
                 int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movementDistance"));
                 Enemy newEnem = new Enemy(enemCollisRect, imgPath, movementDistance);
                 newEnem.initBoxes(enemCollisRect);
@@ -130,9 +129,6 @@ public class GameLevel {
                     WorldObject.defaultImgPath);
             triggerStartLocation.name = "start";
             collidables.add(triggerStartLocation);
-            
-//            Collidable triggerStartLocation;
-//            Rectangle triggerStartLocationRect = new Rectangle()
             
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);

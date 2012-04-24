@@ -1,5 +1,6 @@
 package game;
 
+import editor.LevelEditor;
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -22,10 +24,11 @@ public class BobertPanel extends JPanel implements Runnable,
     static Character bobert;
     static Camera screenCam;
     static ArrayList<String> gameLevels = new ArrayList<String>();
-    static String levelDataPath = "resources/levels/levels_data.xml";
-    static boolean levelsDefined = false;
     static GameLevel level;
+    static String levelDataPath = "resources/levels/level_order.xml";
+    static boolean levelsDefined = false;
     static boolean shouldAdvanceOneLevel = false;
+    private static boolean wonGame = false;
     
     // Animation vars
     static int animationFrame = 0;
@@ -69,6 +72,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static int movementFrame = 0;
     static int movementDelay = 0;
     
+    
     //</editor-fold>
     
     public BobertPanel(BobertFrame frame) {
@@ -107,13 +111,19 @@ public class BobertPanel extends JPanel implements Runnable,
     public static void defineObjects() {
         if (!levelsDefined) {
             int numLevels = RossLib.parseXML(levelDataPath, "level");
+            gameLevels.clear();
             for (int i = 0; i < numLevels; i++) {
                 gameLevels.add(RossLib.parseXML(levelDataPath, "level", i, "name"));
+                System.out.println(gameLevels.get(i));
             }
             levelsDefined = true;
         }
         if (Main.curArgs == null) { // If this is regular game run
-            level = new GameLevel(gameLevels.get(0), false);
+            if (gameLevels.size() > 0) {
+                level = new GameLevel(gameLevels.get(0), false);
+            } else {
+                wonGame = true;
+            }
         } else { // If this is a level editor test
             level = new GameLevel(Main.curArgs[0], false);
         }
@@ -166,7 +176,7 @@ public class BobertPanel extends JPanel implements Runnable,
         Graphics2D g2d = (Graphics2D) g;
         
         if (objectsDefined) {
-
+            
             // **Draw background
             if (showDebugBoxes) {
                 level.background.drawDebug(g2d, screenCam);
@@ -224,8 +234,8 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
-            g2d.drawString("bobert.numCollected: " + bobert.numCollected, 0, debugTextHeight * 1);
-            g2d.drawString("bobert.vertVelocity < 0: " + (bobert.vertVelocity < 0), 0, debugTextHeight * 2);
+//            g2d.drawString("bobert.numCollected: " + bobert.numCollected, 0, debugTextHeight * 1);
+//            g2d.drawString("bobert.vertVelocity < 0: " + (bobert.vertVelocity < 0), 0, debugTextHeight * 2);
 //            g2d.drawString("level.enemies.get(0).drawBox.x: "+ level.enemies.get(0).drawBox.x, 0, debugTextHeight*3);
 //            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
 //            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
@@ -751,6 +761,11 @@ public class BobertPanel extends JPanel implements Runnable,
                         String action = cur.name;
                         if (action.equalsIgnoreCase("end")) {
                             shouldAdvanceOneLevel = true;
+                        } else if (action.equalsIgnoreCase("play")) {
+                            shouldAdvanceOneLevel = true;
+                        } else if (action.equalsIgnoreCase("editor")) {
+                            BobertPanel.gameRunning = false;
+                            LevelEditor.main(null);
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
                         level.collidables.remove(i);
