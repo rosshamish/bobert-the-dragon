@@ -35,7 +35,7 @@ public class EditPanel extends JPanel
     public static Camera editCam;
     
     public static int camMovementFrame = 0;
-    public static final int camMovementDelay = 80;
+    public static final int camMovementDelay = 0;
     
     public static boolean movingLeft;
     public static boolean movingUp;
@@ -66,7 +66,7 @@ public class EditPanel extends JPanel
     public static Collidable heldObject;
     public static Collidable selectedObject;
     private static long FPSStartOfLoopTime = 0;
-    private final static long FPSDelayPerFrame = 100;
+    private final static long FPSDelayPerFrame = 1;
     
     
     public EditPanel(EditFrame frame) {
@@ -256,7 +256,11 @@ public class EditPanel extends JPanel
     
     @Override
     public void run() {
+        
         while (gameRunning) {
+            
+            FPSStartOfLoop();
+            
             eFrame.labelFileName.setText(level.levelName);
             
             if (camMovementFrame >= camMovementDelay) {
@@ -281,6 +285,8 @@ public class EditPanel extends JPanel
             level.floor.setWidth(level.background.getWidth());
             
             repaint();
+            
+            FPSEndOfLoop();
         }
     }
 
@@ -594,9 +600,9 @@ public class EditPanel extends JPanel
                 System.out.println("chosenLevel is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                Rectangle collectableRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
                         120, 70);
-                level.collidables.add(new Collidable(platRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
+                level.collidables.add(new Collidable(collectableRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
             }
         } else if (action.equalsIgnoreCase("Add Enemy")) {
             String enemiesPath = "resources/enemies/";
@@ -737,7 +743,6 @@ public class EditPanel extends JPanel
                 for (int i=0; i<level.enemies.size(); i++) {
                     if (level.enemies.get(i).hitBox.y != 0) {
                         double ratio = oldHeight / level.enemies.get(i).hitBox.y;
-                        System.out.println("(int) (newHeight / ratio): "+(int) (newHeight / ratio));
                         level.enemies.get(i).setY((int) (newHeight / ratio));
                     }
                 }

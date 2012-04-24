@@ -5,13 +5,11 @@ import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -107,16 +105,13 @@ public class BobertPanel extends JPanel implements Runnable,
         
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-        gameLevels.add("Menu");
-        gameLevels.add("Second Level");
-        gameLevels.add("Third Level");
+
         if (Main.curArgs == null) { // If this is regular game run
+            gameLevels.add("Menu");
             level = new GameLevel(gameLevels.get(0), false);
         } else { // If this is a level editor test
             level = new GameLevel(Main.curArgs[0], false);
         }
-        
-        
         
         bobert = new Character();
         for (int i=0; i<level.collidables.size(); i++) {
@@ -222,11 +217,11 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
-//            g2d.drawString("level.enemies.get(0).movingRight: " + level.enemies.get(0).movingRight, 0, debugTextHeight * 1);
+            g2d.drawString("bobert.numCollected: " + bobert.numCollected, 0, debugTextHeight * 1);
 //            g2d.drawString("level.enemies.get(0).movingLeft: " + level.enemies.get(0).movingLeft, 0, debugTextHeight * 2);
 //            g2d.drawString("level.enemies.get(0).drawBox.x: "+ level.enemies.get(0).drawBox.x, 0, debugTextHeight*3);
 //            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
-//            g2d.drawString("level.enemies.get(0).xPositionInCam(screenCam):  " + level.enemies.get(0).xPositionInCam(screenCam), 0, debugTextHeight * 5);
+//            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
 //            g2d.drawString("level.enemies.get(0).isAlive:  "+ level.enemies.get(0).isAlive, 0, debugTextHeight*6);
 //            g2d.drawString("level.enemies.get(0).isInViewOf(screenCam):     "+level.enemies.get(0).isInViewOf(screenCam), 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
@@ -239,12 +234,20 @@ public class BobertPanel extends JPanel implements Runnable,
 
         while (gameRunning) {
             FPSStartOfLoop();
-            
+
+            // **Moving from level 1 to level 2, for example
             //<editor-fold defaultstate="collapsed" desc="Level Advancement">
             if (shouldAdvanceOneLevel) {
-                shouldAdvanceOneLevel = false;
-                gameLevels.remove(level.levelName);
-                level = new GameLevel(gameLevels.get(0), false);
+                if (Main.curArgs == null) {
+                    // If this is a regular game run, boot the next level.
+                    shouldAdvanceOneLevel = false;
+                    gameLevels.remove(level.levelName);
+                    level = new GameLevel(gameLevels.get(0), false);
+
+                } else {
+                    // if this is an editor test, restart the level
+                    level = new GameLevel(level.levelName, false);
+                }
                 for (int i = 0; i < level.collidables.size(); i++) {
                     Collidable cur = level.collidables.get(i);
                     if (cur.worldObjectType == WorldObjectType.TRIGGER) {
@@ -255,6 +258,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         }
                     }
                 }
+                bobert.numCollected = 0;
                 bobert.vertVelocity = 0;
                 bobert.hasJumped = false;
                 bobert.hasDoubleJumped = false;
@@ -317,13 +321,8 @@ public class BobertPanel extends JPanel implements Runnable,
                                 break;
                             }
                         } else if (cur.collisionType == CollisionType.PASSABLE) {
-                            if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
-                                
-                            } else if (cur.worldObjectType == WorldObjectType.TRIGGER) {
-                                
-                            }
+                            continue;
                         }
-
                     } else {
                         // If we aren't going to be on the ground right away, then
                         // we must be in the air. Set isInAir to true so that we can
@@ -346,20 +345,23 @@ public class BobertPanel extends JPanel implements Runnable,
                 // we should set the character to be standing directly on top of
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
-                
+
                 for (int i = 0; i < level.enemies.size(); i++) {
+                    Enemy curEnemy = level.enemies.get(i);
+                    curEnemy.updateFutureHitBox();
+                    curEnemy.futureHitBox.y += curEnemy.vertVelocity;
+
                     for (int j = 0; j < level.collidables.size(); j++) {
-                        Enemy curEnemy = level.enemies.get(i);
-                        curEnemy.updateFutureHitBox();
-                        curEnemy.futureHitBox.y += curEnemy.vertVelocity*2;
+                        Collidable cur = level.collidables.get(j);
+
                         if (curEnemy.willCollideWith(level.collidables.get(j))) {
-                            if (level.collidables.get(j).collisionType == CollisionType.PLATFORM) {
+                            if (cur.collisionType != CollisionType.PASSABLE) {
                                 if (curEnemy.vertVelocity < 0) {
                                     break;
                                 }
                             }
                             curEnemy.isInAir = false;
-                            curEnemy.setY(level.collidables.get(j).hitBox.y - curEnemy.hitBox.height);
+                            curEnemy.setY(cur.hitBox.y - curEnemy.hitBox.height);
                             // Set the character's vertical velocity to 0 because we are
                             // on the ground, goddamn it, and we aren't jumping, goddamn it.
                             curEnemy.vertVelocity = 1;
@@ -370,15 +372,15 @@ public class BobertPanel extends JPanel implements Runnable,
                             // know whether or not we are jumping.
                             curEnemy.isInAir = true;
                         }
-                        // If the character is in the air, add some gravity to our current
-                        // velocity, and then add the new velocity to the character's
-                        // height.
-                        if (curEnemy.isInAir) {
-                            curEnemy.vertVelocity += gravity;
-                            curEnemy.moveVerticallyBy(curEnemy.vertVelocity);
-                        }
-                        level.enemies.set(i, curEnemy);
                     }
+                    // If the character is in the air, add some gravity to our current
+                    // velocity, and then add the new velocity to the character's
+                    // height.
+                    if (curEnemy.isInAir) {
+                        curEnemy.vertVelocity += gravity;
+                        curEnemy.moveVerticallyBy(curEnemy.vertVelocity);
+                    }
+                    level.enemies.set(i, curEnemy);
                 }
 
                 // Set inAirFrame to 0 because we just finished processing a
@@ -418,9 +420,7 @@ public class BobertPanel extends JPanel implements Runnable,
                                 i < level.collidables.size(); i++) {
                             Collidable cur = level.collidables.get(i);
                             if (bobert.willCollideWith(cur)) {
-                                if (cur.collisionType == CollisionType.PASSABLE) {
-                                    canMove = true;
-                                } else {
+                                if (cur.collisionType != CollisionType.PASSABLE) {
                                     canMove = false;
                                     break;
                                 }
@@ -705,8 +705,32 @@ public class BobertPanel extends JPanel implements Runnable,
             
                 //</editor-fold>
             
+            // **Bobert's collision with the enemies
+            //<editor-fold defaultstate="collapsed" desc="Character Death">
+            for (int i = 0; i < level.enemies.size(); i++) {
+                if (bobert.isCollidingWith(level.enemies.get(i))) {
+                    level = new GameLevel(level.levelName, false);
+                    for (int j = 0; j < level.collidables.size(); j++) {
+                        Collidable cur = level.collidables.get(j);
+                        if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                            if (cur.name.equalsIgnoreCase("start")) {
+                                bobert.setX(cur.leftEdge());
+                                bobert.setY(cur.topEdge());
+                                break;
+                            }
+                        }
+                    }
+                    bobert.vertVelocity = 0;
+                    bobert.hasJumped = false;
+                    bobert.hasDoubleJumped = false;
+                    onScreenProjectiles.clear();
+                    break;
+                }
+            }
+            //</editor-fold>
+            
             // **Handles collision with triggers and the actions associated with them
-            //<editor-fold defaultstate="collapsed" desc="Triggers">
+            //<editor-fold defaultstate="collapsed" desc="Triggers and Collectables">
             for (int i=0; i<level.collidables.size(); i++) {
                 Collidable cur = level.collidables.get(i);
                 if (bobert.isCollidingWith(cur)) {
@@ -715,6 +739,10 @@ public class BobertPanel extends JPanel implements Runnable,
                         if (action.equalsIgnoreCase("end")) {
                             shouldAdvanceOneLevel = true;
                         }
+                    } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
+                        level.collidables.remove(i);
+                        i--;
+                        bobert.numCollected++;
                     }
                 }
             }

@@ -161,7 +161,8 @@ public class RossLib {
                         RossLib.writeXmlTag(dFileName, "y", cur.hitBox.y);
                         RossLib.writeXmlTag(dFileName, "width", cur.hitBox.width);
                         RossLib.writeXmlTag(dFileName, "height", cur.hitBox.height);
-                        RossLib.writeXmlTag(dFileName, "type", cur.collisionType.toString());
+                        RossLib.writeXmlTag(dFileName, "collisionType", cur.collisionType.toString());
+                        RossLib.writeXmlTag(dFileName, "worldObjectType", cur.worldObjectType.toString());
                         RossLib.writeXmlFooter(dFileName, "collidable");
                     }
                 }

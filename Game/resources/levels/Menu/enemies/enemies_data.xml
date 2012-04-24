@@ -2,5 +2,18 @@
 <enemies_data>
 
 
+<enemy>
+
+<name>  </name>
+<location> resources/enemies/0.png </location>
+<x> 567 </x>
+<y> 688 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 150 </movementDistance>
+
+</enemy>
+
+
 </enemies_data>
 

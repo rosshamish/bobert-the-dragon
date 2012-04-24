@@ -52,7 +52,7 @@ public class GameLevel {
             collidables.add(floor);
 
             Collidable collidable;
-            Rectangle platCollisRect;
+            Rectangle collisRect;
             int numCollidables = RossLib.parseXML(collidablesDataPath, "collidable");
             for (int i = 0; i < numCollidables; i++) {
                 int collHeight = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "height"));
@@ -61,18 +61,12 @@ public class GameLevel {
                 int collY = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "y"));
                 String collImgPath = RossLib.parseXML(collidablesDataPath, "collidable", i, "location");
                 CollisionType collType = Collidable.parseCollisionType(
-                        RossLib.parseXML(collidablesDataPath, "collidable", i, "type"));
-                platCollisRect = new Rectangle(collX, collY,
+                        RossLib.parseXML(collidablesDataPath, "collidable", i, "collisionType"));
+                collisRect = new Rectangle(collX, collY,
                         collWidth, collHeight);
-                WorldObjectType objType = WorldObjectType.OBSTACLE;
-                if (collType == CollisionType.PLATFORM) {
-                    objType = WorldObjectType.PLATFORM;
-                } else if (collType == CollisionType.IMPASSABLE) {
-                    objType = WorldObjectType.OBSTACLE;
-                } else if (collType == CollisionType.PASSABLE) {
-                    objType = WorldObjectType.TRIGGER;
-                }
-                collidable = new Collidable(platCollisRect,
+                WorldObjectType objType = WorldObject.parseWorldObjectType(
+                        RossLib.parseXML(collidablesDataPath, "collidable", i, "worldObjectType"));
+                collidable = new Collidable(collisRect,
                         objType, collType,
                         collImgPath);
                 

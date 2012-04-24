@@ -28,6 +28,8 @@ public class Character extends Sprite
     public boolean hasJumped = false;
     public boolean hasDoubleJumped = false;
     
+    public int numCollected = 0;
+    
     static int imageCount = 0;
     static int numImages;
     
