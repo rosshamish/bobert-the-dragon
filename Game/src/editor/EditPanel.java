@@ -66,7 +66,7 @@ public class EditPanel extends JPanel
     public static Collidable heldObject;
     public static Collidable selectedObject;
     private static long FPSStartOfLoopTime = 0;
-    private final static long FPSDelayPerFrame = 10;
+    private final static long FPSDelayPerFrame = 100;
     
     
     public EditPanel(EditFrame frame) {

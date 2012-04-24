@@ -27,7 +27,7 @@ public class Projectile extends Sprite
     public boolean destroyed;
     public boolean movingQuickerSpeed;
     public int numBounces = 0;
-    public static int numBouncesAllowed = 1;
+    public static int numBouncesAllowed = 5;
     
     
     // Should be just high enough of a bounce that there's a possibility it could

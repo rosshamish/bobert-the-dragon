@@ -8,7 +8,7 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
-<width> 1200 </width>
+<width> 1440 </width>
 <height> 100 </height>
 <type> PLATFORM </type>
 
@@ -17,10 +17,23 @@
 
 <collidable>
 
-<name>  </name>
+<name> end </name>
 <location> resources/collidables/triggers/green_flag.png </location>
-<x> 735 </x>
-<y> 517 </y>
+<x> 110 </x>
+<y> 277 </y>
+<width> 50 </width>
+<height> 100 </height>
+<type> PASSABLE </type>
+
+</collidable>
+
+
+<collidable>
+
+<name> start </name>
+<location> resources/default.jpg </location>
+<x> 619 </x>
+<y> 531 </y>
 <width> 50 </width>
 <height> 100 </height>
 <type> PASSABLE </type>
@@ -31,22 +44,9 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/blue.png </location>
-<x> 679 </x>
-<y> 619 </y>
-<width> 120 </width>
-<height> 70 </height>
-<type> IMPASSABLE </type>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/collidables/platforms/magenta.png </location>
-<x> 179 </x>
-<y> 684 </y>
+<location> resources/collidables/platforms/darkgreen.png </location>
+<x> 582 </x>
+<y> 642 </y>
 <width> 120 </width>
 <height> 70 </height>
 <type> PLATFORM </type>
@@ -57,9 +57,22 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/yellow.png </location>
-<x> 950 </x>
-<y> 753 </y>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 296 </x>
+<y> 576 </y>
+<width> 120 </width>
+<height> 70 </height>
+<type> PLATFORM </type>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/red.png </location>
+<x> 54 </x>
+<y> 386 </y>
 <width> 120 </width>
 <height> 70 </height>
 <type> PLATFORM </type>

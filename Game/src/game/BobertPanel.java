@@ -5,7 +5,6 @@ import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -24,7 +23,9 @@ public class BobertPanel extends JPanel implements Runnable,
     // Character vars.
     static Character bobert;
     static Camera screenCam;
+    static ArrayList<String> gameLevels = new ArrayList<String>();
     static GameLevel level;
+    static boolean shouldAdvanceOneLevel = false;
     
     // Animation vars
     static int animationFrame = 0;
@@ -106,31 +107,29 @@ public class BobertPanel extends JPanel implements Runnable,
         
         screenCam = new Camera(0, 0,
                 Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        gameLevels.add("Menu");
+        gameLevels.add("Second Level");
+        gameLevels.add("Third Level");
         if (Main.curArgs == null) { // If this is regular game run
-        File dir = new File("resources/levels/");
-            File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
-            for (int i=0; i<levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
-            }
-            Object chosenLevel = JOptionPane.showInputDialog(bFrame, 
-                    "Pick a level!",
-                    "Bobert the Dragon - BlockTwo Studios",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    fileNames,
-                    fileNames[0]);
-            if (chosenLevel == null) {
-                System.out.println("chosenLevel is null");
-                System.exit(0);
-            } else {
-                level = new GameLevel((String) chosenLevel, false);
-            }
+            level = new GameLevel(gameLevels.get(0), false);
         } else { // If this is a level editor test
             level = new GameLevel(Main.curArgs[0], false);
         }
         
+        
+        
         bobert = new Character();
+        for (int i=0; i<level.collidables.size(); i++) {
+            Collidable cur = level.collidables.get(i);
+            if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                if (cur.name.equalsIgnoreCase("start")) {
+                    bobert.setX(cur.leftEdge());
+                    bobert.setY(cur.topEdge());
+                    break;
+                }
+            }
+        }
+        
         bobert.imagePaths = new ArrayList<String>();
         String amtImages = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "numberOfImages");
@@ -190,7 +189,9 @@ public class BobertPanel extends JPanel implements Runnable,
             }
             // **Draw collidables
             for (int i=0; i<level.collidables.size(); i++) {
-                level.collidables.get(i).draw(g2d, screenCam);
+                if (!level.collidables.get(i).name.equalsIgnoreCase("start")) {
+                    level.collidables.get(i).draw(g2d, screenCam);
+                }
                 if (showDebugBoxes) 
                     level.collidables.get(i).drawDebug(g2d, screenCam);
             }
@@ -239,11 +240,27 @@ public class BobertPanel extends JPanel implements Runnable,
         while (gameRunning) {
             FPSStartOfLoop();
             
-            /* TODO handle collision detection better. Update his future hit box
-             * once at the beginning of the game loop (here), and then keep udpating
-             * it throughout the loop. If, at the end, it's an invalid place, move
-             * him back to where he was BUT KEEP APPLYING GRAVITY.
-             */
+            //<editor-fold defaultstate="collapsed" desc="Level Advancement">
+            if (shouldAdvanceOneLevel) {
+                shouldAdvanceOneLevel = false;
+                gameLevels.remove(level.levelName);
+                level = new GameLevel(gameLevels.get(0), false);
+                for (int i = 0; i < level.collidables.size(); i++) {
+                    Collidable cur = level.collidables.get(i);
+                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                        if (cur.name.equalsIgnoreCase("start")) {
+                            bobert.setX(cur.leftEdge());
+                            bobert.setY(cur.topEdge());
+                            break;
+                        }
+                    }
+                }
+                bobert.vertVelocity = 0;
+                bobert.hasJumped = false;
+                bobert.hasDoubleJumped = false;
+                onScreenProjectiles.clear();
+            }
+            //</editor-fold>
             
             // **Handles all characters which are in the air.
             //<editor-fold defaultstate="collapsed" desc="In Air">
@@ -385,39 +402,24 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Duh.
                 if (bobert.leftEdge() > level.background.drawBox.x
                         && bobert.rightEdge() < level.background.drawBox.x + level.background.drawBox.width) {
-                    boolean canMove = true;
-                    if (bobert.movingRight) {
-                        bobert.updateFutureHitBox();
-                        bobert.futureHitBox.x += bobert.moveSpeed;
-
-                        for (int i = 0; i < level.collidables.size(); i++) {
-                            if (bobert.willCollideWith(level.collidables.get(i))) {
-                                canMove = false;
-                                break;
-                            } else {
-                                canMove = true;
-                            }
-                        }
-                        if (canMove) {
-                            bobert.moveRightBy(bobert.moveSpeed);
-                        }
-                    }
+                    
                     // If the character is moving to the left (as set in the
                     // keyPressed and keyReleased methods), then move it to the left.
                     // Duh.
+                    boolean canMove = true;
+                    bobert.updateFutureHitBox();
                     if (bobert.movingLeft) {
-                        bobert.updateFutureHitBox();
                         bobert.futureHitBox.x -= bobert.moveSpeed;
-                        for (int i = 0; i < level.collidables.size(); i++) {
+                    } else if (bobert.movingRight) {
+                        bobert.futureHitBox.x += bobert.moveSpeed;
+                    }
+                    if (bobert.movingRight || bobert.movingLeft) {
+                        for (int i = 0;
+                                i < level.collidables.size(); i++) {
                             Collidable cur = level.collidables.get(i);
                             if (bobert.willCollideWith(cur)) {
                                 if (cur.collisionType == CollisionType.PASSABLE) {
                                     canMove = true;
-                                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
-                                        System.out.println("Hit trigger!");
-                                    } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
-                                        System.out.println("Collected something!");
-                                    }
                                 } else {
                                     canMove = false;
                                     break;
@@ -426,10 +428,15 @@ public class BobertPanel extends JPanel implements Runnable,
                                 canMove = true;
                             }
                         }
-                        if (canMove) {
+                    }
+                    if (canMove) {
+                        if (bobert.movingLeft) {
                             bobert.moveLeftBy(bobert.moveSpeed);
+                        } else if (bobert.movingRight) {
+                            bobert.moveRightBy(bobert.moveSpeed);
                         }
                     }
+
                 } else {
                     if (bobert.leftEdge() <= 0) {
                         bobert.moveRightBy(bobert.moveSpeed);
@@ -697,6 +704,21 @@ public class BobertPanel extends JPanel implements Runnable,
 //            }
             
                 //</editor-fold>
+            
+            // **Handles collision with triggers and the actions associated with them
+            //<editor-fold defaultstate="collapsed" desc="Triggers">
+            for (int i=0; i<level.collidables.size(); i++) {
+                Collidable cur = level.collidables.get(i);
+                if (bobert.isCollidingWith(cur)) {
+                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                        String action = cur.name;
+                        if (action.equalsIgnoreCase("end")) {
+                            shouldAdvanceOneLevel = true;
+                        }
+                    }
+                }
+            }
+            //</editor-fold>
 
             // Keeps the frame rate constant by delaying the game loop
             FPSEndOfLoop();

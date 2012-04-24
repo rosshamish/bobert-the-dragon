@@ -2,7 +2,6 @@ package game;
 
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import rosslib.RossLib;
@@ -20,8 +19,6 @@ public class GameLevel {
     public ArrayList<Collidable> collidables;
     public ArrayList<Enemy> enemies;
     
-    public Point startLocation;
-    public Collidable triggerEndLevel;
     
     public GameLevel (String _levelName, boolean _newLevel) {
         
@@ -124,12 +121,24 @@ public class GameLevel {
             floor.initBoxes(this.floor.hitBox);
             collidables.add(floor);
             
-            startLocation = new Point(Main.B_WINDOW_WIDTH*1/4, background.getHeight()*3/4);
-            Rectangle triggerEndLevelRect = new Rectangle(Main.B_WINDOW_WIDTH*3/4, background.getHeight()*1/2,
+            Collidable triggerEndLevel;
+            Rectangle triggerEndLevelRect = new Rectangle(100, background.getHeight()*1/2,
                     50, 100);
             triggerEndLevel = new Collidable(triggerEndLevelRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                     "resources/collidables/triggers/green_flag.png");
+            triggerEndLevel.name = "end";
             collidables.add(triggerEndLevel);
+            
+            Collidable triggerStartLocation;
+            Rectangle triggerStartLocationRect = new Rectangle(200, background.getHeight()*1/2,
+                    50, 100);
+            triggerStartLocation = new Collidable(triggerStartLocationRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
+                    WorldObject.defaultImgPath);
+            triggerStartLocation.name = "start";
+            collidables.add(triggerStartLocation);
+            
+//            Collidable triggerStartLocation;
+//            Rectangle triggerStartLocationRect = new Rectangle()
             
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);
