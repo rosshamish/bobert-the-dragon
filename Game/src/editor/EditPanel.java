@@ -80,8 +80,7 @@ public class EditPanel extends JPanel
     }
     
     public static void defineObjects() {
-        editCam = new Camera(0, 0,
-                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        
         borderLeft = new Rectangle(0, Main.B_WINDOW_BAR_HEIGHT,
                 borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
         borderLeftImg = new ImageIcon("resources/editor/border_facingLeft.png").getImage();
@@ -151,6 +150,19 @@ public class EditPanel extends JPanel
                 level = new GameLevel((String) chosenLevel, false);
             }
         }
+        editCam = new Camera(0, 0,
+                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        for (int i=0; i<level.collidables.size(); i++) {
+            Collidable cur = level.collidables.get(i);
+            if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                if (cur.name.equalsIgnoreCase("start")) {
+                    editCam = new Camera(cur.leftEdge() - Main.B_WINDOW_WIDTH/2, cur.topEdge() - Main.B_WINDOW_HEIGHT/2,
+                            Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+                    break;
+                }
+            }
+        }
+        
         
         gameRunning = true;
         objectsDefined = true;
@@ -716,14 +728,16 @@ public class EditPanel extends JPanel
                 int oldWidth = level.background.drawBox.width;
                 for (int i=0; i<level.collidables.size(); i++) {
                     if (level.collidables.get(i).hitBox.x != 0) {
-                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
-                        level.collidables.get(i).setX((int) (newWidth / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
+//                        level.collidables.get(i).setX((int) (newWidth / ratio));
                     }
                 }
                 for (int i=0; i<level.enemies.size(); i++) {
                     if (level.enemies.get(i).hitBox.x != 0) {
-                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
-                        level.enemies.get(i).setX((int) (newWidth / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
+//                        level.enemies.get(i).setX((int) (newWidth / ratio));
                     }
                 }
                 
@@ -736,14 +750,16 @@ public class EditPanel extends JPanel
                 int oldHeight = level.background.drawBox.height;
                 for (int i=0; i<level.collidables.size(); i++) {
                     if (level.collidables.get(i).hitBox.y != 0) {
-                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
-                        level.collidables.get(i).setY((int) (newHeight / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
+//                        level.collidables.get(i).setY((int) (newHeight / ratio));
                     }
                 }
                 for (int i=0; i<level.enemies.size(); i++) {
                     if (level.enemies.get(i).hitBox.y != 0) {
-                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
-                        level.enemies.get(i).setY((int) (newHeight / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
+//                        level.enemies.get(i).setY((int) (newHeight / ratio));
                     }
                 }
                 level.background.drawBox.height = newHeight;

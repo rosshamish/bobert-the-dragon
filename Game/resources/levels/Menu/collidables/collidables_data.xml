@@ -4,11 +4,11 @@
 
 <collidable>
 
-<name>  </name>
+<name> Floor, eh? </name>
 <location> resources/default.jpg </location>
 <x> 0 </x>
-<y> 910 </y>
-<width> 1440 </width>
+<y> 1807 </y>
+<width> 1200 </width>
 <height> 100 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> FLOOR </worldObjectType>
@@ -20,8 +20,8 @@
 
 <name> end </name>
 <location> resources/collidables/triggers/green_flag.png </location>
-<x> 636 </x>
-<y> 345 </y>
+<x> 818 </x>
+<y> 399 </y>
 <width> 50 </width>
 <height> 100 </height>
 <collisionType> PASSABLE </collisionType>
@@ -34,8 +34,8 @@
 
 <name> start </name>
 <location> resources/default.jpg </location>
-<x> 135 </x>
-<y> 595 </y>
+<x> 112 </x>
+<y> 685 </y>
 <width> 50 </width>
 <height> 100 </height>
 <collisionType> PASSABLE </collisionType>
@@ -47,9 +47,9 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_OC.png </location>
-<x> 300 </x>
-<y> 456 </y>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 275 </x>
+<y> 724 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -61,11 +61,11 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_BL.png </location>
-<x> 150 </x>
-<y> 406 </y>
-<width> 160 </width>
-<height> 122 </height>
+<location> resources/collidables/platforms/blockTwo_primaryColors_KT.png </location>
+<x> 535 </x>
+<y> 430 </y>
+<width> 224 </width>
+<height> 150 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
 
@@ -75,11 +75,25 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blockTwo_primaryColors_KT.png </location>
-<x> 402 </x>
-<y> 404 </y>
-<width> 160 </width>
-<height> 122 </height>
+<location> resources/collidables/platforms/blockTwo_primaryColors_BL.png </location>
+<x> 160 </x>
+<y> 450 </y>
+<width> 224 </width>
+<height> 131 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blockTwo_primaryColors_OC.png </location>
+<x> 366 </x>
+<y> 484 </y>
+<width> 192 </width>
+<height> 98 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
 
@@ -90,10 +104,10 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blockTwo_primaryColors_WO.png </location>
-<x> 513 </x>
-<y> 440 </y>
-<width> 200 </width>
-<height> 85 </height>
+<x> 684 </x>
+<y> 484 </y>
+<width> 216 </width>
+<height> 94 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
 
@@ -103,9 +117,23 @@
 <collidable>
 
 <name>  </name>
+<location> resources/collidables/obstacles/orange.png </location>
+<x> 554 </x>
+<y> 764 </y>
+<width> 353 </width>
+<height> 70 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> OBSTACLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
 <location> resources/collidables/collectables/pineapple.png </location>
-<x> 306 </x>
-<y> 602 </y>
+<x> 270 </x>
+<y> 648 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -117,27 +145,13 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/platforms/blue.png </location>
-<x> 317 </x>
-<y> 678 </y>
+<location> resources/collidables/collectables/pineapple.png </location>
+<x> 393 </x>
+<y> 406 </y>
 <width> 120 </width>
 <height> 70 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> PLATFORM </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/collidables/obstacles/orange.png </location>
-<x> 544 </x>
-<y> 798 </y>
-<width> 297 </width>
-<height> 70 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> OBSTACLE </worldObjectType>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
 
 </collidable>
 

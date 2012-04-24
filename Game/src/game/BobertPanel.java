@@ -103,9 +103,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
     public static void defineObjects() {
         
-        screenCam = new Camera(0, 0,
-                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-
         if (Main.curArgs == null) { // If this is regular game run
             gameLevels.add("Menu");
             level = new GameLevel(gameLevels.get(0), false);
@@ -124,6 +121,8 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
             }
         }
+        screenCam = new Camera(0, bobert.topEdge() - Main.B_WINDOW_HEIGHT/2,
+                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         
         bobert.imagePaths = new ArrayList<String>();
         String amtImages = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
@@ -218,7 +217,7 @@ public class BobertPanel extends JPanel implements Runnable,
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
             g2d.drawString("bobert.numCollected: " + bobert.numCollected, 0, debugTextHeight * 1);
-//            g2d.drawString("level.enemies.get(0).movingLeft: " + level.enemies.get(0).movingLeft, 0, debugTextHeight * 2);
+            g2d.drawString("bobert.vertVelocity < 0: " + (bobert.vertVelocity < 0), 0, debugTextHeight * 2);
 //            g2d.drawString("level.enemies.get(0).drawBox.x: "+ level.enemies.get(0).drawBox.x, 0, debugTextHeight*3);
 //            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
 //            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
@@ -297,7 +296,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             if (bobert.vertVelocity < 0) {
                                 // if bobert is moving upwards, he can't collide
                                 // because you have to FALL onto a platform, bro.
-                                break;
+                                continue;
                             } else {
                                 bobert.isInAir = false;
                                 bobert.hasJumped = false;
@@ -321,6 +320,7 @@ public class BobertPanel extends JPanel implements Runnable,
                                 break;
                             }
                         } else if (cur.collisionType == CollisionType.PASSABLE) {
+                            bobert.isInAir = true;
                             continue;
                         }
                     } else {
@@ -357,15 +357,20 @@ public class BobertPanel extends JPanel implements Runnable,
                         if (curEnemy.willCollideWith(level.collidables.get(j))) {
                             if (cur.collisionType != CollisionType.PASSABLE) {
                                 if (curEnemy.vertVelocity < 0) {
+                                    continue;
+                                } else {
+                                    curEnemy.isInAir = false;
+                                    curEnemy.setY(cur.hitBox.y - curEnemy.hitBox.height);
+                                    // Set the character's vertical velocity to 0 because we are
+                                    // on the ground, goddamn it, and we aren't jumping, goddamn it.
+                                    curEnemy.vertVelocity = 1;
                                     break;
                                 }
+                            } else {
+                                curEnemy.isInAir = true;
+                                continue;
                             }
-                            curEnemy.isInAir = false;
-                            curEnemy.setY(cur.hitBox.y - curEnemy.hitBox.height);
-                            // Set the character's vertical velocity to 0 because we are
-                            // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                            curEnemy.vertVelocity = 1;
-                            break;
+                            
                         } else {
                             // If we aren't going to be on the ground right away, then
                             // we must be in the air. Set isInAir to true so that we can
@@ -799,10 +804,12 @@ public class BobertPanel extends JPanel implements Runnable,
                     Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
+                    bobert.hasDoubleJumped = false;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
                     Audio.JUMP.play();
                     bobert.isInAir = true;
+                    bobert.hasJumped = true;
                     bobert.hasDoubleJumped = true;
                     bobert.vertVelocity = Character.vertVelocityDoubleJump;
                 }
