@@ -646,12 +646,12 @@ public class BobertPanel extends JPanel implements Runnable,
                     && bobert.xPositionInCam(screenCam) < screenCam.getWidth() * 0.5) {
                 screenCam.moveLeftBy(bobert.moveSpeed * Camera.scrollFactor);
             }
-            if (screenCam.getY() < 0 
-                    && bobert.yPositionInCam(screenCam) > screenCam.getY() + (screenCam.getHeight()*0.5)){
+            if (screenCam.getY() + screenCam.getHeight() <= level.background.drawBox.y + level.background.drawBox.height
+                    && bobert.yPositionInCam(screenCam) > (screenCam.getHeight()*0.5)){
                 screenCam.moveVerticallyBy(3);
             }
             if (screenCam.getY() > level.background.drawBox.y 
-                    && bobert.yPositionInCam(screenCam) < screenCam.getY() + (screenCam.getHeight()*0.5)) {
+                    && bobert.yPositionInCam(screenCam) < (screenCam.getHeight()*0.5)) {
                 screenCam.moveVerticallyBy(-3);
             }
             

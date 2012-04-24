@@ -10,6 +10,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +35,7 @@ public class EditPanel extends JPanel
     public static Camera editCam;
     
     public static int camMovementFrame = 0;
-    public static final int camMovementDelay = 8000;
+    public static final int camMovementDelay = 80;
     
     public static boolean movingLeft;
     public static boolean movingUp;
@@ -63,6 +65,8 @@ public class EditPanel extends JPanel
     
     public static Collidable heldObject;
     public static Collidable selectedObject;
+    private static long FPSStartOfLoopTime = 0;
+    private final static long FPSDelayPerFrame = 10;
     
     
     public EditPanel(EditFrame frame) {
@@ -237,10 +241,10 @@ public class EditPanel extends JPanel
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-//            g2d.drawString("Mouse X: "+String.valueOf(mouseX), 10, 10);
-//            g2d.drawString("Mouse Y: "+String.valueOf(mouseY), 10, 20);
-//            g2d.drawString("Mouse dX: "+String.valueOf(mouseDeltaX), 10, 30);
-//            g2d.drawString("Mouse dY: "+String.valueOf(mouseDeltaY), 10, 40); 
+//            g2d.drawString("Flag x: "+level.collidables.get(2).hitBox.x, 10, 10);
+//            g2d.drawString("Flag y: "+level.collidables.get(2).hitBox.y, 10, 20);
+//            g2d.drawString("Cloud x: "+String.valueOf(mouseDeltaX), 10, 30);
+//            g2d.drawString("Cloud y: "+String.valueOf(mouseDeltaY), 10, 40); 
 //            
 //            g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
 //            g2d.drawString("selectedObject: "+String.valueOf(selectedObject), 10, 70);
@@ -613,7 +617,7 @@ public class EditPanel extends JPanel
                 System.out.println("chosenEnemy is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                Rectangle enemCollisRect = new Rectangle(50, 50, 100, 100);
+                Rectangle enemCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 100, 100);
                 level.enemies.add(new Enemy(enemCollisRect, enemiesPath+(String)chosenEnemy, Enemy.defaultMovementDistance));
             }
         } else if (action.equalsIgnoreCase("Change Image")) {
@@ -756,6 +760,22 @@ public class EditPanel extends JPanel
             }
         } else {
             System.out.println("Slider "+name+" doesn't have behaviour set up yet!");
+        }
+    }
+    
+    static void FPSStartOfLoop() {
+        FPSStartOfLoopTime = System.currentTimeMillis();
+    }
+
+    static void FPSEndOfLoop() {
+        long sleepTime = FPSDelayPerFrame - (System.currentTimeMillis() - FPSStartOfLoopTime);
+        if (sleepTime < 1) {
+            sleepTime = 1;
+        }
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

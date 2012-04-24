@@ -37,14 +37,14 @@ public class GameLevel {
             // need transparency.
             int bgHeight = Integer.parseInt(RossLib.parseXML(backgroundsDataPath, "background", 0, "height"));
             int bgWidth = Integer.parseInt(RossLib.parseXML(backgroundsDataPath, "background", 0, "width"));
-            background = new WorldObject(new Rectangle(0, Main.B_WINDOW_HEIGHT - bgHeight,
+            background = new WorldObject(new Rectangle(0, 0,
                     bgWidth, bgHeight));
             String bgImgPath = RossLib.parseXML(backgroundsDataPath, "background", 0, "location");
             background.setImage(bgImgPath);
 
             collidables = new ArrayList<Collidable>();
             int floorWidth = bgWidth;
-            Rectangle floorCollisionRect = new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
+            Rectangle floorCollisionRect = new Rectangle(background.drawBox.x, background.drawBox.y + background.drawBox.height - Main.B_WINDOW_BAR_HEIGHT,
                     floorWidth, 100);
             String floorImgPath = Collidable.defaultImgPath;
             floor = new Collidable(floorCollisionRect,
@@ -73,7 +73,7 @@ public class GameLevel {
                 } else if (collType == CollisionType.IMPASSABLE) {
                     objType = WorldObjectType.OBSTACLE;
                 } else if (collType == CollisionType.PASSABLE) {
-                    objType = WorldObjectType.COLLECTABLE;
+                    objType = WorldObjectType.TRIGGER;
                 }
                 collidable = new Collidable(platCollisRect,
                         objType, collType,
@@ -94,6 +94,7 @@ public class GameLevel {
                 int height = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "height"));
                 Rectangle enemCollisRect = new Rectangle(x, y, width, height);
                 String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
+                System.out.println("enemy #"+(i)+"\n\timage location: "+imgPath);
                 int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movementDistance"));
                 Enemy newEnem = new Enemy(enemCollisRect, imgPath, movementDistance);
                 newEnem.initBoxes(enemCollisRect);
@@ -111,24 +112,24 @@ public class GameLevel {
         } else { // This is a new level, ,so create it.
             levelName = _levelName;
             
-            this.enemies = new ArrayList<Enemy>();
+            enemies = new ArrayList<Enemy>();
             
-            this.collidables = new ArrayList<Collidable>();
-            this.background = new WorldObject(new Rectangle(0, 0,
-                    (int) (Main.B_WINDOW_WIDTH*1.2), (int) (Main.B_WINDOW_HEIGHT*1.2)));
-            this.background.setImage(WorldObject.defaultImgPath);
-            this.floor = new Collidable(new Rectangle(0, Main.B_WINDOW_CANVAS_HEIGHT,
+            collidables = new ArrayList<Collidable>();
+            background = new WorldObject(new Rectangle(0, 0,
+                    (int) (Main.B_WINDOW_WIDTH*1.2), (int) (Main.B_WINDOW_HEIGHT*1.0)));
+            background.setImage(WorldObject.defaultImgPath);
+            floor = new Collidable(new Rectangle(background.drawBox.x, background.drawBox.y + background.drawBox.height - Main.B_WINDOW_BAR_HEIGHT,
                     background.getWidth(), 100), 
                     WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
-            this.floor.initBoxes(this.floor.hitBox);
-            this.collidables.add(floor);
+            floor.initBoxes(this.floor.hitBox);
+            collidables.add(floor);
             
             startLocation = new Point(Main.B_WINDOW_WIDTH*1/4, background.getHeight()*3/4);
             Rectangle triggerEndLevelRect = new Rectangle(Main.B_WINDOW_WIDTH*3/4, background.getHeight()*1/2,
                     50, 100);
             triggerEndLevel = new Collidable(triggerEndLevelRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                     "resources/collidables/triggers/green_flag.png");
-            this.collidables.add(triggerEndLevel);
+            collidables.add(triggerEndLevel);
             
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);

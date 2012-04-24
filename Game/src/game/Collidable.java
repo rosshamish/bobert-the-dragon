@@ -46,8 +46,8 @@ public class Collidable extends WorldObject
     
     public Collidable(Rectangle collisionRect, WorldObjectType objType, CollisionType colType, ArrayList<String> imageLocations) {
         this.hitBox = collisionRect;
-        this.drawBox = hitBox;
-        this.futureHitBox = hitBox;
+        this.drawBox = new Rectangle(hitBox);
+        this.futureHitBox = new Rectangle(hitBox);
         this.worldObjectType = objType;
         this.collisionType = colType;
         this.imagePaths = imageLocations;
@@ -150,24 +150,25 @@ public class Collidable extends WorldObject
      */
     public void setX(int newX) {
         hitBox.x = newX;
-        if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.OBSTACLE;
-        }
-        if (this.worldObjectType == WorldObjectType.FRIENDLY) {
-            drawBox.x = hitBox.x + this.drawHitOffset;
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.ENEMY || 
-                this.worldObjectType == WorldObjectType.PROJECTILE) {
-            drawBox.x = hitBox.x - this.drawHitOffset;
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.CHARACTER || 
-                this.worldObjectType == WorldObjectType.PLATFORM ||
-                this.worldObjectType == WorldObjectType.OBSTACLE) {
-            drawBox.x = hitBox.x;
-            return;
-        }
+        drawBox.x = newX;
+//        if (this.worldObjectType == null) {
+//            this.worldObjectType = WorldObjectType.OBSTACLE;
+//        }
+//        if (this.worldObjectType == WorldObjectType.FRIENDLY) {
+//            drawBox.x = hitBox.x + this.drawHitOffset;
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.ENEMY || 
+//                this.worldObjectType == WorldObjectType.PROJECTILE) {
+//            drawBox.x = hitBox.x - this.drawHitOffset;
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.CHARACTER || 
+//                this.worldObjectType == WorldObjectType.PLATFORM ||
+//                this.worldObjectType == WorldObjectType.OBSTACLE) {
+//            drawBox.x = hitBox.x;
+//            return;
+//        }
     }
     
     /**
@@ -176,25 +177,26 @@ public class Collidable extends WorldObject
      */
     public void setY(int newY) {
         hitBox.y = newY;
-        if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.OBSTACLE;
-        }
-        if (this.worldObjectType == WorldObjectType.FRIENDLY) {
-            drawBox.y = hitBox.y + this.drawHitOffset;
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.ENEMY || 
-                this.worldObjectType == WorldObjectType.PROJECTILE) {
-            drawBox.y = hitBox.y - this.drawHitOffset;
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.CHARACTER ||
-                this.worldObjectType == WorldObjectType.PLATFORM ||
-                this.worldObjectType == WorldObjectType.OBSTACLE ||
-                this.worldObjectType == WorldObjectType.FLOOR) {
-            drawBox.y = hitBox.y;
-            return;
-        }
+        drawBox.y = newY;
+//        if (this.worldObjectType == null) {
+//            this.worldObjectType = WorldObjectType.OBSTACLE;
+//        }
+//        if (this.worldObjectType == WorldObjectType.FRIENDLY) {
+//            drawBox.y = hitBox.y + this.drawHitOffset;
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.ENEMY || 
+//                this.worldObjectType == WorldObjectType.PROJECTILE) {
+//            drawBox.y = hitBox.y - this.drawHitOffset;
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.CHARACTER ||
+//                this.worldObjectType == WorldObjectType.PLATFORM ||
+//                this.worldObjectType == WorldObjectType.OBSTACLE ||
+//                this.worldObjectType == WorldObjectType.FLOOR) {
+//            drawBox.y = hitBox.y;
+//            return;
+//        }
     }
     
     public void setWidth(int _width) {
@@ -257,38 +259,39 @@ public class Collidable extends WorldObject
      */
     void initBoxes(Rectangle collisionBox) {
         hitBox = new Rectangle(collisionBox);
-        futureHitBox = new Rectangle(hitBox);
-        if (this.worldObjectType == null) {
-            this.worldObjectType = WorldObjectType.OBSTACLE;
-        }
-        if (this.worldObjectType == WorldObjectType.FRIENDLY || 
-                this.worldObjectType == WorldObjectType.PROJECTILE) {
-            drawBox.x = hitBox.x + this.drawHitOffset;
-            drawBox.y = hitBox.y + this.drawHitOffset;
-            drawBox.width = hitBox.width - (this.drawHitOffset*2); // Subtract 1 for each side of the box.
-            drawBox.height = hitBox.height - (this.drawHitOffset); // The feet need to touch ground.
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.ENEMY) {
-            drawBox.x = hitBox.x - this.drawHitOffset;
-            drawBox.y = hitBox.y - this.drawHitOffset;
-            drawBox.width = hitBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.
-            drawBox.height = hitBox.height + (this.drawHitOffset); // The feet need to touch ground.
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.CHARACTER || 
-                this.worldObjectType == WorldObjectType.OBSTACLE) {
-            // Just return. The boxes are the same for each of these types.
-            drawBox = new Rectangle(hitBox);
-            return;
-        }
-        if (this.worldObjectType == WorldObjectType.FLOOR) {
-            drawBox.x = hitBox.x;
-            drawBox.y = hitBox.y - drawHitOffset;
-            drawBox.width = hitBox.width;
-            drawBox.height = hitBox.height + drawHitOffset;
-            return;
-        }
+        futureHitBox = new Rectangle(collisionBox);
+        drawBox = new Rectangle(collisionBox);
+//        if (this.worldObjectType == null) {
+//            this.worldObjectType = WorldObjectType.OBSTACLE;
+//        }
+//        if (this.worldObjectType == WorldObjectType.FRIENDLY || 
+//                this.worldObjectType == WorldObjectType.PROJECTILE) {
+//            drawBox.x = hitBox.x + this.drawHitOffset;
+//            drawBox.y = hitBox.y + this.drawHitOffset;
+//            drawBox.width = hitBox.width - (this.drawHitOffset*2); // Subtract 1 for each side of the box.
+//            drawBox.height = hitBox.height - (this.drawHitOffset); // The feet need to touch ground.
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.ENEMY) {
+//            drawBox.x = hitBox.x - this.drawHitOffset;
+//            drawBox.y = hitBox.y - this.drawHitOffset;
+//            drawBox.width = hitBox.width + (this.drawHitOffset*2); // Subtract 1 for each side of the box.
+//            drawBox.height = hitBox.height + (this.drawHitOffset); // The feet need to touch ground.
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.CHARACTER || 
+//                this.worldObjectType == WorldObjectType.OBSTACLE) {
+//            // Just return. The boxes are the same for each of these types.
+//            drawBox = new Rectangle(hitBox);
+//            return;
+//        }
+//        if (this.worldObjectType == WorldObjectType.FLOOR) {
+//            drawBox.x = hitBox.x;
+//            drawBox.y = hitBox.y - drawHitOffset;
+//            drawBox.width = hitBox.width;
+//            drawBox.height = hitBox.height + drawHitOffset;
+//            return;
+//        }
         
     }
     

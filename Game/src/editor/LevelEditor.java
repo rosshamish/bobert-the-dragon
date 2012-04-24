@@ -34,8 +34,10 @@ public class LevelEditor {
                     // Do nothing
                 } else if (optionChosen == JOptionPane.YES_OPTION) {
                     String name = JOptionPane.showInputDialog("Save as: ", EditPanel.level.levelName);
-                    EditPanel.level.levelName = name;
-                    RossLib.writeLevelData(EditPanel.level);
+                    if (name != null) {
+                        EditPanel.level.levelName = name;
+                        RossLib.writeLevelData(EditPanel.level);
+                    }
                     System.exit(0);
                 } else if (optionChosen == JOptionPane.NO_OPTION) {
                     System.exit(0);
