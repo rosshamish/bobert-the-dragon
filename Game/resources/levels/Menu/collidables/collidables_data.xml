@@ -18,6 +18,34 @@
 
 <collidable>
 
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1807 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1807 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
 <name> end </name>
 <location> resources/collidables/triggers/green_flag.png </location>
 <x> 818 </x>
@@ -152,6 +180,20 @@
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
 <worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 81 </x>
+<y> 786 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
 
 </collidable>
 
