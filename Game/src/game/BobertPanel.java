@@ -22,6 +22,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static Character bobert;
     static Camera screenCam;
     static ArrayList<String> gameLevels = new ArrayList<String>();
+    static String levelDataPath = "resources/levels/levels_data.xml";
     static GameLevel level;
     static boolean shouldAdvanceOneLevel = false;
     
@@ -99,12 +100,15 @@ public class BobertPanel extends JPanel implements Runnable,
         gameThread = new Thread(this);
         gameThread.start();
         bFrame.addKeyListener(this);
+        int numLevels = RossLib.parseXML(levelDataPath, "level");
+        for (int i=0; i<numLevels; i++) {
+            gameLevels.add(RossLib.parseXML(levelDataPath, "level", i, "name"));
+        }
     }
 
     public static void defineObjects() {
         
         if (Main.curArgs == null) { // If this is regular game run
-            gameLevels.add("Menu");
             level = new GameLevel(gameLevels.get(0), false);
         } else { // If this is a level editor test
             level = new GameLevel(Main.curArgs[0], false);
