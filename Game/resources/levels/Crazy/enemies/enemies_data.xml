@@ -4,10 +4,10 @@
 
 <enemy>
 
-<name>  </name>
+<name> DefaultName </name>
 <location> resources/enemies/0.png </location>
-<x> 432 </x>
-<y> 752 </y>
+<x> 428 </x>
+<y> 742 </y>
 <width> 131 </width>
 <height> 119 </height>
 <movementDistance> 403 </movementDistance>

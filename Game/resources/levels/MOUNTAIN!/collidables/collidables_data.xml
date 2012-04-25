@@ -18,6 +18,34 @@
 
 <collidable>
 
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
 <name>  </name>
 <location> resources/default.jpg </location>
 <x> 0 </x>
@@ -62,8 +90,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/silver.png </location>
-<x> 712 </x>
-<y> 582 </y>
+<x> 678 </x>
+<y> 580 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -76,8 +104,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/lightgreen.png </location>
-<x> 964 </x>
-<y> 701 </y>
+<x> 968 </x>
+<y> 735 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -90,8 +118,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/skyblue.png </location>
-<x> 992 </x>
-<y> 457 </y>
+<x> 986 </x>
+<y> 497 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -146,8 +174,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/cloud1.png </location>
-<x> 746 </x>
-<y> 308 </y>
+<x> 750 </x>
+<y> 334 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>

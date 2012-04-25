@@ -4,26 +4,26 @@
 
 <enemy>
 
-<name>  </name>
+<name> DefaultName </name>
 <location> resources/enemies/0.png </location>
 <x> 1019 </x>
 <y> 203 </y>
 <width> 100 </width>
 <height> 100 </height>
-<movementDistance> 10 </movementDistance>
+<movementDistance> 0 </movementDistance>
 
 </enemy>
 
 
 <enemy>
 
-<name>  </name>
+<name> DefaultName </name>
 <location> resources/enemies/0.png </location>
 <x> 433 </x>
 <y> 305 </y>
 <width> 100 </width>
 <height> 100 </height>
-<movementDistance> 10 </movementDistance>
+<movementDistance> 0 </movementDistance>
 
 </enemy>
 

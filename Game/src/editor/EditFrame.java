@@ -137,6 +137,7 @@ public class EditFrame extends JFrame {
                     sliderSelectedEnemyMoveDistance.setAlignmentX(LEFT_ALIGNMENT);
                     sliderSelectedEnemyMoveDistance.addChangeListener(ePanel);
                     sliderSelectedEnemyMoveDistance.setVisible(false);
+                    sliderSelectedEnemyMoveDistance.setToolTipText("Change where this enemy moves back and forth to (Green box is where they will move to)");
                     buttonPanel.add(sliderSelectedEnemyMoveDistance);
                 } else {
                     JSlider slider = new JSlider(JSlider.HORIZONTAL,
@@ -161,7 +162,7 @@ public class EditFrame extends JFrame {
                     labelFileName.setHorizontalAlignment(SwingConstants.CENTER);
                     buttonPanel.add(labelFileName);
                 } else if (labelName.trim().equalsIgnoreCase("Movement Distance")) {
-                    labelSelectedEnemyMoveDistance = new JLabel(labelName);
+                    labelSelectedEnemyMoveDistance = new JLabel("Enemy Movement");
                     labelSelectedEnemyMoveDistance.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                     labelSelectedEnemyMoveDistance.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
                     labelSelectedEnemyMoveDistance.setHorizontalAlignment(SwingConstants.LEFT);

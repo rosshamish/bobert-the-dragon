@@ -86,9 +86,14 @@ public class GameLevel {
                 Rectangle enemCollisRect = new Rectangle(x, y, width, height);
                 String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
                 int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movementDistance"));
+                if (Math.abs(movementDistance) < 20) {
+                    // If we are essentially not moving, then just don't move at all.
+                    movementDistance = 0;
+                }
                 Enemy newEnem = new Enemy(enemCollisRect, imgPath, movementDistance);
                 newEnem.initBoxes(enemCollisRect);
-                if (movementDistance >= 0) {
+                
+                if (movementDistance > 0) {
                     newEnem.movingRight = true;
                     newEnem.movingLeft = false;
                 } else {

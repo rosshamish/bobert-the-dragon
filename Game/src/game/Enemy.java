@@ -24,7 +24,7 @@ public class Enemy extends Sprite
     public Enemy(Rectangle collisionRect, String imgPath, int howFarCanMoveRightFromLocation) {
         name = "DefaultName";
         setImage(imgPath);
-        moveSpeed = defaultMoveSpeed;
+        horizVelocity = defaultMoveSpeed;
         movementDistance = howFarCanMoveRightFromLocation;
         hitBox = new Rectangle(collisionRect);
         startX = collisionRect.x;

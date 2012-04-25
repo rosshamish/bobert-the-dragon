@@ -78,7 +78,7 @@ public class Main {
             });
         } else {
             bFrame.setLocationByPlatform(true);
-            bFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         bFrame.setSize(B_WINDOW_WIDTH, B_WINDOW_HEIGHT);
         bFrame.setResizable(false);

@@ -23,12 +23,21 @@ public class Character extends Sprite
     public int keyJump = KeyEvent.VK_W;
     public int keyShoot = KeyEvent.VK_SPACE;
     
+    public int horizAcceleration = 1;
+    public int horizMaxVelocity = 2;
+    public static int horizAccelDelay = 60;
+    public int horizAccelFrame = 0;
+    public boolean shouldAccelLeft = false;
+    public boolean shouldAccelRight = false;
+    
+    
     static int vertVelocityJump = -20;
     static int vertVelocityDoubleJump = (int) (vertVelocityJump * 0.85);
     public boolean hasJumped = false;
     public boolean hasDoubleJumped = false;
     
     public int numCollected = 0;
+    public int totalCollected = 0;
     
     static int imageCount = 0;
     static int numImages;
@@ -52,12 +61,42 @@ public class Character extends Sprite
         name = RossLib.parseXML(dataPath, "character", "bobert", "name");
         worldObjectType = WorldObjectType.CHARACTER;
         collisionType = CollisionType.IMPASSABLE;
-        moveSpeed = Integer.parseInt(RossLib.parseXML(dataPath, "character", "bobert", "speed"));
+        horizVelocity = 0;
         int defaultX = (int) (Main.B_WINDOW_WIDTH * 0.5);
         int defaultY = 350;
         initBoxes(new Rectangle(defaultX, defaultY,
                                 width, height)
                   );
+    }
+    
+    public void moveRight() {
+        moveRightBy(Math.abs(horizVelocity));
+    }
+    
+    public void moveLeft() {
+        moveLeftBy(Math.abs(horizVelocity));
+    }
+    
+    public void accelerateLeft() {
+        if (Math.abs(horizVelocity) < horizMaxVelocity) 
+            horizVelocity -= horizAcceleration;
+    }
+    
+    public void accelerateRight() {
+        if (horizVelocity < horizMaxVelocity)
+            horizVelocity += horizAcceleration;
+    }
+    
+    public void decelerate() {
+        if (horizVelocity < 0) {
+            horizVelocity += horizAcceleration;
+        } else if (horizVelocity > 0) {
+            horizVelocity -= horizAcceleration;
+        }
+    }
+    
+    public void decelerateCompletely() {
+        horizVelocity = 0;
     }
     
     @Override
@@ -84,4 +123,5 @@ public class Character extends Sprite
             }
         }
     }
+
 }
