@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
-public enum Audio {
+public class Audio {
 
-    JUMP("resources/audio/sfx/Jumping.wav"),
-    WOOHOO("resources/audio/sfx/Jumping2.wav"),
-    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
+    
+    
+//    JUMP("resources/audio/sfx/Jumping.wav"),
+//    WOOHOO("resources/audio/sfx/Jumping2.wav"),
+//    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
 
     public static enum Volume {
 
@@ -47,12 +49,16 @@ public enum Audio {
     }
 
     static void init() {
-        values();
+//        values();
     }
 
     public void loop() {
-
+        
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-
+        
+    }
+    
+    public void stop() {
+        clip.stop();
     }
 }
