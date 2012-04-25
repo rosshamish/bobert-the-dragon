@@ -9,12 +9,10 @@ import interfaces.Drawable;
 public abstract class Sprite extends Collidable
                     implements Drawable {
     
-    public int vertVelocity;
-    public int moveSpeed;
+    public int vertVelocity = 0;
+    public int horizVelocity = 0;
     public boolean isInAir;
     
-    public String name;
-
     // Vars to check the left-right direction of the sprite
     // Which way the character is facing
     public boolean facingRight;

@@ -16,7 +16,6 @@ public class WorldObject
                          implements Drawable {
 
     public enum WorldObjectType {
-        FRIENDLY,
         OBSTACLE,
         PLATFORM,
         FLOOR,
@@ -44,6 +43,28 @@ public class WorldObject
         drawBox = drawRect;
     }
     
+    public static WorldObjectType parseWorldObjectType(String _type) {
+        if (_type.equalsIgnoreCase("Obstacle")) {
+            return WorldObjectType.OBSTACLE;
+        } else if (_type.equalsIgnoreCase("Platform")) {
+            return WorldObjectType.PLATFORM;
+        } else if (_type.equalsIgnoreCase("Floor")) {
+            return WorldObjectType.FLOOR;
+        } else if (_type.equalsIgnoreCase("Character")) {
+            return WorldObjectType.CHARACTER;
+        } else if (_type.equalsIgnoreCase("Projectile")) {
+            return WorldObjectType.PROJECTILE;
+        } else if (_type.equalsIgnoreCase("Enemy")) {
+            return WorldObjectType.ENEMY;
+        } else if (_type.equalsIgnoreCase("Collectable")) {
+            return WorldObjectType.COLLECTABLE;
+        } else if (_type.equalsIgnoreCase("Trigger")) {
+            return WorldObjectType.TRIGGER;
+        } else {
+            return WorldObjectType.OBSTACLE;
+        }
+    }
+    
     public boolean isInViewOf(Camera cam) {
         if (       // The left side is in the camera
              (drawBox.x >= cam.getX() && drawBox.x <= cam.getX() + cam.getWidth())
@@ -69,10 +90,10 @@ public class WorldObject
     @Override
     public void draw(Graphics2D currentGraphics2DContext, Camera cam) {
         // Check to see if this object is inside the camera's view
-        if (this.isInViewOf(cam)) {
-            currentGraphics2DContext.drawImage(this.getImage(),
-                    this.xPositionInCam(cam), this.yPositionInCam(cam),
-                    this.drawBox.width, this.drawBox.height,
+        if (isInViewOf(cam)) {
+            currentGraphics2DContext.drawImage(getImage(),
+                    xPositionInCam(cam), yPositionInCam(cam),
+                    drawBox.width, drawBox.height,
                     null);
         }
     }

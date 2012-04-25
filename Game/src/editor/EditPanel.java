@@ -10,6 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class EditPanel extends JPanel
     public static Camera editCam;
     
     public static int camMovementFrame = 0;
-    public static final int camMovementDelay = 80;
+    public static final int camMovementDelay = 0;
     
     public static boolean movingLeft;
     public static boolean movingUp;
@@ -66,7 +67,7 @@ public class EditPanel extends JPanel
     public static Collidable heldObject;
     public static Collidable selectedObject;
     private static long FPSStartOfLoopTime = 0;
-    private final static long FPSDelayPerFrame = 10;
+    private final static long FPSDelayPerFrame = 1;
     
     
     public EditPanel(EditFrame frame) {
@@ -80,8 +81,7 @@ public class EditPanel extends JPanel
     }
     
     public static void defineObjects() {
-        editCam = new Camera(0, 0,
-                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        
         borderLeft = new Rectangle(0, Main.B_WINDOW_BAR_HEIGHT,
                 borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
         borderLeftImg = new ImageIcon("resources/editor/border_facingLeft.png").getImage();
@@ -133,9 +133,15 @@ public class EditPanel extends JPanel
         } else {
             File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
+            String[] fileNames = new String[levelFiles.length-1]; //to account for the xml file
+            ArrayList<String> tempFileNames = new ArrayList<String>();
             for (int i = 0; i < levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
+                if (levelFiles[i].isDirectory()) {
+                    tempFileNames.add(levelFiles[i].getName());
+                }
+            }
+            for (int i=0; i<tempFileNames.size(); i++) {
+                fileNames[i] = tempFileNames.get(i);
             }
             Object chosenLevel = JOptionPane.showInputDialog(eFrame,
                     "Which level would you like to load?",
@@ -151,6 +157,19 @@ public class EditPanel extends JPanel
                 level = new GameLevel((String) chosenLevel, false);
             }
         }
+        editCam = new Camera(0, 0,
+                Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, Main.B_WINDOW_HEIGHT);
+        for (int i=0; i<level.collidables.size(); i++) {
+            Collidable cur = level.collidables.get(i);
+            if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                if (cur.name.equalsIgnoreCase("start")) {
+                    editCam = new Camera(cur.leftEdge() - Main.B_WINDOW_WIDTH/2, cur.topEdge() - Main.B_WINDOW_HEIGHT/2,
+                            Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, Main.B_WINDOW_HEIGHT);
+                    break;
+                }
+            }
+        }
+        
         
         gameRunning = true;
         objectsDefined = true;
@@ -256,7 +275,11 @@ public class EditPanel extends JPanel
     
     @Override
     public void run() {
+        
         while (gameRunning) {
+            
+            FPSStartOfLoop();
+            
             eFrame.labelFileName.setText(level.levelName);
             
             if (camMovementFrame >= camMovementDelay) {
@@ -281,6 +304,8 @@ public class EditPanel extends JPanel
             level.floor.setWidth(level.background.getWidth());
             
             repaint();
+            
+            FPSEndOfLoop();
         }
     }
 
@@ -499,7 +524,7 @@ public class EditPanel extends JPanel
                     fileNames,
                     fileNames[0]);
             if (chosenLevel == null) {
-                System.out.println("chosenLevel is null");
+                System.err.println("chosenLevel is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
                 level = new GameLevel((String) chosenLevel, false);
@@ -594,9 +619,9 @@ public class EditPanel extends JPanel
                 System.out.println("chosenLevel is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                Rectangle platRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                Rectangle collectableRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
                         120, 70);
-                level.collidables.add(new Collidable(platRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
+                level.collidables.add(new Collidable(collectableRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
             }
         } else if (action.equalsIgnoreCase("Add Enemy")) {
             String enemiesPath = "resources/enemies/";
@@ -710,14 +735,16 @@ public class EditPanel extends JPanel
                 int oldWidth = level.background.drawBox.width;
                 for (int i=0; i<level.collidables.size(); i++) {
                     if (level.collidables.get(i).hitBox.x != 0) {
-                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
-                        level.collidables.get(i).setX((int) (newWidth / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
+//                        level.collidables.get(i).setX((int) (newWidth / ratio));
                     }
                 }
                 for (int i=0; i<level.enemies.size(); i++) {
                     if (level.enemies.get(i).hitBox.x != 0) {
-                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
-                        level.enemies.get(i).setX((int) (newWidth / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
+//                        level.enemies.get(i).setX((int) (newWidth / ratio));
                     }
                 }
                 
@@ -730,15 +757,16 @@ public class EditPanel extends JPanel
                 int oldHeight = level.background.drawBox.height;
                 for (int i=0; i<level.collidables.size(); i++) {
                     if (level.collidables.get(i).hitBox.y != 0) {
-                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
-                        level.collidables.get(i).setY((int) (newHeight / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
+//                        level.collidables.get(i).setY((int) (newHeight / ratio));
                     }
                 }
                 for (int i=0; i<level.enemies.size(); i++) {
                     if (level.enemies.get(i).hitBox.y != 0) {
-                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
-                        System.out.println("(int) (newHeight / ratio): "+(int) (newHeight / ratio));
-                        level.enemies.get(i).setY((int) (newHeight / ratio));
+                        // TODO make these scroll
+//                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
+//                        level.enemies.get(i).setY((int) (newHeight / ratio));
                     }
                 }
                 level.background.drawBox.height = newHeight;

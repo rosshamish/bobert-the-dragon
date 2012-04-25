@@ -2,7 +2,6 @@ package game;
 
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import rosslib.RossLib;
@@ -20,8 +19,6 @@ public class GameLevel {
     public ArrayList<Collidable> collidables;
     public ArrayList<Enemy> enemies;
     
-    public Point startLocation;
-    public Collidable triggerEndLevel;
     
     public GameLevel (String _levelName, boolean _newLevel) {
         
@@ -55,7 +52,7 @@ public class GameLevel {
             collidables.add(floor);
 
             Collidable collidable;
-            Rectangle platCollisRect;
+            Rectangle collisRect;
             int numCollidables = RossLib.parseXML(collidablesDataPath, "collidable");
             for (int i = 0; i < numCollidables; i++) {
                 int collHeight = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "height"));
@@ -64,18 +61,12 @@ public class GameLevel {
                 int collY = Integer.parseInt(RossLib.parseXML(collidablesDataPath, "collidable", i, "y"));
                 String collImgPath = RossLib.parseXML(collidablesDataPath, "collidable", i, "location");
                 CollisionType collType = Collidable.parseCollisionType(
-                        RossLib.parseXML(collidablesDataPath, "collidable", i, "type"));
-                platCollisRect = new Rectangle(collX, collY,
+                        RossLib.parseXML(collidablesDataPath, "collidable", i, "collisionType"));
+                collisRect = new Rectangle(collX, collY,
                         collWidth, collHeight);
-                WorldObjectType objType = WorldObjectType.OBSTACLE;
-                if (collType == CollisionType.PLATFORM) {
-                    objType = WorldObjectType.PLATFORM;
-                } else if (collType == CollisionType.IMPASSABLE) {
-                    objType = WorldObjectType.OBSTACLE;
-                } else if (collType == CollisionType.PASSABLE) {
-                    objType = WorldObjectType.TRIGGER;
-                }
-                collidable = new Collidable(platCollisRect,
+                WorldObjectType objType = WorldObject.parseWorldObjectType(
+                        RossLib.parseXML(collidablesDataPath, "collidable", i, "worldObjectType"));
+                collidable = new Collidable(collisRect,
                         objType, collType,
                         collImgPath);
                 
@@ -94,11 +85,15 @@ public class GameLevel {
                 int height = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "height"));
                 Rectangle enemCollisRect = new Rectangle(x, y, width, height);
                 String imgPath = RossLib.parseXML(enemiesDataPath, "enemy", i, "location");
-                System.out.println("enemy #"+(i)+"\n\timage location: "+imgPath);
                 int movementDistance = Integer.parseInt(RossLib.parseXML(enemiesDataPath, "enemy", i, "movementDistance"));
+                if (Math.abs(movementDistance) < 20) {
+                    // If we are essentially not moving, then just don't move at all.
+                    movementDistance = 0;
+                }
                 Enemy newEnem = new Enemy(enemCollisRect, imgPath, movementDistance);
                 newEnem.initBoxes(enemCollisRect);
-                if (movementDistance >= 0) {
+                
+                if (movementDistance > 0) {
                     newEnem.movingRight = true;
                     newEnem.movingLeft = false;
                 } else {
@@ -124,12 +119,21 @@ public class GameLevel {
             floor.initBoxes(this.floor.hitBox);
             collidables.add(floor);
             
-            startLocation = new Point(Main.B_WINDOW_WIDTH*1/4, background.getHeight()*3/4);
-            Rectangle triggerEndLevelRect = new Rectangle(Main.B_WINDOW_WIDTH*3/4, background.getHeight()*1/2,
+            Collidable triggerEndLevel;
+            Rectangle triggerEndLevelRect = new Rectangle(100, background.getHeight()*1/2,
                     50, 100);
             triggerEndLevel = new Collidable(triggerEndLevelRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                     "resources/collidables/triggers/green_flag.png");
+            triggerEndLevel.name = "end";
             collidables.add(triggerEndLevel);
+            
+            Collidable triggerStartLocation;
+            Rectangle triggerStartLocationRect = new Rectangle(200, background.getHeight()*1/2,
+                    50, 100);
+            triggerStartLocation = new Collidable(triggerStartLocationRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
+                    WorldObject.defaultImgPath);
+            triggerStartLocation.name = "start";
+            collidables.add(triggerStartLocation);
             
             // ONLY DO THIS AT THE VERY END.
             boolean success = RossLib.writeLevelData(this);

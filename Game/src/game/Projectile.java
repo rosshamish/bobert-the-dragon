@@ -27,7 +27,7 @@ public class Projectile extends Sprite
     public boolean destroyed;
     public boolean movingQuickerSpeed;
     public int numBounces = 0;
-    public static int numBouncesAllowed = 1;
+    public static int numBouncesAllowed = 5;
     
     
     // Should be just high enough of a bounce that there's a possibility it could
@@ -51,7 +51,7 @@ public class Projectile extends Sprite
         int width = Integer.parseInt(RossLib.parseXML(dataPath, "projectile", imageCount, "width"));
         //height
         int height = Integer.parseInt(RossLib.parseXML(dataPath, "projectile", imageCount, "height"));
-        this.moveSpeed = defaultSpeed;
+        this.horizVelocity = defaultSpeed;
         this.drawHitOffset = (int) (width * 0.12);
         initBoxes(new Rectangle(0, 0,
                                 width, height)

@@ -1,6 +1,5 @@
 package editor;
 
-import game.GameLevel;
 import game.Main;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

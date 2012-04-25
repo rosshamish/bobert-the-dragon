@@ -1,0 +1,272 @@
+
+<collidables_data>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> end </name>
+<location> resources/collidables/triggers/green_flag.png </location>
+<x> 49 </x>
+<y> 250 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> start </name>
+<location> resources/default.jpg </location>
+<x> 1163 </x>
+<y> 720 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/silver.png </location>
+<x> 678 </x>
+<y> 580 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/lightgreen.png </location>
+<x> 968 </x>
+<y> 735 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/skyblue.png </location>
+<x> 986 </x>
+<y> 497 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 1144 </x>
+<y> 289 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/magenta.png </location>
+<x> 1018 </x>
+<y> 294 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> OBSTACLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/pineapple.png </location>
+<x> 1125 </x>
+<y> 219 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 750 </x>
+<y> 334 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 556 </x>
+<y> 158 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 419 </x>
+<y> 409 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud1.png </location>
+<x> 159 </x>
+<y> 517 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> -5 </x>
+<y> 339 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 1006 </x>
+<y> 22 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/pineapple.png </location>
+<x> 978 </x>
+<y> -43 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+</collidables_data>
+

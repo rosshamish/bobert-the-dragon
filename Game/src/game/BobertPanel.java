@@ -1,18 +1,15 @@
 package game;
 
+import editor.LevelEditor;
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Line2D;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -24,21 +21,35 @@ public class BobertPanel extends JPanel implements Runnable,
     // Character vars.
     static Character bobert;
     static Camera screenCam;
+    static ArrayList<String> gameLevels = new ArrayList<String>();
     static GameLevel level;
+    static String levelDataPath = "resources/levels/level_order.xml";
+    static boolean levelsDefined = false;
+    static boolean shouldAdvanceOneLevel = false;
+    static boolean loadingLevel = false;
+    static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
+    private static boolean wonGame = false;
     
     // Animation vars
     static int animationFrame = 0;
     static int animationDelay = 25;
         
     // Projectile
-    static ArrayList<Projectile> onScreenProjectiles;
-    static Projectile defaultProjectile;
-    static boolean shootingProjectile = false;
-    static boolean canShootProjectileBasedOnTimer = true;
-    static int projectileTimer = 0;
-    static int projectileTimerDelay = 200;
-    static int projectileFrame = 0;
-    static final int projectileDelay = 8;
+    /*
+     * Projectiles have been temporarily removed as a gameplay test. They might
+     * make the game too easy. Gameplay might shift towards timing, running and
+     * jumping, and avoidance of obstacles/enemies/spike pits. Sigh, so much work
+     * lost. But also glad for the learning done while building this portion.
+     * -R
+     */
+//    static ArrayList<Projectile> onScreenProjectiles;
+//    static Projectile defaultProjectile;
+//    static boolean shootingProjectile = false;
+//    static boolean canShootProjectileBasedOnTimer = true;
+//    static int projectileTimer = 0;
+//    static int projectileTimerDelay = 200;
+//    static int projectileFrame = 0;
+//    static final int projectileDelay = 8;
     
     // Used for spacing in paintComponent(Graphics g) when displaying
     // text to the screen.
@@ -67,6 +78,7 @@ public class BobertPanel extends JPanel implements Runnable,
     // Vars for the character moving left and right
     static int movementFrame = 0;
     static int movementDelay = 0;
+    
     
     //</editor-fold>
     
@@ -100,37 +112,44 @@ public class BobertPanel extends JPanel implements Runnable,
         gameThread = new Thread(this);
         gameThread.start();
         bFrame.addKeyListener(this);
+        
     }
 
     public static void defineObjects() {
-        
-        screenCam = new Camera(0, 0,
-                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
-        if (Main.curArgs == null) { // If this is regular game run
-        File dir = new File("resources/levels/");
-            File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
-            for (int i=0; i<levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
+        if (!levelsDefined) {
+            int numLevels = RossLib.parseXML(levelDataPath, "level");
+            gameLevels.clear();
+            for (int i = 0; i < numLevels; i++) {
+                gameLevels.add(RossLib.parseXML(levelDataPath, "level", i, "name"));
+                System.out.println(gameLevels.get(i));
             }
-            Object chosenLevel = JOptionPane.showInputDialog(bFrame, 
-                    "Pick a level!",
-                    "Bobert the Dragon - BlockTwo Studios",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    fileNames,
-                    fileNames[0]);
-            if (chosenLevel == null) {
-                System.out.println("chosenLevel is null");
-                System.exit(0);
+            levelsDefined = true;
+        }
+        if (Main.curArgs == null) { // If this is regular game run
+            if (gameLevels.size() > 0) {
+                level = new GameLevel(gameLevels.get(0), false);
             } else {
-                level = new GameLevel((String) chosenLevel, false);
+                wonGame = true;
             }
         } else { // If this is a level editor test
             level = new GameLevel(Main.curArgs[0], false);
         }
         
         bobert = new Character();
+        screenCam = new Camera(0, 0, Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        for (int i=0; i<level.collidables.size(); i++) {
+            Collidable cur = level.collidables.get(i);
+            if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                if (cur.name.equalsIgnoreCase("start")) {
+                    bobert.setX(cur.leftEdge());
+                    bobert.setY(cur.topEdge());
+                } else if (cur.name.equalsIgnoreCase("end")) {
+                    screenCam.setX(cur.leftEdge());
+                    screenCam.setY(cur.topEdge());
+                }
+            }
+        }
+        
         bobert.imagePaths = new ArrayList<String>();
         String amtImages = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "numberOfImages");
@@ -147,11 +166,11 @@ public class BobertPanel extends JPanel implements Runnable,
         }
         
         // Initialize the lists of projectiles
-        onScreenProjectiles = new ArrayList<Projectile>();
-        defaultProjectile = new Projectile();
-        defaultProjectile.setX(bobert.hitBox.x);
-        defaultProjectile.setY(bobert.hitBox.y);
-        Projectile.numImages = RossLib.parseXML(Projectile.dataPath, "projectile");
+//        onScreenProjectiles = new ArrayList<Projectile>();
+//        defaultProjectile = new Projectile();
+//        defaultProjectile.setX(bobert.hitBox.x);
+//        defaultProjectile.setY(bobert.hitBox.y);
+//        Projectile.numImages = RossLib.parseXML(Projectile.dataPath, "projectile");
 
         gameRunning = true;
         objectsDefined = true;
@@ -165,7 +184,10 @@ public class BobertPanel extends JPanel implements Runnable,
         Graphics2D g2d = (Graphics2D) g;
         
         if (objectsDefined) {
-
+            
+            if (!loadingLevel) {
+                
+            
             // **Draw background
             if (showDebugBoxes) {
                 level.background.drawDebug(g2d, screenCam);
@@ -181,16 +203,19 @@ public class BobertPanel extends JPanel implements Runnable,
             }
 
             // **Draw Projectile
-            if (shootingProjectile) {
-                for (int i = 0; i < onScreenProjectiles.size(); i++) {
-                    onScreenProjectiles.get(i).draw(g2d, screenCam);
-                    if (showDebugBoxes) 
-                        onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
-                }
-            }
+//            if (shootingProjectile) {
+//                for (int i = 0; i < onScreenProjectiles.size(); i++) {
+//                    onScreenProjectiles.get(i).draw(g2d, screenCam);
+//                    if (showDebugBoxes) 
+//                        onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
+//                }
+//            }
+            
             // **Draw collidables
             for (int i=0; i<level.collidables.size(); i++) {
-                level.collidables.get(i).draw(g2d, screenCam);
+                if (!level.collidables.get(i).name.equalsIgnoreCase("start")) {
+                    level.collidables.get(i).draw(g2d, screenCam);
+                }
                 if (showDebugBoxes) 
                     level.collidables.get(i).drawDebug(g2d, screenCam);
             }
@@ -220,15 +245,22 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
-//            g2d.drawString("level.enemies.get(0).movingRight: " + level.enemies.get(0).movingRight, 0, debugTextHeight * 1);
-//            g2d.drawString("level.enemies.get(0).movingLeft: " + level.enemies.get(0).movingLeft, 0, debugTextHeight * 2);
-//            g2d.drawString("level.enemies.get(0).drawBox.x: "+ level.enemies.get(0).drawBox.x, 0, debugTextHeight*3);
-//            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
-//            g2d.drawString("level.enemies.get(0).xPositionInCam(screenCam):  " + level.enemies.get(0).xPositionInCam(screenCam), 0, debugTextHeight * 5);
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+            g2d.drawString("Fruit Collected this Level: " + bobert.numCollected, 0, debugTextHeight * 2);
+            g2d.drawString("Total Fruit Collected: " + (bobert.numCollected+bobert.totalCollected), 0, debugTextHeight * 4);
+//            g2d.drawString("bobert.horizAccelFrame: "+ bobert.horizAccelFrame, 0, debugTextHeight*3);
+//            g2d.drawString("loadingLevel: "+ loadingLevel, 0, debugTextHeight*4);
+//            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
 //            g2d.drawString("level.enemies.get(0).isAlive:  "+ level.enemies.get(0).isAlive, 0, debugTextHeight*6);
 //            g2d.drawString("level.enemies.get(0).isInViewOf(screenCam):     "+level.enemies.get(0).isInViewOf(screenCam), 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
+            } else {
+                // if loading the level
+                g2d.drawImage(loadingImage,
+                        0, 0,
+                        Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
+
+            }
         }
 
     }
@@ -238,15 +270,49 @@ public class BobertPanel extends JPanel implements Runnable,
 
         while (gameRunning) {
             FPSStartOfLoop();
-            
-            /* TODO handle collision detection better. Update his future hit box
-             * once at the beginning of the game loop (here), and then keep udpating
-             * it throughout the loop. If, at the end, it's an invalid place, move
-             * him back to where he was BUT KEEP APPLYING GRAVITY.
-             */
+
+            // **Moving from level 1 to level 2, for example
+            //<editor-fold defaultstate="collapsed" desc="Level Advancement">
+            if (shouldAdvanceOneLevel) {
+                loadingLevel = true;
+                repaint();
+
+                if (Main.curArgs == null) {
+                    // If this is a regular game run, boot the next level.
+                    shouldAdvanceOneLevel = false;
+                    gameLevels.remove(level.levelName);
+                    level = new GameLevel(gameLevels.get(0), false);
+
+                } else {
+                    // if this is an editor test, end the level
+                    gameRunning = false;
+                    bFrame.dispose();
+                }
+                for (int i = 0; i < level.collidables.size(); i++) {
+                    Collidable cur = level.collidables.get(i);
+                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                        if (cur.name.equalsIgnoreCase("start")) {
+                            bobert.setX(cur.leftEdge());
+                            bobert.setY(cur.topEdge());
+                        } else if (cur.name.equalsIgnoreCase("end")) {
+                            screenCam.setX(cur.leftEdge());
+                            screenCam.setY(cur.topEdge());
+                        }
+                    }
+                }
+                bobert.totalCollected += bobert.numCollected;
+                bobert.numCollected = 0;
+                bobert.vertVelocity = 0;
+                bobert.decelerateCompletely();
+                bobert.hasJumped = false;
+                bobert.hasDoubleJumped = false;
+//                onScreenProjectiles.clear();
+                loadingLevel = false;
+            }
+            //</editor-fold>
             
             // **Handles all characters which are in the air.
-            //<editor-fold defaultstate="collapsed" desc="In Air">
+            //<editor-fold defaultstate="collapsed" desc="Bobert in Air">
             /*
              * Frame-Delay explanation: The exampleFrame variable always starts
              * at 0. exampleFrame's purpose is to count the number of times that
@@ -268,6 +334,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
                 bobert.updateFutureHitBox();
+                bobert.vertVelocity += gravity;
                 bobert.futureHitBox.y += bobert.vertVelocity;
                 for (int i = 0; i < level.collidables.size(); i++) {
                     Collidable cur = level.collidables.get(i);
@@ -276,7 +343,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             if (bobert.vertVelocity < 0) {
                                 // if bobert is moving upwards, he can't collide
                                 // because you have to FALL onto a platform, bro.
-                                break;
+                                continue;
                             } else {
                                 bobert.isInAir = false;
                                 bobert.hasJumped = false;
@@ -300,13 +367,9 @@ public class BobertPanel extends JPanel implements Runnable,
                                 break;
                             }
                         } else if (cur.collisionType == CollisionType.PASSABLE) {
-                            if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
-                                
-                            } else if (cur.worldObjectType == WorldObjectType.TRIGGER) {
-                                
-                            }
+                            bobert.isInAir = true;
+                            continue;
                         }
-
                     } else {
                         // If we aren't going to be on the ground right away, then
                         // we must be in the air. Set isInAir to true so that we can
@@ -319,49 +382,58 @@ public class BobertPanel extends JPanel implements Runnable,
                 // velocity, and then add the new velocity to the character's
                 // height.
                 if (bobert.isInAir) {
-                    bobert.vertVelocity += gravity;
                     bobert.moveVerticallyBy(bobert.vertVelocity);
-                    defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
+//                    defaultProjectile.moveVerticallyBy(bobert.vertVelocity);
                 }
+                //</editor-fold>
                 
+            //<editor-fold defaultstate="collapsed" desc="Enemies in Air">
                 // DO ALL THIS AGAIN FOR EACH ENEMY
                 // If the character is about to be inside/below the floor, then
                 // we should set the character to be standing directly on top of
                 // the floor, and set isInAir to false (because the character is
                 // on the ground now.
-                
+
                 for (int i = 0; i < level.enemies.size(); i++) {
+                    Enemy curEnemy = level.enemies.get(i);
+                    curEnemy.updateFutureHitBox();
+                    curEnemy.futureHitBox.y += curEnemy.vertVelocity;
+
                     for (int j = 0; j < level.collidables.size(); j++) {
-                        Enemy curEnemy = level.enemies.get(i);
-                        curEnemy.updateFutureHitBox();
-                        curEnemy.futureHitBox.y += curEnemy.vertVelocity*2;
+                        Collidable cur = level.collidables.get(j);
+
                         if (curEnemy.willCollideWith(level.collidables.get(j))) {
-                            if (level.collidables.get(j).collisionType == CollisionType.PLATFORM) {
+                            if (cur.collisionType != CollisionType.PASSABLE) {
                                 if (curEnemy.vertVelocity < 0) {
+                                    continue;
+                                } else {
+                                    curEnemy.isInAir = false;
+                                    curEnemy.setY(cur.hitBox.y - curEnemy.hitBox.height);
+                                    // Set the character's vertical velocity to 0 because we are
+                                    // on the ground, goddamn it, and we aren't jumping, goddamn it.
+                                    curEnemy.vertVelocity = 1;
                                     break;
                                 }
+                            } else {
+                                curEnemy.isInAir = true;
+                                continue;
                             }
-                            curEnemy.isInAir = false;
-                            curEnemy.setY(level.collidables.get(j).hitBox.y - curEnemy.hitBox.height);
-                            // Set the character's vertical velocity to 0 because we are
-                            // on the ground, goddamn it, and we aren't jumping, goddamn it.
-                            curEnemy.vertVelocity = 1;
-                            break;
+                            
                         } else {
                             // If we aren't going to be on the ground right away, then
                             // we must be in the air. Set isInAir to true so that we can
                             // know whether or not we are jumping.
                             curEnemy.isInAir = true;
                         }
-                        // If the character is in the air, add some gravity to our current
-                        // velocity, and then add the new velocity to the character's
-                        // height.
-                        if (curEnemy.isInAir) {
-                            curEnemy.vertVelocity += gravity;
-                            curEnemy.moveVerticallyBy(curEnemy.vertVelocity);
-                        }
-                        level.enemies.set(i, curEnemy);
                     }
+                    // If the character is in the air, add some gravity to our current
+                    // velocity, and then add the new velocity to the character's
+                    // height.
+                    if (curEnemy.isInAir) {
+                        curEnemy.vertVelocity += gravity;
+                        curEnemy.moveVerticallyBy(curEnemy.vertVelocity);
+                    }
+                    level.enemies.set(i, curEnemy);
                 }
 
                 // Set inAirFrame to 0 because we just finished processing a
@@ -376,8 +448,8 @@ public class BobertPanel extends JPanel implements Runnable,
             //</editor-fold>
 
             // **Handles all character movement.
-            //<editor-fold defaultstate="collapsed" desc="Movement">
-            
+            //<editor-fold defaultstate="collapsed" desc="Bobert Movement">
+
             // See the explanation of Frame-Delay up in the inAir section ^^
             if (movementFrame >= movementDelay) {
                 // If the character is moving to the right (as set in the
@@ -385,40 +457,30 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Duh.
                 if (bobert.leftEdge() > level.background.drawBox.x
                         && bobert.rightEdge() < level.background.drawBox.x + level.background.drawBox.width) {
-                    boolean canMove = true;
-                    if (bobert.movingRight) {
-                        bobert.updateFutureHitBox();
-                        bobert.futureHitBox.x += bobert.moveSpeed;
 
-                        for (int i = 0; i < level.collidables.size(); i++) {
-                            if (bobert.willCollideWith(level.collidables.get(i))) {
-                                canMove = false;
-                                break;
-                            } else {
-                                canMove = true;
-                            }
-                        }
-                        if (canMove) {
-                            bobert.moveRightBy(bobert.moveSpeed);
-                        }
-                    }
                     // If the character is moving to the left (as set in the
                     // keyPressed and keyReleased methods), then move it to the left.
                     // Duh.
-                    if (bobert.movingLeft) {
-                        bobert.updateFutureHitBox();
-                        bobert.futureHitBox.x -= bobert.moveSpeed;
+                    if (bobert.horizAccelFrame > Character.horizAccelDelay) {
+                        if (bobert.shouldAccelLeft) {
+                            bobert.accelerateLeft();
+                        } else if (bobert.shouldAccelRight) {
+                            bobert.accelerateRight();
+                        } else {
+                            bobert.decelerate();
+                        }
+                        bobert.horizAccelFrame = 0;
+                    } else {
+                        bobert.horizAccelFrame++;
+                    }
+                    boolean canMove = true;
+                    bobert.updateFutureHitBox();
+                    bobert.futureHitBox.x += bobert.horizVelocity;
+                    if (bobert.movingRight || bobert.movingLeft) {
                         for (int i = 0; i < level.collidables.size(); i++) {
                             Collidable cur = level.collidables.get(i);
                             if (bobert.willCollideWith(cur)) {
-                                if (cur.collisionType == CollisionType.PASSABLE) {
-                                    canMove = true;
-                                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
-                                        System.out.println("Hit trigger!");
-                                    } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
-                                        System.out.println("Collected something!");
-                                    }
-                                } else {
+                                if (cur.collisionType != CollisionType.PASSABLE) {
                                     canMove = false;
                                     break;
                                 }
@@ -426,22 +488,36 @@ public class BobertPanel extends JPanel implements Runnable,
                                 canMove = true;
                             }
                         }
-                        if (canMove) {
-                            bobert.moveLeftBy(bobert.moveSpeed);
+                    }
+                    if (canMove) {
+                        if (bobert.horizVelocity > 0) {
+                            if (bobert.futureHitBox.x + bobert.futureHitBox.width < level.background.drawBox.x + level.background.drawBox.width) {
+                                bobert.moveRight();
+                            }
+                        } else if (bobert.horizVelocity < 0) {
+                            if (bobert.futureHitBox.x > level.background.drawBox.x) {
+                                bobert.moveLeft();
+                            }
                         }
-                    }
-                } else {
-                    if (bobert.leftEdge() <= 0) {
-                        bobert.moveRightBy(bobert.moveSpeed);
                     } else {
-                        bobert.moveLeftBy(bobert.moveSpeed);
+                        bobert.decelerateCompletely();
                     }
+                    
+                    if (bobert.leftEdge() < level.background.drawBox.x) {
+                        bobert.setX(level.background.drawBox.x + bobert.getWidth());
+                    } else if (bobert.rightEdge() > level.background.drawBox.x + level.background.drawBox.width) {
+                        bobert.setX(level.background.drawBox.x + level.background.drawBox.width - bobert.getWidth());
+                    }
+
                 }
                 // The default projectile needs to be positioned in the same
                 // spot as the character!
-                defaultProjectile.setX(bobert.hitBox.x);
-                defaultProjectile.setY(bobert.hitBox.y);
+//                defaultProjectile.setX(bobert.hitBox.x);
+//                defaultProjectile.setY(bobert.hitBox.y);
+                
+                //</editor-fold>
 
+            //<editor-fold defaultstate="collapsed" desc="Enemies Movement">
                 //**Enemy movement
                 for (int i = 0; i < level.enemies.size(); i++) {
                     Enemy curEnemy = level.enemies.get(i);
@@ -450,28 +526,34 @@ public class BobertPanel extends JPanel implements Runnable,
                         i--;
                         break;
                     }
-
+                    
                     // Randomly decide if the enemy should turn around or not.
+                    // If movement distance is 0, DON'T MOVE. This is important
+                    // so that stationary enemies can exist (spikes, lava pits, etc)
                     if (curEnemy.movementDistance > 0) {
                         if (curEnemy.hitBox.x > curEnemy.startX + curEnemy.movementDistance
                                 || curEnemy.hitBox.x < curEnemy.startX) {
                             curEnemy.switchHorizontalDirection();
                         }
-                    } else {
+                    } else if (curEnemy.movementDistance < 0) {
                         if (curEnemy.hitBox.x < curEnemy.startX + curEnemy.movementDistance
                                 || curEnemy.hitBox.x > curEnemy.startX) {
                             curEnemy.switchHorizontalDirection();
                         }
                     }
                     
-                    if (curEnemy.movingRight) {
-                        curEnemy.moveRightBy(curEnemy.moveSpeed);
-                    } else if (curEnemy.movingLeft) {
-                        curEnemy.moveLeftBy(curEnemy.moveSpeed);
+                    // If there is distance to be moved, then move. Otherwise
+                    // stay put.
+                    if (Math.abs(curEnemy.movementDistance) > 0) {
+                        if (curEnemy.movingRight) {
+                            curEnemy.moveRightBy(curEnemy.horizVelocity);
+                        } else if (curEnemy.movingLeft) {
+                            curEnemy.moveLeftBy(curEnemy.horizVelocity);
+                        }
                     }
                     level.enemies.set(i, curEnemy);
                 }
-
+                
                 // Set frame to 0 to reset counter, blah blah, see explanation in
                 // inAir
                 movementFrame = 0;
@@ -480,7 +562,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 movementFrame++;
             }
             //</editor-fold>
-            
+
             // **Handles all animation
             //<editor-fold defaultstate="collapsed" desc="Animation">
             if (animationFrame >= animationDelay) {
@@ -508,195 +590,253 @@ public class BobertPanel extends JPanel implements Runnable,
             //<editor-fold defaultstate="collapsed" desc="Projectiles">
             // shootingProjectile is set to true in keyPressed
             // and is set back to false in "if(projectileDestroyed)"
-            if (shootingProjectile) {
-                // See explanation of Frame-Delay up at the inAir block ^^
-                if (projectileFrame >= projectileDelay) {
-
-                    // **Vertical Movement
-                    // If the space it will move into is in the floor,
-                    // set the projectile to sit just above the floor.
-                    // Otherwise, add gravity to velocity and then velocity to
-                    // the projectile's y value normally.
-
-                    for (int i = 0; i < onScreenProjectiles.size(); i++) {
-                        final Projectile curProjectile = onScreenProjectiles.get(i);
-
-                        for (int j = 0; j < level.collidables.size(); j++) {
-                            Collidable curCollidable = level.collidables.get(j);
-                            curProjectile.isInAir = false;
-                            curProjectile.updateFutureHitBox();
-                            curProjectile.futureHitBox.y += curProjectile.vertVelocity;
-                            if (curProjectile.futureHitBox.intersects(curCollidable.hitBox)) {
-                                if (curProjectile.isAbove(curCollidable)) {
-                                    curProjectile.setY(curCollidable.hitBox.y - curProjectile.hitBox.height-5);
-                                    curProjectile.vertVelocity = Projectile.vertVelocityBounce;
-                                    curProjectile.numBounces++;
-                                    curProjectile.isInAir = false;
-                                    break;
-                                }
-                            } else {
-                                curProjectile.isInAir = true;
-                            }
-                            
-                        }
-
-                        // **Horizontal Movement
-                        // Move the projectile in the direction it's moving.
-                        // If the character was moving at the time it shot the projectile,
-                        // move the projectile twice as fast.
-                        
-                        
-                        for (int j = 0; j < level.enemies.size(); j++) {
-                            curProjectile.updateFutureHitBox();
-                            if (curProjectile.willCollideWith(level.enemies.get(j))) {
-                                curProjectile.setImage(Projectile.resourcesPath + "explosion.png");
-                                level.enemies.get(j).isAlive = false;
-
-                                final Timer destroyTimer = new Timer(curProjectile.toString());
-                                destroyTimer.schedule(new TimerTask() {
-
-                                    final Projectile proj = curProjectile;
-
-                                    @Override
-                                    public void run() {
-                                        proj.destroyed = true;
-                                        destroyTimer.cancel();
-                                    }
-                                }, 100);
-
-                                break;
-                            }
-                        }
-                        
-                        if (curProjectile.numBounces > Projectile.numBouncesAllowed) {
-                            curProjectile.setImage(Projectile.resourcesPath + "poof.png");
-                            
-                            final Timer poofTimer = new Timer(curProjectile.toString());
-                            poofTimer.schedule(new TimerTask() {
-                                
-                                final Projectile proj = curProjectile;
-                                
-                                @Override
-                                public void run() {
-                                    proj.destroyed = true;
-                                    poofTimer.cancel();
-                                }
-                            }, 100);
-                        }
-
-                        if (curProjectile.isInAir) {
-                            for (int j = 0; j < level.collidables.size(); j++) {
-                                Collidable curCollidable = level.collidables.get(j);
-                                if (curProjectile.movingRight) {
-                                    if (curCollidable.hitBox.intersectsLine(curProjectile.rightEdge(), curProjectile.topEdge(),
-                                            curProjectile.rightEdge(), curProjectile.bottomEdge())) {
-                                        curProjectile.switchHorizontalDirection();
-                                        curProjectile.numBounces++;
-                                        break;
-                                    }
-                                } else if (curProjectile.movingLeft) {
-                                    if (curCollidable.hitBox.intersectsLine(curProjectile.leftEdge(), curProjectile.topEdge(),
-                                            curProjectile.leftEdge(), curProjectile.bottomEdge())) {
-                                        curProjectile.switchHorizontalDirection();
-                                        curProjectile.numBounces++;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Bounds check to see if the projectile is off the screen
-                            if (curProjectile.hitBox.x + curProjectile.hitBox.width < level.background.drawBox.x
-                                    || curProjectile.hitBox.x > level.background.drawBox.x + level.background.drawBox.width) {
-
-                                curProjectile.destroyed = true;
-                            }
-                        
-                        if (curProjectile.isInAir) {
-                            curProjectile.vertVelocity += gravity;
-                            curProjectile.moveVerticallyBy(curProjectile.vertVelocity);
-                        }
-                        
-                        if (curProjectile.movingRight) {
-                            curProjectile.moveRightBy(curProjectile.moveSpeed);
-                            // wasMovingRight is set to true in keyPressed and is set
-                            // back to false in keyReleased (if the projectile isn't
-                            // being shot), and is set back to false in projectileDestroyed
-                            // as well.
-                            if (curProjectile.movingQuickerSpeed) {
-                                curProjectile.moveRightBy((int) (curProjectile.moveSpeed * 0.5));
-                            }
-                        }
-                        // If is moving left
-                        if (curProjectile.movingLeft) {
-                            curProjectile.moveLeftBy(curProjectile.moveSpeed);
-                            // See wasMovingRight for explanation
-                            if (curProjectile.movingQuickerSpeed) {
-                                curProjectile.moveLeftBy((int) (curProjectile.moveSpeed * 0.5));
-                            }
-                        }
-                        if (curProjectile.destroyed) {
-                            onScreenProjectiles.remove(i);
-                            i--;
-                            if (onScreenProjectiles.isEmpty()) {
-                                shootingProjectile = false;
-                            }
-                        } else {
-                            onScreenProjectiles.set(i, curProjectile);
-                        }
-                    }
-                    // Reset frame
-                    projectileFrame = 0;
-                } else {
-                    // Increment frame counter
-                    projectileFrame++;
-                }
-            }
-            
-                    
-                    
-            // Increment projectile shooting timer
-            // TODO modify this timer so that it will keep one keypress in memory
-            // i.e. if you press it and the timer is still active, it will fire
-            // once the timer runs all the way, then stop.
-            // If statement is to protect against data overflows
-            if (projectileTimer < projectileTimerDelay) {
-                projectileTimer++;
-            }
+//            if (shootingProjectile) {
+//                // See explanation of Frame-Delay up at the inAir block ^^
+//                if (projectileFrame >= projectileDelay) {
+//
+//                    // **Vertical Movement
+//                    // If the space it will move into is in the floor,
+//                    // set the projectile to sit just above the floor.
+//                    // Otherwise, add gravity to velocity and then velocity to
+//                    // the projectile's y value normally.
+//
+//                    for (int i = 0; i < onScreenProjectiles.size(); i++) {
+//                        final Projectile curProjectile = onScreenProjectiles.get(i);
+//
+//                        for (int j = 0; j < level.collidables.size(); j++) {
+//                            Collidable curCollidable = level.collidables.get(j);
+//                            curProjectile.isInAir = false;
+//                            curProjectile.updateFutureHitBox();
+//                            curProjectile.futureHitBox.y += curProjectile.vertVelocity;
+//                            if (curProjectile.futureHitBox.intersects(curCollidable.hitBox)) {
+//                                if (curProjectile.isAbove(curCollidable)) {
+//                                    curProjectile.setY(curCollidable.hitBox.y - curProjectile.hitBox.height-5);
+//                                    curProjectile.vertVelocity = Projectile.vertVelocityBounce;
+//                                    curProjectile.numBounces++;
+//                                    curProjectile.isInAir = false;
+//                                    break;
+//                                }
+//                            } else {
+//                                curProjectile.isInAir = true;
+//                            }
+//                            
+//                        }
+//
+//                        // **Horizontal Movement
+//                        // Move the projectile in the direction it's moving.
+//                        // If the character was moving at the time it shot the projectile,
+//                        // move the projectile twice as fast.
+//                        
+//                        
+//                        for (int j = 0; j < level.enemies.size(); j++) {
+//                            curProjectile.updateFutureHitBox();
+//                            if (curProjectile.willCollideWith(level.enemies.get(j))) {
+//                                curProjectile.setImage(Projectile.resourcesPath + "explosion.png");
+//                                level.enemies.get(j).isAlive = false;
+//
+//                                final Timer destroyTimer = new Timer(curProjectile.toString());
+//                                destroyTimer.schedule(new TimerTask() {
+//
+//                                    final Projectile proj = curProjectile;
+//
+//                                    @Override
+//                                    public void run() {
+//                                        proj.destroyed = true;
+//                                        destroyTimer.cancel();
+//                                    }
+//                                }, 100);
+//
+//                                break;
+//                            }
+//                        }
+//                        
+//                        if (curProjectile.numBounces > Projectile.numBouncesAllowed) {
+//                            curProjectile.setImage(Projectile.resourcesPath + "poof.png");
+//                            
+//                            final Timer poofTimer = new Timer(curProjectile.toString());
+//                            poofTimer.schedule(new TimerTask() {
+//                                
+//                                final Projectile proj = curProjectile;
+//                                
+//                                @Override
+//                                public void run() {
+//                                    proj.destroyed = true;
+//                                    poofTimer.cancel();
+//                                }
+//                            }, 100);
+//                        }
+//
+//                        if (curProjectile.isInAir) {
+//                            for (int j = 0; j < level.collidables.size(); j++) {
+//                                Collidable curCollidable = level.collidables.get(j);
+//                                if (curProjectile.movingRight) {
+//                                    if (curCollidable.hitBox.intersectsLine(curProjectile.rightEdge(), curProjectile.topEdge(),
+//                                            curProjectile.rightEdge(), curProjectile.bottomEdge())) {
+//                                        curProjectile.switchHorizontalDirection();
+//                                        curProjectile.numBounces++;
+//                                        break;
+//                                    }
+//                                } else if (curProjectile.movingLeft) {
+//                                    if (curCollidable.hitBox.intersectsLine(curProjectile.leftEdge(), curProjectile.topEdge(),
+//                                            curProjectile.leftEdge(), curProjectile.bottomEdge())) {
+//                                        curProjectile.switchHorizontalDirection();
+//                                        curProjectile.numBounces++;
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        
+//                        // Bounds check to see if the projectile is off the screen
+//                            if (curProjectile.hitBox.x + curProjectile.hitBox.width < level.background.drawBox.x
+//                                    || curProjectile.hitBox.x > level.background.drawBox.x + level.background.drawBox.width) {
+//
+//                                curProjectile.destroyed = true;
+//                            }
+//                        
+//                        if (curProjectile.isInAir) {
+//                            curProjectile.vertVelocity += gravity;
+//                            curProjectile.moveVerticallyBy(curProjectile.vertVelocity);
+//                        }
+//                        
+//                        if (curProjectile.movingRight) {
+//                            curProjectile.moveRightBy(curProjectile.horizVelocity);
+//                            // wasMovingRight is set to true in keyPressed and is set
+//                            // back to false in keyReleased (if the projectile isn't
+//                            // being shot), and is set back to false in projectileDestroyed
+//                            // as well.
+//                            if (curProjectile.movingQuickerSpeed) {
+//                                curProjectile.moveRightBy((int) (curProjectile.horizVelocity * 0.5));
+//                            }
+//                        }
+//                        // If is moving left
+//                        if (curProjectile.movingLeft) {
+//                            curProjectile.moveLeftBy(curProjectile.horizVelocity);
+//                            // See wasMovingRight for explanation
+//                            if (curProjectile.movingQuickerSpeed) {
+//                                curProjectile.moveLeftBy((int) (curProjectile.horizVelocity * 0.5));
+//                            }
+//                        }
+//                        if (curProjectile.destroyed) {
+//                            onScreenProjectiles.remove(i);
+//                            i--;
+//                            if (onScreenProjectiles.isEmpty()) {
+//                                shootingProjectile = false;
+//                            }
+//                        } else {
+//                            onScreenProjectiles.set(i, curProjectile);
+//                        }
+//                    }
+//                    // Reset frame
+//                    projectileFrame = 0;
+//                } else {
+//                    // Increment frame counter
+//                    projectileFrame++;
+//                }
+//            }
+//            
+//                    
+//                    
+//            // Increment projectile shooting timer
+//            // TODO modify this timer so that it will keep one keypress in memory
+//            // i.e. if you press it and the timer is still active, it will fire
+//            // once the timer runs all the way, then stop.
+//            // If statement is to protect against data overflows
+//            if (projectileTimer < projectileTimerDelay) {
+//                projectileTimer++;
+//            }
             //</editor-fold>
             
             // **Handles the camera movement around bobert
             //            //<editor-fold defaultstate="collapsed" desc="Camera">
-//            if (bobert.yPositionInCam(screenCam) <= (screenCam.getHeight() * 0.5)) {
-//                screenCam.moveVerticallyBy(bobert.vertVelocity * 2);
-//            } else if (bobert.yPositionInCam(screenCam) >= (screenCam.getHeight() * 0.5)
-//                    && screenCam.getY() + screenCam.getHeight() <= Main.B_WINDOW_HEIGHT) {
-//                screenCam.moveVerticallyBy(bobert.vertVelocity * 2);
-//            }
-            if (screenCam.getX() + screenCam.getWidth() < level.background.drawBox.width
-                    && bobert.xPositionInCam(screenCam) > screenCam.getWidth() * 0.5) {
-                screenCam.moveRightBy(bobert.moveSpeed * Camera.scrollFactor);
+            
+            if ( (screenCam.getX() + screenCam.getWidth() < level.background.drawBox.width
+                    && bobert.xPositionInCam(screenCam) > screenCam.getWidth() * 0.5)
+                                ||
+                    (screenCam.getX() < level.background.drawBox.x) ) {
+                screenCam.moveRightBy(3 * Camera.scrollFactor);
             }
-            if (screenCam.getX() > level.background.drawBox.x
-                    && bobert.xPositionInCam(screenCam) < screenCam.getWidth() * 0.5) {
-                screenCam.moveLeftBy(bobert.moveSpeed * Camera.scrollFactor);
+            
+            if ( (screenCam.getX() > level.background.drawBox.x
+                    && bobert.xPositionInCam(screenCam) < screenCam.getWidth() * 0.5)
+                                ||
+                    (screenCam.getX() + screenCam.getWidth() > level.background.drawBox.x + level.background.drawBox.width) ){
+                screenCam.moveLeftBy(3 * Camera.scrollFactor);
             }
-            if (screenCam.getY() + screenCam.getHeight() <= level.background.drawBox.y + level.background.drawBox.height
-                    && bobert.yPositionInCam(screenCam) > (screenCam.getHeight()*0.5)){
+            
+            if ( (screenCam.getY() + screenCam.getHeight() <= level.background.drawBox.y + level.background.drawBox.height
+                    && bobert.yPositionInCam(screenCam) > (screenCam.getHeight()*0.5))
+                                ||
+                    (screenCam.getY() < level.background.drawBox.y) ) {
                 screenCam.moveVerticallyBy(3);
             }
-            if (screenCam.getY() > level.background.drawBox.y 
-                    && bobert.yPositionInCam(screenCam) < (screenCam.getHeight()*0.5)) {
+            
+            if ( (screenCam.getY() > level.background.drawBox.y 
+                    && bobert.yPositionInCam(screenCam) < (screenCam.getHeight()*0.5))
+                                ||
+                    (screenCam.getY() + screenCam.getHeight() > level.background.drawBox.y + level.background.getHeight()) ) {
                 screenCam.moveVerticallyBy(-3);
             }
             
-//            if (bobert.isInAir) {
-//                screenCam.moveVerticallyBy(bobert.vertVelocity * Camera.scrollFactor);
-//            } else {
-//                screenCam.moveVerticallyBy()
-//            }
-            
                 //</editor-fold>
+            
+            // **Bobert's collision with the enemies
+            //<editor-fold defaultstate="collapsed" desc="Character Death">
+            for (int i = 0; i < level.enemies.size(); i++) {
+                if (bobert.isCollidingWith(level.enemies.get(i))) {
+                    level = new GameLevel(level.levelName, false);
+                    for (int j = 0; j < level.collidables.size(); j++) {
+                        Collidable cur = level.collidables.get(j);
+                        if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                            if (cur.name.equalsIgnoreCase("start")) {
+                                loadingLevel = true;
+                                repaint();
+                                bobert.setX(cur.leftEdge());
+                                bobert.setY(cur.topEdge());
+                                level = new GameLevel(level.levelName, false);
+                                break;
+                            }
+                        }
+                    }
+                    bobert.numCollected = 0;
+                    bobert.vertVelocity = 0;
+                    bobert.decelerateCompletely();
+                    bobert.horizAccelFrame = 0;
+                    bobert.hasJumped = false;
+                    bobert.hasDoubleJumped = false;
+//                    onScreenProjectiles.clear();
+                    loadingLevel = false;
+                    break;
+                }
+            }
+            //</editor-fold>
+            
+            // **Handles collision with triggers and the actions associated with them
+            //<editor-fold defaultstate="collapsed" desc="Triggers and Collectables">
+            for (int i=0; i<level.collidables.size(); i++) {
+                Collidable cur = level.collidables.get(i);
+                if (bobert.isCollidingWith(cur)) {
+                    if (cur.worldObjectType == WorldObjectType.TRIGGER) {
+                        String action = cur.name;
+                        if (action.equalsIgnoreCase("end")) {
+                            shouldAdvanceOneLevel = true;
+                        } else if (action.equalsIgnoreCase("play")) {
+                            shouldAdvanceOneLevel = true;
+                        } else if (action.equalsIgnoreCase("editor")) {
+                            BobertPanel.gameRunning = false;
+                            LevelEditor.main(null);
+                        } else if (action.contains("audio")) {
+                            String audioPath = action.substring(5).trim();
+//                            Audio.play(audioPath);
+                        }
+                    } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
+                        level.collidables.remove(i);
+                        i--;
+                        bobert.numCollected++;
+                    }
+                }
+            }
+            //</editor-fold>
 
             // Keeps the frame rate constant by delaying the game loop
             FPSEndOfLoop();
@@ -735,11 +875,16 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.movingLeft = true;
                 bobert.facingLeft = true;
                 bobert.facingRight = false;
+                bobert.shouldAccelLeft = true;
+                bobert.horizAccelFrame = Character.horizAccelDelay -1;
+                
             }
             if (e.getKeyCode() == bobert.keyRight) {
                 bobert.movingRight = true;
                 bobert.facingLeft = false;
                 bobert.facingRight = true;
+                bobert.shouldAccelRight = true;
+                bobert.horizAccelFrame = Character.horizAccelDelay -1;
             }
             if (e.getKeyCode() == bobert.keyJump) {
                 // Make sure we aren't already jumping, then set isInAir to true
@@ -749,40 +894,43 @@ public class BobertPanel extends JPanel implements Runnable,
                     Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
+                    bobert.hasDoubleJumped = false;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
                     Audio.JUMP.play();
                     bobert.isInAir = true;
+                    bobert.hasJumped = true;
                     bobert.hasDoubleJumped = true;
                     bobert.vertVelocity = Character.vertVelocityDoubleJump;
                 }
             }
-            if (e.getKeyCode() == bobert.keyShoot) {
-                // Make sure we aren't already shooting the projetile, then set
-                // shootingProjectile to true and set the projectile velocity
-                // to bouncing.
-                if (projectileTimer >= projectileTimerDelay) {
-                    projectileTimer = 0;
-                    Projectile newProjectile = defaultProjectile;
-                    newProjectile.destroyed = false;
-                    if (bobert.facingRight) {
-                        newProjectile.movingRight = true;
-                        if (bobert.movingRight) {
-                            newProjectile.movingQuickerSpeed = true;
-                        }
-                    } else {
-                        newProjectile.movingLeft = true;
-                        if (bobert.movingLeft) {
-                            newProjectile.movingQuickerSpeed = true;
-                        }
-                    }
-                    onScreenProjectiles.add(newProjectile);
-                    defaultProjectile = new Projectile();
-                    defaultProjectile.setX(bobert.hitBox.x - level.floor.hitBox.x);
-                    defaultProjectile.setY(bobert.hitBox.y);
-                }
-                shootingProjectile = true;
-            } // Dev commands, debug commands
+//            if (e.getKeyCode() == bobert.keyShoot) {
+//                // Make sure we aren't already shooting the projetile, then set
+//                // shootingProjectile to true and set the projectile velocity
+//                // to bouncing.
+//                if (projectileTimer >= projectileTimerDelay) {
+//                    projectileTimer = 0;
+//                    Projectile newProjectile = defaultProjectile;
+//                    newProjectile.destroyed = false;
+//                    if (bobert.facingRight) {
+//                        newProjectile.movingRight = true;
+//                        if (bobert.movingRight) {
+//                            newProjectile.movingQuickerSpeed = true;
+//                        }
+//                    } else {
+//                        newProjectile.movingLeft = true;
+//                        if (bobert.movingLeft) {
+//                            newProjectile.movingQuickerSpeed = true;
+//                        }
+//                    }
+//                    onScreenProjectiles.add(newProjectile);
+//                    defaultProjectile = new Projectile();
+//                    defaultProjectile.setX(bobert.hitBox.x - level.floor.hitBox.x);
+//                    defaultProjectile.setY(bobert.hitBox.y);
+//                }
+//                shootingProjectile = true;
+//            } 
+            // Dev commands, debug commands
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 consoleCommand = ""; // Clear the input for the command
                 typingConsoleCommand = true; // Start grabbing characters
@@ -806,15 +954,6 @@ public class BobertPanel extends JPanel implements Runnable,
                         // save stuff
                         if (cmdRemaining.substring(0, 5).equalsIgnoreCase("level")) {
                             cmdRemaining = cmdRemaining.substring(6);
-                            // save the level
-                            /*
-                             * TODO
-                             * 1)Create a folder named whatever is left in cmdRemaining
-                             *   i.e. save level MyLevelName
-                             * 2)Write backgrounds_data.xml with whatever is the background and floor
-                             * 3)Write collidable_data.xml with whatever is in collidables
-                             * 4)Write enemy_data.xml with whatever is in enemies
-                             */
                         }
                     } else if (consoleCommand.substring(0, 6).equalsIgnoreCase("toggle")) { 
                         // toggle booleans and stuff
@@ -879,9 +1018,13 @@ public class BobertPanel extends JPanel implements Runnable,
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == bobert.keyLeft) {
             bobert.movingLeft = false;
+            bobert.shouldAccelLeft = false;
+            bobert.decelerateCompletely();
         }
         if (e.getKeyCode() == bobert.keyRight) {
             bobert.movingRight = false;
+            bobert.shouldAccelRight = false;
+            bobert.decelerateCompletely();
         }
     }
     
