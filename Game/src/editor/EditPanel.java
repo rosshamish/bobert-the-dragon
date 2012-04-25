@@ -158,13 +158,13 @@ public class EditPanel extends JPanel
             }
         }
         editCam = new Camera(0, 0,
-                Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+                Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, Main.B_WINDOW_HEIGHT);
         for (int i=0; i<level.collidables.size(); i++) {
             Collidable cur = level.collidables.get(i);
             if (cur.worldObjectType == WorldObjectType.TRIGGER) {
                 if (cur.name.equalsIgnoreCase("start")) {
                     editCam = new Camera(cur.leftEdge() - Main.B_WINDOW_WIDTH/2, cur.topEdge() - Main.B_WINDOW_HEIGHT/2,
-                            Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+                            Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, Main.B_WINDOW_HEIGHT);
                     break;
                 }
             }

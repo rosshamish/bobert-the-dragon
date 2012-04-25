@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -81,6 +82,7 @@ public class Main {
             bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         bFrame.setSize(B_WINDOW_WIDTH, B_WINDOW_HEIGHT);
+        bFrame.setBackground(new Color(93, 50, 237));
         bFrame.setResizable(false);
         bFrame.setVisible(true);
     }

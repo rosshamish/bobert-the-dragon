@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import rosslib.RossLib;
 
@@ -25,6 +26,8 @@ public class BobertPanel extends JPanel implements Runnable,
     static String levelDataPath = "resources/levels/level_order.xml";
     static boolean levelsDefined = false;
     static boolean shouldAdvanceOneLevel = false;
+    static boolean loadingLevel = false;
+    static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
     private static boolean wonGame = false;
     
     // Animation vars
@@ -182,6 +185,9 @@ public class BobertPanel extends JPanel implements Runnable,
         
         if (objectsDefined) {
             
+            if (!loadingLevel) {
+                
+            
             // **Draw background
             if (showDebugBoxes) {
                 level.background.drawDebug(g2d, screenCam);
@@ -239,15 +245,22 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
-            g2d.drawString("bobert.numCollected: " + bobert.numCollected, 0, debugTextHeight * 1);
-            g2d.drawString("bobert.totalCollected: " + bobert.totalCollected, 0, debugTextHeight * 2);
-            g2d.drawString("bobert.horizAccelFrame: "+ bobert.horizAccelFrame, 0, debugTextHeight*3);
-//            g2d.drawString("level.enemies.get(0).hitBox.x: "+ level.enemies.get(0).hitBox.x, 0, debugTextHeight*4);
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+            g2d.drawString("Fruit Collected this Level: " + bobert.numCollected, 0, debugTextHeight * 2);
+            g2d.drawString("Total Fruit Collected: " + (bobert.numCollected+bobert.totalCollected), 0, debugTextHeight * 4);
+//            g2d.drawString("bobert.horizAccelFrame: "+ bobert.horizAccelFrame, 0, debugTextHeight*3);
+//            g2d.drawString("loadingLevel: "+ loadingLevel, 0, debugTextHeight*4);
 //            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
 //            g2d.drawString("level.enemies.get(0).isAlive:  "+ level.enemies.get(0).isAlive, 0, debugTextHeight*6);
 //            g2d.drawString("level.enemies.get(0).isInViewOf(screenCam):     "+level.enemies.get(0).isInViewOf(screenCam), 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
+            } else {
+                // if loading the level
+                g2d.drawImage(loadingImage,
+                        0, 0,
+                        Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
+
+            }
         }
 
     }
@@ -261,6 +274,9 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Moving from level 1 to level 2, for example
             //<editor-fold defaultstate="collapsed" desc="Level Advancement">
             if (shouldAdvanceOneLevel) {
+                loadingLevel = true;
+                repaint();
+
                 if (Main.curArgs == null) {
                     // If this is a regular game run, boot the next level.
                     shouldAdvanceOneLevel = false;
@@ -291,6 +307,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.hasJumped = false;
                 bobert.hasDoubleJumped = false;
 //                onScreenProjectiles.clear();
+                loadingLevel = false;
             }
             //</editor-fold>
             
@@ -772,6 +789,8 @@ public class BobertPanel extends JPanel implements Runnable,
                         Collidable cur = level.collidables.get(j);
                         if (cur.worldObjectType == WorldObjectType.TRIGGER) {
                             if (cur.name.equalsIgnoreCase("start")) {
+                                loadingLevel = true;
+                                repaint();
                                 bobert.setX(cur.leftEdge());
                                 bobert.setY(cur.topEdge());
                                 level = new GameLevel(level.levelName, false);
@@ -786,6 +805,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     bobert.hasJumped = false;
                     bobert.hasDoubleJumped = false;
 //                    onScreenProjectiles.clear();
+                    loadingLevel = false;
                     break;
                 }
             }
@@ -805,6 +825,9 @@ public class BobertPanel extends JPanel implements Runnable,
                         } else if (action.equalsIgnoreCase("editor")) {
                             BobertPanel.gameRunning = false;
                             LevelEditor.main(null);
+                        } else if (action.contains("audio")) {
+                            String audioPath = action.substring(5).trim();
+//                            Audio.play(audioPath);
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
                         level.collidables.remove(i);

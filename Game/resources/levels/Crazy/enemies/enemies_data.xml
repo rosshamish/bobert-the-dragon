@@ -15,5 +15,18 @@
 </enemy>
 
 
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 322 </x>
+<y> 783 </y>
+<width> 67 </width>
+<height> 96 </height>
+<movementDistance> 0 </movementDistance>
+
+</enemy>
+
+
 </enemies_data>
 

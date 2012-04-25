@@ -1,7 +1,7 @@
 package game;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.*;
 
 public enum Audio {
@@ -49,10 +49,10 @@ public enum Audio {
     static void init() {
         values();
     }
-    
-    public void loop(){
-       
+
+    public void loop() {
+
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-            
+
     }
-    }
+}
