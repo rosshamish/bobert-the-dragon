@@ -826,6 +826,8 @@ public class BobertPanel extends JPanel implements Runnable,
                             BobertPanel.gameRunning = false;
                             LevelEditor.main(null);
                         } else if (action.contains("audio")) {
+                            level.collidables.remove(i);
+                            i--;
 //                            String audioPath = action.substring(5).trim();
                             Audio.WOOHOO.play();
                         }
