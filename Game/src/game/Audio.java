@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
-public class Audio {
+public enum Audio {
 
+    NARRATION1("resources/audio/Narration/NarrationIntro.wav"),
     
-    
-//    JUMP("resources/audio/sfx/Jumping.wav"),
-//    WOOHOO("resources/audio/sfx/Jumping2.wav"),
-//    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
+    JUMP("resources/audio/sfx/Jumping.wav"),
+    WOOHOO("resources/audio/sfx/Jumping2.wav"),
+    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
 
     public static enum Volume {
 

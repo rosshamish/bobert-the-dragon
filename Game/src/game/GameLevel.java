@@ -23,6 +23,8 @@ public class GameLevel {
     
     public GameLevel (String _levelName, boolean _newLevel) {
         
+        Audio.BACKGROUNDMUSIC.loop();
+        
         if (!_newLevel) { // If this is an old level, then load it from its data.
             resourcesPath = "resources/levels/" + _levelName + "/";
             levelName = _levelName;

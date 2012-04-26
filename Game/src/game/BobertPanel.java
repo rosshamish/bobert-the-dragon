@@ -117,7 +117,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
     public static void defineObjects() {
         
-        new Audio("resources/audio/music/SuaveBobertMusic.wav").loop();
         
         if (!levelsDefined) {
             int numLevels = RossLib.parseXML(levelDataPath, "level");
@@ -830,7 +829,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             LevelEditor.main(null);
                         } else if (action.contains("audio")) {
 //                            String audioPath = action.substring(5).trim();
-                            new Audio("resources/audio/Narration/NarrationIntro.wav").play();
+                              Audio.NARRATION1.play();
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
                         level.collidables.remove(i);
@@ -894,13 +893,13 @@ public class BobertPanel extends JPanel implements Runnable,
                 // as a flag that we are jumping, and then set the vertical 
                 // velocity to jumping.
                 if (!bobert.hasJumped) {
-                    new Audio("resources/audio/sfx/Jumping.wav").play();
+                    Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
                     bobert.hasDoubleJumped = false;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
-                    new Audio("resources/audio/sfx/Jumping2.wav").play();
+                    Audio.JUMP.play();
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
                     bobert.hasDoubleJumped = true;
