@@ -52,6 +52,7 @@ public class EditFrame extends JFrame {
             "Add Obstacle",
             "Add Collectable",
             "Add Enemy",
+            "Add Trigger",
             "",
             "Label ----Selected Object----",
             "Change Image",
@@ -64,8 +65,8 @@ public class EditFrame extends JFrame {
             "Slider Selected Enemy Movement Distance"
         };
         int buttonWidth = buttonPanelWidth;
-        int buttonHeight = 24;
-        int buttonFontSize = 13;
+        int buttonHeight = 23;
+        int buttonFontSize = 12;
         
         int levelWidthMin = Main.B_WINDOW_WIDTH;
         int levelWidthMax = Main.B_WINDOW_WIDTH*30;

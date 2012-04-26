@@ -645,6 +645,48 @@ public class EditPanel extends JPanel
                 Rectangle enemCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 100, 100);
                 level.enemies.add(new Enemy(enemCollisRect, enemiesPath+(String)chosenEnemy, Enemy.defaultMovementDistance));
             }
+        } else if (action.equalsIgnoreCase("Add Trigger")) {
+            String triggersPath = "resources/collidables/triggers/";
+            File dir = new File(triggersPath);
+            File[] triggerFiles = dir.listFiles();
+            String[] fileNames = new String[triggerFiles.length];
+            for (int i=0; i<triggerFiles.length; i++) {
+                fileNames[i] = triggerFiles[i].getName();
+            }
+            Object chosenTrigger = JOptionPane.showInputDialog(eFrame, 
+                    "Choose a trigger:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    fileNames,
+                    fileNames[0]);
+            String[] availableActions = {
+                "start",
+                "end",
+                "play",
+                "audio"
+            };
+            Object chosenAction = JOptionPane.showInputDialog(eFrame,
+                    "Choose an action:",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    availableActions,
+                    availableActions[0]);
+            String strChosenAction = (String)chosenAction;
+            if (strChosenAction.equalsIgnoreCase("audio")) {
+                strChosenAction += " "+JOptionPane.showInputDialog(eFrame,
+                        "Where is the audio file?",
+                        "resources/audio/***.wav");
+            }
+            if (chosenTrigger == null || strChosenAction == null) {
+                System.err.println("your trigger is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                Rectangle trigCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 100, 100);
+                level.collidables.add(new Collidable(trigCollisRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
+                        triggersPath + (String)chosenTrigger, strChosenAction));
+            }
         } else if (action.equalsIgnoreCase("Change Image")) {
             String imagePath = "";
             String inputDialogMessage = "Available images: ";
