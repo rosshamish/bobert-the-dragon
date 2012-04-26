@@ -11,7 +11,6 @@ public enum Audio {
     
     public static Volume volume = Volume.MEDIUM;
     private Clip clip;
-    public static String resourcesPath = "resources/audio/";
 
     Audio(String soundFileName) {
         try {

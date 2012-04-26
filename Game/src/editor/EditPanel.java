@@ -512,9 +512,15 @@ public class EditPanel extends JPanel
             heldObject = null;
             File dir = new File("resources/levels/");
             File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length];
-            for (int i=0; i<levelFiles.length; i++) {
-                fileNames[i] = levelFiles[i].getName();
+            String[] fileNames = new String[levelFiles.length-1]; //to account for the xml file
+            ArrayList<String> tempFileNames = new ArrayList<String>();
+            for (int i = 0; i < levelFiles.length; i++) {
+                if (levelFiles[i].isDirectory()) {
+                    tempFileNames.add(levelFiles[i].getName());
+                }
+            }
+            for (int i=0; i<tempFileNames.size(); i++) {
+                fileNames[i] = tempFileNames.get(i);
             }
             Object chosenLevel = JOptionPane.showInputDialog(eFrame, 
                     "Open File:",
@@ -660,24 +666,29 @@ public class EditPanel extends JPanel
                     null,
                     fileNames,
                     fileNames[0]);
-            String[] availableActions = {
-                "start",
-                "end",
-                "play",
-                "audio"
-            };
-            Object chosenAction = JOptionPane.showInputDialog(eFrame,
-                    "Choose an action:",
-                    "Bobert Level Editor - BlockTwo Studios",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    availableActions,
-                    availableActions[0]);
-            String strChosenAction = (String)chosenAction;
-            if (strChosenAction.equalsIgnoreCase("audio")) {
-                strChosenAction += " "+JOptionPane.showInputDialog(eFrame,
-                        "Where is the audio file?",
-                        "resources/audio/***.wav");
+            String strChosenAction = null;
+            if (chosenTrigger != null) {
+                String[] availableActions = {
+                    "start",
+                    "end",
+                    "play",
+                    "audio"
+                };
+                Object chosenAction = JOptionPane.showInputDialog(eFrame,
+                        "Choose an action:",
+                        "Bobert Level Editor - BlockTwo Studios",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        availableActions,
+                        availableActions[0]);
+                strChosenAction = (String) chosenAction;
+                if (strChosenAction != null) {
+                    if (strChosenAction.equalsIgnoreCase("audio")) {
+                        strChosenAction += " " + JOptionPane.showInputDialog(eFrame,
+                                "If sound effect, specify the name. If larger audio, specify the name",
+                                "***.wav OR SoundFile1");
+                    }
+                }
             }
             if (chosenTrigger == null || strChosenAction == null) {
                 System.err.println("your trigger is null");

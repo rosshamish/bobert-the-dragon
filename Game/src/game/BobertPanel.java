@@ -228,8 +228,18 @@ public class BobertPanel extends JPanel implements Runnable,
             
             // **Draw bobert
             bobert.draw(g2d, screenCam);
-            if (showDebugBoxes) 
+            if (showDebugBoxes) {
                 bobert.drawDebug(g2d, screenCam);
+            }
+            
+            g2d.drawImage(Collidable.collectableIcon, 
+                    Main.B_WINDOW_WIDTH - 200, 10,
+                    100, 80,
+                    null);
+            g2d.setColor(Color.black);
+            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+            g2d.drawString("x "+(bobert.totalCollected+bobert.numCollected),
+                    Main.B_WINDOW_WIDTH - 110, 90);
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, consoleCommandTextHeight));
@@ -252,8 +262,8 @@ public class BobertPanel extends JPanel implements Runnable,
             // **Debugging values on screen
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
-            g2d.drawString("Fruit Collected this Level: " + bobert.numCollected, 0, debugTextHeight * 2);
-            g2d.drawString("Total Fruit Collected: " + (bobert.numCollected+bobert.totalCollected), 0, debugTextHeight * 4);
+//            g2d.drawString("Fruit Collected this Level: " + bobert.numCollected, 0, debugTextHeight * 2);
+//            g2d.drawString("Total Fruit Collected: " + (bobert.numCollected+bobert.totalCollected), 0, debugTextHeight * 4);
 //            g2d.drawString("bobert.horizAccelFrame: "+ bobert.horizAccelFrame, 0, debugTextHeight*3);
 //            g2d.drawString("loadingLevel: "+ loadingLevel, 0, debugTextHeight*4);
 //            g2d.drawString("level.enemies.get(0).hitBox.y:  " + level.enemies.get(0).hitBox.y, 0, debugTextHeight * 5);
@@ -268,7 +278,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
             } else if (wonGame) {
                 // if the game is won
-                System.out.println("Trying to draw the won image");
                 g2d.drawImage(wonImage,
                         0, 0,
                         Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
@@ -855,8 +864,12 @@ public class BobertPanel extends JPanel implements Runnable,
                         } else if (action.contains("audio")) {
                             level.collidables.remove(i);
                             i--;
-//                            String audioPath = action.substring(5).trim();
-                              Audio.NARRATION1.play(Volume.HIGH);
+                            String audioName = action.substring(5).trim().toLowerCase();
+                            if (audioName.equalsIgnoreCase("Narration1")) {
+                                Audio.NARRATION1.play(Volume.HIGH);
+                            } else {
+                                new SoundEffect(audioName).play(Volume.LOW_MEDIUM);
+                            }
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
                         level.collidables.remove(i);
@@ -926,7 +939,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     bobert.hasDoubleJumped = false;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
-                    new SoundEffect("Jumping.wav").play(Volume.LOW_MEDIUM);
+                    new SoundEffect("Jumping2.wav").play(Volume.LOW_MEDIUM);
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
                     bobert.hasDoubleJumped = true;
