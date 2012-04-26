@@ -18,90 +18,6 @@
 
 <collidable>
 
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 1200 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
 <name> end </name>
 <location> resources/collidables/triggers/green_flag.png </location>
 <x> 676 </x>
@@ -158,21 +74,7 @@
 
 <collidable>
 
-<name>  </name>
-<location> resources/collidables/triggers/green_flag.png </location>
-<x> 613 </x>
-<y> 493 </y>
-<width> 100 </width>
-<height> 100 </height>
-<collisionType> PASSABLE </collisionType>
-<worldObjectType> TRIGGER </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> audio resources/audio/sfx/jumping.wav </name>
+<name> audio Narration1 </name>
 <location> resources/collidables/triggers/green_flag.png </location>
 <x> 394 </x>
 <y> 562 </y>

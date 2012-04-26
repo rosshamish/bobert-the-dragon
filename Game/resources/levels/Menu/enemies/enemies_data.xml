@@ -4,7 +4,7 @@
 
 <enemy>
 
-<name>  </name>
+<name> DefaultName </name>
 <location> resources/enemies/0.png </location>
 <x> 26 </x>
 <y> 762 </y>

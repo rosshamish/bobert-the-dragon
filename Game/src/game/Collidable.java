@@ -1,11 +1,9 @@
 package game;
 
 import interfaces.Drawable;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -20,6 +18,8 @@ public class Collidable extends WorldObject
     };
     public static String resourcesPath = resourcesPathStem + "collidables/";
     public static String dataPath = resourcesPath + "collidables_data.xml";
+    
+    public static Image collectableIcon = new ImageIcon("resources/collidables/collectables/pineapple.png").getImage();
     
     public Rectangle hitBox;
     public Rectangle futureHitBox; // For collision detection

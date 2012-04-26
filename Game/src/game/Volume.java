@@ -17,12 +17,12 @@ public enum Volume {
             } else if (this.equals(Volume.MEDIUM)) {
                 return -10.0f;
             } else if (this.equals(Volume.MEDIUM_HIGH)) {
-                return 0.0f;
+                return -2.0f;
             } else if (this.equals(Volume.HIGH)) {
-                return 6.0f;
+                return 2.0f;
             } else {
                 return 0.0f;
             }
         }
-        
+
 }
