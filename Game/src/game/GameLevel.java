@@ -1,5 +1,6 @@
 package game;
 
+import game.Audio.Volume;
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.Rectangle;
@@ -20,9 +21,10 @@ public class GameLevel {
     public ArrayList<Enemy> enemies;
     
     
+    
     public GameLevel (String _levelName, boolean _newLevel) {
         
-       Audio.BACKGROUNDMUSIC.loop();
+        Audio.BACKGROUNDMUSIC.loop();
         
         if (!_newLevel) { // If this is an old level, then load it from its data.
             resourcesPath = "resources/levels/" + _levelName + "/";

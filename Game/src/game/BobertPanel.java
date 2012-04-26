@@ -118,6 +118,8 @@ public class BobertPanel extends JPanel implements Runnable,
     }
 
     public static void defineObjects() {
+        
+        
         if (!levelsDefined) {
             int numLevels = RossLib.parseXML(levelDataPath, "level");
             gameLevels.clear();
@@ -853,8 +855,8 @@ public class BobertPanel extends JPanel implements Runnable,
                         } else if (action.contains("audio")) {
                             level.collidables.remove(i);
                             i--;
-                            String audioPath = action.substring(5).trim();
-                            Audio.WOOHOO.play();
+//                            String audioPath = action.substring(5).trim();
+                              Audio.NARRATION1.play();
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
                         level.collidables.remove(i);
