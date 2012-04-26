@@ -30,6 +30,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static boolean loadingLevel = false;
     static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
     private static boolean wonGame = false;
+    static Image wonImage = new ImageIcon("resources/logos/blockTwo_3.jpg").getImage();
     
     // Animation vars
     static int animationFrame = 0;
@@ -188,7 +189,7 @@ public class BobertPanel extends JPanel implements Runnable,
         
         if (objectsDefined) {
             
-            if (!loadingLevel) {
+            if (!loadingLevel && !wonGame) {
                 
             
             // **Draw background
@@ -257,12 +258,18 @@ public class BobertPanel extends JPanel implements Runnable,
 //            g2d.drawString("level.enemies.get(0).isAlive:  "+ level.enemies.get(0).isAlive, 0, debugTextHeight*6);
 //            g2d.drawString("level.enemies.get(0).isInViewOf(screenCam):     "+level.enemies.get(0).isInViewOf(screenCam), 0, debugTextHeight*7);
 //            g2d.drawString("bobert.movingLeft: "+bobert.movingLeft, 0, debugTextHeight*8);
-            } else {
+            } else if (loadingLevel && !wonGame) {
                 // if loading the level
                 g2d.drawImage(loadingImage,
                         0, 0,
                         Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
 
+            } else if (wonGame) {
+                // if the game is won
+                System.out.println("Trying to draw the won image");
+                g2d.drawImage(wonImage,
+                        0, 0,
+                        Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
             }
         }
 
@@ -283,10 +290,20 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (Main.curArgs == null) {
                     // If this is a regular game run, boot the next level.
                     shouldAdvanceOneLevel = false;
-                    if (gameLevels.size() > 0) {
+                    if (gameLevels.size() > 1) {
+                        // If there is still a level to remove, then remove it.
                         gameLevels.remove(level.levelName);
                     } else {
+                        // Otherwise, reload the level array
+                        wonGame = true;
+                        repaint();
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         gameLevels.clear();
+                        wonGame = false;
                         for (int i=0; i < allGameLevels.size(); i++) {
                             gameLevels.add(allGameLevels.get(i));
                         }
@@ -836,7 +853,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         } else if (action.contains("audio")) {
                             level.collidables.remove(i);
                             i--;
-//                            String audioPath = action.substring(5).trim();
+                            String audioPath = action.substring(5).trim();
                             Audio.WOOHOO.play();
                         }
                     } else if (cur.worldObjectType == WorldObjectType.COLLECTABLE) {
