@@ -24,6 +24,5 @@ public enum Volume {
                 return 0.0f;
             }
         }
-
-
+        
 }
