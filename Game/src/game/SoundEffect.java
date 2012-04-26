@@ -4,19 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
-public enum Audio {
-
-    NARRATION1("resources/audio/Narration/NarrationIntro.wav"),
-    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
+public class SoundEffect {
     
     public static Volume volume = Volume.MEDIUM;
     private Clip clip;
-    public static String resourcesPath = "resources/audio/";
+    public static String resourcesPath = "resources/audio/sfx/";
 
-    Audio(String soundFileName) {
+    SoundEffect(String soundFileName) {
         try {
-
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFileName));
+            String soundFileFullPath = resourcesPath + soundFileName;
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFileFullPath));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
 
@@ -40,15 +37,8 @@ public enum Audio {
             clip.start();
         }
     }
-
-    public void loop(Volume _vol) {
-        this.setVolume(_vol);
-        if (volume != Volume.MUTE) {
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
     
-    public void stop() {
+    public void stop(Volume _vol) {
         clip.stop();
     }
     
