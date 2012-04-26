@@ -1,5 +1,6 @@
 package game;
 
+import game.Audio.Volume;
 import game.Collidable.CollisionType;
 import game.WorldObject.WorldObjectType;
 import java.awt.Rectangle;
