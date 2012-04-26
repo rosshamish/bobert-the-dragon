@@ -22,6 +22,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static Character bobert;
     static Camera screenCam;
     static ArrayList<String> gameLevels = new ArrayList<String>();
+    static ArrayList<String> allGameLevels = new ArrayList<String>();
     static GameLevel level;
     static String levelDataPath = "resources/levels/level_order.xml";
     static boolean levelsDefined = false;
@@ -120,7 +121,9 @@ public class BobertPanel extends JPanel implements Runnable,
             int numLevels = RossLib.parseXML(levelDataPath, "level");
             gameLevels.clear();
             for (int i = 0; i < numLevels; i++) {
-                gameLevels.add(RossLib.parseXML(levelDataPath, "level", i, "name"));
+                String levelName = (RossLib.parseXML(levelDataPath, "level", i, "name"));
+                gameLevels.add(levelName);
+                allGameLevels.add(levelName);
                 System.out.println(gameLevels.get(i));
             }
             levelsDefined = true;
@@ -280,9 +283,15 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (Main.curArgs == null) {
                     // If this is a regular game run, boot the next level.
                     shouldAdvanceOneLevel = false;
-                    gameLevels.remove(level.levelName);
+                    if (gameLevels.size() > 0) {
+                        gameLevels.remove(level.levelName);
+                    } else {
+                        gameLevels.clear();
+                        for (int i=0; i < allGameLevels.size(); i++) {
+                            gameLevels.add(allGameLevels.get(i));
+                        }
+                    }
                     level = new GameLevel(gameLevels.get(0), false);
-
                 } else {
                     // if this is an editor test, end the level
                     gameRunning = false;
@@ -793,7 +802,6 @@ public class BobertPanel extends JPanel implements Runnable,
                                 repaint();
                                 bobert.setX(cur.leftEdge());
                                 bobert.setY(cur.topEdge());
-                                level = new GameLevel(level.levelName, false);
                                 break;
                             }
                         }

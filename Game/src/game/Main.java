@@ -81,6 +81,7 @@ public class Main {
             bFrame.setLocationByPlatform(true);
             bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
+        bFrame.setSize(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
         bFrame.setAutoRequestFocus(true);
         bFrame.setBackground(new Color(93, 50, 237));
         bFrame.setResizable(false);
