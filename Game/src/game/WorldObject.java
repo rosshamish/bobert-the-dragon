@@ -34,6 +34,8 @@ public class WorldObject
     protected Image image;
     protected String imageLocation;
     public ArrayList<String> imagePaths;
+    int imageCount = 0;
+    int numImages;
     
     public WorldObject() {
         

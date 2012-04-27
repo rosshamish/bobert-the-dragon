@@ -19,7 +19,9 @@ public class Collidable extends WorldObject
     public static String resourcesPath = resourcesPathStem + "collidables/";
     public static String dataPath = resourcesPath + "collidables_data.xml";
     
-    public static Image collectableIcon = new ImageIcon("resources/collidables/collectables/pineapple.png").getImage();
+    public static Image collectableIcon = new ImageIcon("resources/collidables/collectables/coin1.png").getImage();
+    public static int collectableAnimationFrame = 0;
+    public static int collectableAnimationDelay = 40;
     
     public Rectangle hitBox;
     public Rectangle futureHitBox; // For collision detection
@@ -57,11 +59,14 @@ public class Collidable extends WorldObject
     
     public Collidable(Rectangle collisionRect, WorldObjectType objType, CollisionType colType, ArrayList<String> imageLocations) {
         this.hitBox = collisionRect;
+        
         this.drawBox = new Rectangle(hitBox);
         this.futureHitBox = new Rectangle(hitBox);
         this.worldObjectType = objType;
         this.collisionType = colType;
         this.imagePaths = imageLocations;
+        this.numImages = imagePaths.size();
+        this.setImage(imagePaths.get(0));
     }
     
     boolean isAbove(Collidable obj) {

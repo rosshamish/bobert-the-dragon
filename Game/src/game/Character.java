@@ -39,9 +39,6 @@ public class Character extends Sprite
     public int numCollected = 0;
     public int totalCollected = 0;
     
-    static int imageCount = 0;
-    static int numImages;
-    
     public Character() {
         try {
             ImageIcon iiP = new ImageIcon(resourcesPath + imageCount + ".png");
@@ -50,6 +47,7 @@ public class Character extends Sprite
         } catch (Exception e) {
             System.out.println("Exception: "+e.getMessage());
         }
+        
         int width = Integer.parseInt(
                 RossLib.parseXML(resourcesPath + "character_data.xml",
                 "character", "bobert", "width")

@@ -3,11 +3,12 @@ package game;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
+import rosslib.RossLib;
 
 public enum Audio {
 
-    NARRATION1("resources/audio/Narration/NarrationIntro.wav"),
-    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
+    NARRATION1(RossLib.getResource("resources/audio/Narration/NarrationIntro.wav").getPath()),
+    BACKGROUNDMUSIC(RossLib.getResource("resources/audio/music/SuaveBobertMusic.wav").getPath());
     
     public static Volume volume = Volume.MEDIUM;
     private Clip clip;

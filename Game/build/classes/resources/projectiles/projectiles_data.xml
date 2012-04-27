@@ -1,0 +1,107 @@
+<projectile_data>
+	<!-- Template Projectile XML Code
+	<projectile>
+		<name>projectile name</name>
+		<location>location relative to Game folder</location>
+		<width>width in pixels, bro. The default is 40</width>
+		<height>height in pixels, bro. The default is 40</height>
+	</projectile>
+
+	-->
+	<!-- This is an example comment-->
+
+	<!-- IMPORTANT NOTES -->
+	<!-- Do not make anything taller than bobert is. Just don't. It will fuck up the collision detection. -->
+
+
+	<!-- Projectile 0 -->
+	<projectile>
+		<name> Red Stripes </name>
+		<location> resources/projectiles/0.png </location>
+		<width> 53 </width>
+		<height> 50 </height>
+		<speed> 7 </speed>
+	</projectile>
+	
+	<!-- Projectile 1 -->
+	<projectile>
+		<name> Blue Stripes </name>
+		<location> resources/projectiles/1.png </location>
+		<width> 52 </width>
+		<height> 48 </height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 2 -->
+	<projectile>
+		<name> Orange Stars </name>
+		<location> resources/projectiles/2.png </location>
+		<width> 55 </width>
+		<height> 50 </height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 3 -->
+	<projectile>
+		<name> Spatula </name>
+		<location> resources/projectiles/3.png </location>
+		<width> 40</width>
+		<height> 70</height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 4 -->
+	<projectile>
+		<name> Tire </name>
+		<location> resources/projectiles/4.png </location>
+		<width>	70</width>
+		<height> 70</height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 5 -->
+	<projectile>
+		<name> Tennis Racquet </name>
+		<location> resources/projectiles/5.png </location>
+		<width> 75</width>
+		<height> 60</height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 6 -->
+	<projectile>
+		<name> Mushroom </name>
+		<location> resources/projectiles/6.png </location>
+		<width> 65</width>
+		<height> 65 </height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 7 -->
+	<projectile>
+		<name> Birdemic Cover </name>
+		<location> resources/projectiles/birdemic.png </location>
+		<width> 50 </width>
+		<height> 70 </height>
+		<speed> 7 </speed>
+	</projectile>
+
+	<!-- Projectile 9 -->
+	<projectile>
+		<name> Axe </name>
+		<location> resources/projectiles/axe.png </location>
+		<width> 42 </width>
+		<height> 71 </height>
+		<speed> 7 </speed>
+	</projectile>
+	
+	<!-- Projectile 10 -->
+	<projectile>
+		<name> Ladder </name>
+		<location> resources/projectiles/ladder.png </location>
+		<width> 93 </width>
+		<height> 75</height>
+		<speed> 7 </speed>
+	</projectile>
+
+</projectile_data>

@@ -2,6 +2,7 @@ package game;
 
 import interfaces.Drawable;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  *
@@ -21,6 +22,18 @@ public class Enemy extends Sprite
     
     public boolean isAlive = true;
     
+    public Enemy(Rectangle collisionRect, ArrayList<String> imgPaths, int howFarCanMoveRightFromLocation) {
+        name = "DefaultName";
+        
+        horizVelocity = defaultMoveSpeed;
+        movementDistance = howFarCanMoveRightFromLocation;
+        hitBox = new Rectangle(collisionRect);
+        startX = collisionRect.x;
+        this.initBoxes(collisionRect);
+        worldObjectType = WorldObjectType.ENEMY;
+        collisionType = CollisionType.IMPASSABLE;
+    }
+    
     public Enemy(Rectangle collisionRect, String imgPath, int howFarCanMoveRightFromLocation) {
         name = "DefaultName";
         setImage(imgPath);
@@ -32,5 +45,4 @@ public class Enemy extends Sprite
         worldObjectType = WorldObjectType.ENEMY;
         collisionType = CollisionType.IMPASSABLE;
     }
-    
 }

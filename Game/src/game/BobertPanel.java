@@ -28,7 +28,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static boolean levelsDefined = false;
     static boolean shouldAdvanceOneLevel = false;
     static boolean loadingLevel = false;
-    static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
+    static Image loadingImage = new ImageIcon(BobertPanel.class.getResource("/resources/logos/blockTwo_loadScreen.jpg")).getImage();
     private static boolean wonGame = false;
     static Image wonImage = new ImageIcon("resources/logos/blockTwo_3.jpg").getImage();
     
@@ -160,14 +160,14 @@ public class BobertPanel extends JPanel implements Runnable,
         String amtImages = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "numberOfImages");
         if (!amtImages.isEmpty()) {
-            Character.numImages = Integer.parseInt(amtImages); 
+            bobert.numImages = Integer.parseInt(amtImages); 
         }
         String defaultImage = RossLib.parseXML(Character.resourcesPath + "character_data.xml", 
                 "character", "Bobert", "defaultImage");
         if (!defaultImage.isEmpty()) {
-            Character.imageCount = Integer.parseInt(defaultImage);
+            bobert.imageCount = Integer.parseInt(defaultImage);
         }
-        for (int i=0; i<Character.numImages; i++) {
+        for (int i=0; i<bobert.numImages; i++) {
             bobert.imagePaths.add(Character.resourcesPath+i+".png");
         }
         
@@ -234,7 +234,7 @@ public class BobertPanel extends JPanel implements Runnable,
             
             g2d.drawImage(Collidable.collectableIcon, 
                     Main.B_WINDOW_WIDTH - 200, 10,
-                    100, 80,
+                    80, 80,
                     null);
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
@@ -602,23 +602,48 @@ public class BobertPanel extends JPanel implements Runnable,
 
             // **Handles all animation
             //<editor-fold defaultstate="collapsed" desc="Animation">
+            
+            // Bobert and standard animation
             if (animationFrame >= animationDelay) {
                 // Right-facing images: 0-15
                 // Left-facing images: 16-30
                 if (bobert.movingRight || bobert.movingLeft) {
-                    Character.imageCount++;
+                    bobert.imageCount++;
                 } else if (bobert.facingRight || bobert.facingLeft) {
-                    Character.imageCount = 12;
+                    bobert.imageCount = 12;
                 }
-                if (Character.imageCount >= bobert.imagePaths.size()) {
-                    Character.imageCount = 0;
+                if (bobert.imageCount >= bobert.imagePaths.size()) {
+                    bobert.imageCount = 0;
                 }
-                bobert.setImage(bobert.imagePaths.get(Character.imageCount));
+                bobert.setImage(bobert.imagePaths.get(bobert.imageCount));
                 
                 animationFrame = 0;
             } else {
                 animationFrame++;
             }
+            
+            // Collectable animation
+            if (Collidable.collectableAnimationFrame >= Collidable.collectableAnimationDelay) {
+                for (int i=0; i < level.collidables.size(); i++) {
+                    Collidable cur = level.collidables.get(i);
+                    cur.imageCount++;
+                    if (cur.imagePaths != null) {
+                        // If this is an animated collidable
+                        if (cur.imageCount >= cur.numImages) {
+                            cur.imageCount = 0;
+                        }
+                        cur.setImage(cur.imagePaths.get(cur.imageCount));
+                    } else {
+                        /* If this is a static collidable,
+                         * do nothing, don't change the image :)
+                         */
+                    }
+                }
+                Collidable.collectableAnimationFrame = 0;
+            } else {
+                Collidable.collectableAnimationFrame++;
+            }
+            
             
             //</editor-fold>
 
@@ -875,6 +900,7 @@ public class BobertPanel extends JPanel implements Runnable,
                         level.collidables.remove(i);
                         i--;
                         bobert.numCollected++;
+                        new SoundEffect("coin_pickup.wav").play(Volume.LOW_MEDIUM);
                     }
                 }
             }
@@ -939,7 +965,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     bobert.hasDoubleJumped = false;
                     bobert.vertVelocity = Character.vertVelocityJump;
                 } else if (!bobert.hasDoubleJumped) {
-                    new SoundEffect("Jumping2.wav").play(Volume.LOW_MEDIUM);
+                    new SoundEffect("Jumping.wav").play(Volume.LOW_MEDIUM);
                     bobert.isInAir = true;
                     bobert.hasJumped = true;
                     bobert.hasDoubleJumped = true;

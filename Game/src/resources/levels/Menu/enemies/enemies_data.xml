@@ -1,0 +1,19 @@
+
+<enemies_data>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/0.png </location>
+<x> 26 </x>
+<y> 762 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 219 </movementDistance>
+
+</enemy>
+
+
+</enemies_data>
+

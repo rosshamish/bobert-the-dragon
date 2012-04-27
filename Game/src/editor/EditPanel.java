@@ -626,7 +626,7 @@ public class EditPanel extends JPanel
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
                 Rectangle collectableRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
-                        120, 70);
+                        70, 70);
                 level.collidables.add(new Collidable(collectableRect, WorldObjectType.COLLECTABLE, CollisionType.PASSABLE, collectablesPath + (String) (chosenCollectable) ));
             }
         } else if (action.equalsIgnoreCase("Add Enemy")) {
@@ -694,7 +694,8 @@ public class EditPanel extends JPanel
                 System.err.println("your trigger is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                Rectangle trigCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 100, 100);
+                Rectangle trigCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 
+                        100, 100);
                 level.collidables.add(new Collidable(trigCollisRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                         triggersPath + (String)chosenTrigger, strChosenAction));
             }
