@@ -24,7 +24,7 @@ import rosslib.RossLib;
  */
 public class EditPanel extends JPanel
                        implements Runnable, 
-                       MouseListener, MouseMotionListener, 
+                       MouseListener, MouseMotionListener,
                        ActionListener, ChangeListener {
     static EditFrame eFrame;
     
@@ -63,9 +63,13 @@ public class EditPanel extends JPanel
     public static int keyRight = KeyEvent.VK_D;
     public static int keyUp = KeyEvent.VK_W;
     public static int keyDown = KeyEvent.VK_S;
+    public static int keyCut = KeyEvent.VK_CUT; 
+    public static int keyCopy = KeyEvent.VK_COPY;
+    public static int keyPaste = KeyEvent.VK_PASTE;
     
     public static Collidable heldObject;
     public static Collidable selectedObject;
+    public static Collidable copiedObject = null;
     private static long FPSStartOfLoopTime = 0;
     private final static long FPSDelayPerFrame = 1;
     
@@ -184,6 +188,7 @@ public class EditPanel extends JPanel
         eFrame.sliderLevelHeight.setValue(level.background.drawBox.height);
         gameThread = new Thread(this);
         gameThread.start();
+        addBindings();
         eFrame.addMouseListener(this);
         eFrame.addMouseMotionListener(this);
     }
@@ -260,8 +265,8 @@ public class EditPanel extends JPanel
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-//            g2d.drawString("Flag x: "+level.collidables.get(2).hitBox.x, 10, 10);
-//            g2d.drawString("Flag y: "+level.collidables.get(2).hitBox.y, 10, 20);
+            g2d.drawString("Selected Object: "+selectedObject, 10, 10);
+            g2d.drawString("Copied Object: "+copiedObject, 10, 20);
 //            g2d.drawString("Cloud x: "+String.valueOf(mouseDeltaX), 10, 30);
 //            g2d.drawString("Cloud y: "+String.valueOf(mouseDeltaY), 10, 40); 
 //            
@@ -859,5 +864,82 @@ public class EditPanel extends JPanel
         } catch (InterruptedException ex) {
             Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static boolean cut() {
+        if (selectedObject != null) {
+            copiedObject = selectedObject;
+            // Now delete the selected object
+            if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
+                        || selectedObject.worldObjectType == WorldObjectType.OBSTACLE
+                        || selectedObject.worldObjectType == WorldObjectType.TRIGGER
+                        || selectedObject.worldObjectType == WorldObjectType.FLOOR) {
+                    for (int i=0; i<level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
+                    for (int i=0; i<level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                    for (int i=0; i<level.enemies.size(); i++) {
+                        if (level.enemies.get(i).equals(selectedObject)) {
+                            level.enemies.remove(i);
+                        }
+                    }
+                }
+                // We can't be selecting anything anymore because the current selection just got deleted.
+                selectedObject = null;
+                return true;
+        }
+        return false;
+    }
+    
+    public static boolean copy() {
+        if (selectedObject != null) {
+            copiedObject = selectedObject;
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean paste() {
+        if (copiedObject != null) {
+        Rectangle pastedCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 
+                        copiedObject.getWidth(), copiedObject.getHeight());
+                level.collidables.add(new Collidable(pastedCollisRect, 
+                        copiedObject.worldObjectType, copiedObject.collisionType, 
+                        copiedObject.getImageLocation()));
+                return true;
+        } 
+        return false;
+    }
+    
+
+    protected void addBindings() {
+        
+        this.getActionMap().put("keys", new AbstractAction() {
+            public void actionPerformed(ActionEvent e){
+                if (e.)
+            }
+        });
+        
+        InputMap inputMap = this.getInputMap();
+
+        //Ctrl-b to go backward one character
+        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK);
+        inputMap.put(key, EditPanel.cut());
+ 
+        //Ctrl-f to go forward one character
+        key = KeyStroke.getKeyStroke("c");
+        inputMap.put(key, "keys");
+
+        //Ctrl-p to go up one line
+        key = KeyStroke.getKeyStroke("v");
+        inputMap.put(key, EditPanel.paste());
     }
 }

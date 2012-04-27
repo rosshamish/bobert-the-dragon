@@ -28,7 +28,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static boolean levelsDefined = false;
     static boolean shouldAdvanceOneLevel = false;
     static boolean loadingLevel = false;
-    static Image loadingImage = new ImageIcon(BobertPanel.class.getResource("/resources/logos/blockTwo_loadScreen.jpg")).getImage();
+    static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
     private static boolean wonGame = false;
     static Image wonImage = new ImageIcon("resources/logos/blockTwo_3.jpg").getImage();
     
@@ -891,7 +891,7 @@ public class BobertPanel extends JPanel implements Runnable,
                             i--;
                             String audioName = action.substring(5).trim().toLowerCase();
                             if (audioName.equalsIgnoreCase("Narration1")) {
-                                Audio.NARRATION1.play(Volume.HIGH);
+                                Audio.NARRATION1.play(Volume.MEDIUM_HIGH);
                             } else {
                                 new SoundEffect(audioName).play(Volume.LOW_MEDIUM);
                             }

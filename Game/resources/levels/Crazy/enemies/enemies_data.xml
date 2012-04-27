@@ -1,0 +1,19 @@
+
+<enemies_data>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike_3-wide.png </location>
+<x> 407 </x>
+<y> 789 </y>
+<width> 184 </width>
+<height> 96 </height>
+<movementDistance> 0 </movementDistance>
+
+</enemy>
+
+
+</enemies_data>
+

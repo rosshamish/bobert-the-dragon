@@ -7,8 +7,8 @@ import rosslib.RossLib;
 
 public enum Audio {
 
-    NARRATION1(RossLib.getResource("resources/audio/Narration/NarrationIntro.wav").getPath()),
-    BACKGROUNDMUSIC(RossLib.getResource("resources/audio/music/SuaveBobertMusic.wav").getPath());
+    NARRATION1("resources/audio/Narration/NarrationIntro.wav"),
+    BACKGROUNDMUSIC("resources/audio/music/SuaveBobertMusic.wav");
     
     public static Volume volume = Volume.MEDIUM;
     private Clip clip;

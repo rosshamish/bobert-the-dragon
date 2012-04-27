@@ -1,10 +1,8 @@
 package editor;
 
 import game.Main;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 /**
@@ -192,6 +190,19 @@ public class EditFrame extends JFrame {
         }
         
         // Add all the panels to the frame.
+        InputMap inputMap = buttonPanel.getInputMap();
+
+        //Ctrl-b to go backward one character
+        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK);
+        inputMap.put(key, EditPanel.cut());
+ 
+        //Ctrl-f to go forward one character
+        key = KeyStroke.getKeyStroke("c");
+        inputMap.put(key, EditPanel.copy());
+
+        //Ctrl-p to go up one line
+        key = KeyStroke.getKeyStroke("v");
+        inputMap.put(key, EditPanel.paste());
         add(buttonPanel, BorderLayout.EAST);
         add(ePanel);
     }

@@ -2,8 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/Users/stuarture/Programming/NetBeansProjects/Bobert-the-Dragon/Game/src/game/Audio.java</file>
-        <file>file:/Users/stuarture/Programming/NetBeansProjects/Bobert-the-Dragon/Game/src/game/BobertPanel.java</file>
-        <file>file:/Users/stuarture/Programming/NetBeansProjects/Bobert-the-Dragon/Game/src/game/GameLevel.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/BobertPanel.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/editor/EditPanel.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/Audio.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/Main.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/BobertFrame.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/editor/EditFrame.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/Enemy.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/GameLevel.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/Volume.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/SoundEffect.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/game/Collidable.java</file>
+        <file>file:/F:/My%20Documents/Comp%20Sci%2010/Github/Bobert-the-Dragon/Game/Game/src/rosslib/RossLib.java</file>
     </open-files>
 </project-private>
