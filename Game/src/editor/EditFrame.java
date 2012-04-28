@@ -33,11 +33,11 @@ public class EditFrame extends JFrame {
         buttonPanel.setPreferredSize(new Dimension(160, Main.B_WINDOW_CANVAS_HEIGHT));
         String[] buttonPanelComponents = {
             "Label File",
-            "New",
-            "Save",
-            "Save as",
-            "Open",
-            "Save & Test",
+            "New (Ctrl+N)",
+            "Save (Ctrl+S)",
+            "Save as (Ctrl+Shift+S)",
+            "Open (Ctrl+O)",
+            "Save & Test (Ctrl+T)",
             "",
             "Change Background",
             "Label Level Width",
@@ -53,8 +53,8 @@ public class EditFrame extends JFrame {
             "Add Trigger",
             "",
             "Label ----Selected Object----",
-            "Change Image",
-            "Delete Object",
+            "Change Img (A & D)",
+            "Delete Object (Delete)",
             "Label Width",
             "Slider Selected Object Width",
             "Label Height",
@@ -188,21 +188,16 @@ public class EditFrame extends JFrame {
                 buttonPanel.add(extraSpace);
             }
         }
+        // The 0th index is the input map, the 1th index is the action map.
+        // Set the maps to both the button panel and the game panel.
+        Object[] maps = EditPanel.getInputAndActionMaps();
+        buttonPanel.setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, (InputMap) maps[0]);
+        ePanel.setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, (InputMap) maps[0]);
         
-        // Add all the panels to the frame.
-        InputMap inputMap = buttonPanel.getInputMap();
-
-        //Ctrl-b to go backward one character
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK);
-        inputMap.put(key, EditPanel.cut());
- 
-        //Ctrl-f to go forward one character
-        key = KeyStroke.getKeyStroke("c");
-        inputMap.put(key, EditPanel.copy());
-
-        //Ctrl-p to go up one line
-        key = KeyStroke.getKeyStroke("v");
-        inputMap.put(key, EditPanel.paste());
+        buttonPanel.setActionMap((ActionMap) maps[1]);
+        ePanel.setActionMap((ActionMap) maps[1]);
+        
+        buttonPanel.requestFocusInWindow();
         add(buttonPanel, BorderLayout.EAST);
         add(ePanel);
     }

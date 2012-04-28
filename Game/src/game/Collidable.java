@@ -28,6 +28,16 @@ public class Collidable extends WorldObject
     public CollisionType collisionType = CollisionType.PASSABLE;
     public int drawHitOffset = 5;
     public WorldObjectType worldObjectType;
+
+    public Collidable(Collidable _c) {
+        this.hitBox = new Rectangle(_c.hitBox);
+        this.drawBox = new Rectangle(_c.drawBox);
+        this.futureHitBox = new Rectangle(_c.hitBox);
+        this.setImage(_c.getImageLocation());
+        this.worldObjectType = _c.worldObjectType;
+        this.collisionType = _c.collisionType;
+        this.drawHitOffset = _c.drawHitOffset;
+    }
     
     public Collidable() {
         this.hitBox = new Rectangle();

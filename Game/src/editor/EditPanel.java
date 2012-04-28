@@ -1,14 +1,10 @@
 package editor;
 
-import game.*;
 import game.Collidable.CollisionType;
+import game.*;
 import game.WorldObject.WorldObjectType;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.ColorModel;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -108,7 +104,7 @@ public class EditPanel extends JPanel
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
-                options[0]);
+                options[1]);
         boolean newLevel = true;
         switch (newLevelOption) {
             case JOptionPane.CLOSED_OPTION:
@@ -188,7 +184,8 @@ public class EditPanel extends JPanel
         eFrame.sliderLevelHeight.setValue(level.background.drawBox.height);
         gameThread = new Thread(this);
         gameThread.start();
-        addBindings();
+        
+        
         eFrame.addMouseListener(this);
         eFrame.addMouseMotionListener(this);
     }
@@ -488,62 +485,16 @@ public class EditPanel extends JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        if (action.equalsIgnoreCase("new")) {
-            selectedObject = null;
-            heldObject = null;
-            int optionChosen = JOptionPane.showConfirmDialog(eFrame, 
-                    "Save this level before starting a new one?", "Bobert the Dragon Level Editor (c) BlockTwo Studios",
-                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (optionChosen == JOptionPane.CLOSED_OPTION) {
-                return; // Just get out of here.
-            } else if (optionChosen == JOptionPane.YES_OPTION) {
-                String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
-                level.levelName = name;
-                RossLib.writeLevelData(level);
-                String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
-                level = new GameLevel(newLevelName, true);
-            } else if (optionChosen == JOptionPane.NO_OPTION) {
-                String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
-                level = new GameLevel(newLevelName, true);
-            }
-        } else if (action.equalsIgnoreCase("save")) {
-            RossLib.writeLevelData(level);
-        } else if (action.equalsIgnoreCase("save as")) {
-            String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
-            level.levelName = name;
-            RossLib.writeLevelData(level);
-        } else if (action.equalsIgnoreCase("open")) {
-            selectedObject = null;
-            heldObject = null;
-            File dir = new File("resources/levels/");
-            File[] levelFiles = dir.listFiles();
-            String[] fileNames = new String[levelFiles.length-1]; //to account for the xml file
-            ArrayList<String> tempFileNames = new ArrayList<String>();
-            for (int i = 0; i < levelFiles.length; i++) {
-                if (levelFiles[i].isDirectory()) {
-                    tempFileNames.add(levelFiles[i].getName());
-                }
-            }
-            for (int i=0; i<tempFileNames.size(); i++) {
-                fileNames[i] = tempFileNames.get(i);
-            }
-            Object chosenLevel = JOptionPane.showInputDialog(eFrame, 
-                    "Open File:",
-                    "Bobert Level Editor - BlockTwo Studios",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    fileNames,
-                    fileNames[0]);
-            if (chosenLevel == null) {
-                System.err.println("chosenLevel is null");
-                // Just quit the box. Nothing wrong, they just changed their mind.
-            } else {
-                level = new GameLevel((String) chosenLevel, false);
-            }
-        } else if (action.equalsIgnoreCase("Save & Test")) {
-            RossLib.writeLevelData(level);
-            String[] curLevel = {level.levelName};
-            Main.main(curLevel); // Call the game's main method.
+        if (action.equalsIgnoreCase("new (Ctrl+N)")) {
+            newLevel();
+        } else if (action.equalsIgnoreCase("save (Ctrl+S)")) {
+            saveLevel();
+        } else if (action.equalsIgnoreCase("save as (Ctrl+Shift+S)")) {
+            saveAsLevel();
+        } else if (action.equalsIgnoreCase("open (Ctrl+O)")) {
+            openLevel();
+        } else if (action.equalsIgnoreCase("Save & Test (Ctrl+T)")) {
+            saveAndTestLevel();
         } else if (action.equalsIgnoreCase("Change Background")) {
             String backgroundsPath = "resources/backgrounds/";
             File dir = new File(backgroundsPath);
@@ -704,9 +655,85 @@ public class EditPanel extends JPanel
                 level.collidables.add(new Collidable(trigCollisRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                         triggersPath + (String)chosenTrigger, strChosenAction));
             }
-        } else if (action.equalsIgnoreCase("Change Image")) {
-            String imagePath = "";
-            String inputDialogMessage = "Available images: ";
+        } else if (action.equalsIgnoreCase("Change Img (A & D, <- & ->)")) {
+            changeSelectedObjectImage();
+        } else if (action.equalsIgnoreCase("Delete Object (Delete)")) {
+            deleteSelectedObject();
+        } else {
+            System.out.println("Action \"" + action + "\" not implemented yet!");
+        }
+    }
+    
+    public static void newLevel() {
+        selectedObject = null;
+        heldObject = null;
+        int optionChosen = JOptionPane.showConfirmDialog(eFrame,
+                "Save this level before starting a new one?", "Bobert the Dragon Level Editor (c) BlockTwo Studios",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (optionChosen == JOptionPane.CLOSED_OPTION) {
+            return; // Just get out of here.
+        } else if (optionChosen == JOptionPane.YES_OPTION) {
+            String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
+            level.levelName = name;
+            RossLib.writeLevelData(level);
+            String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
+            level = new GameLevel(newLevelName, true);
+        } else if (optionChosen == JOptionPane.NO_OPTION) {
+            String newLevelName = JOptionPane.showInputDialog("New level name: ", "");
+            level = new GameLevel(newLevelName, true);
+        }
+    }
+    
+    public static void openLevel() {
+        selectedObject = null;
+        heldObject = null;
+        File dir = new File("resources/levels/");
+        File[] levelFiles = dir.listFiles();
+        String[] fileNames = new String[levelFiles.length - 1]; //to account for the xml file
+        ArrayList<String> tempFileNames = new ArrayList<String>();
+        for (int i = 0; i < levelFiles.length; i++) {
+            if (levelFiles[i].isDirectory()) {
+                tempFileNames.add(levelFiles[i].getName());
+            }
+        }
+        for (int i = 0; i < tempFileNames.size(); i++) {
+            fileNames[i] = tempFileNames.get(i);
+        }
+        Object chosenLevel = JOptionPane.showInputDialog(eFrame,
+                "Open File:",
+                "Bobert Level Editor - BlockTwo Studios",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                fileNames,
+                fileNames[0]);
+        if (chosenLevel == null) {
+            System.err.println("chosenLevel is null");
+            // Just quit the box. Nothing wrong, they just changed their mind.
+        } else {
+            level = new GameLevel((String) chosenLevel, false);
+        }
+    }
+    
+    public static void saveLevel() {
+        RossLib.writeLevelData(level);
+    }
+    
+    public static void saveAsLevel() {
+        String name = JOptionPane.showInputDialog("Save as: ", level.levelName);
+            level.levelName = name;
+            RossLib.writeLevelData(level);
+    }
+    
+    public static void saveAndTestLevel() {
+        RossLib.writeLevelData(level);
+        String[] curLevel = {level.levelName};
+        Main.main(curLevel); // Call the game's main method.
+    }
+    
+    public static void changeSelectedObjectImage() {
+        String imagePath = "";
+        String inputDialogMessage = "Available images: ";
+        if (selectedObject != null) {
             if (selectedObject.worldObjectType == WorldObjectType.PLATFORM) {
                 imagePath = "resources/collidables/platforms/";
                 inputDialogMessage = "Available platforms: ";
@@ -726,10 +753,10 @@ public class EditPanel extends JPanel
             File dir = new File(imagePath);
             File[] imageFiles = dir.listFiles();
             String[] fileNames = new String[imageFiles.length];
-            for (int i=0; i<imageFiles.length; i++) {
+            for (int i = 0; i < imageFiles.length; i++) {
                 fileNames[i] = imageFiles[i].getName();
             }
-            Object chosenImagePath = JOptionPane.showInputDialog(eFrame, 
+            Object chosenImagePath = JOptionPane.showInputDialog(eFrame,
                     inputDialogMessage,
                     "Bobert Level Editor - BlockTwo Studios",
                     JOptionPane.PLAIN_MESSAGE,
@@ -740,15 +767,101 @@ public class EditPanel extends JPanel
                 System.out.println("background is null");
                 // Just quit the box. Nothing wrong, they just changed their mind.
             } else {
-                selectedObject.setImage(imagePath+(String)chosenImagePath);
+                selectedObject.setImage(imagePath + (String) chosenImagePath);
             }
-        } else if (action.equalsIgnoreCase("Delete Object")) {
-            int youSureBro = JOptionPane.showConfirmDialog(eFrame, 
-                                            "You sure bro?", 
-                                            "Bobert Level Editor - BlockTwo Studios", 
-                                            JOptionPane.OK_CANCEL_OPTION);
+        }
+    }
+    
+    public static void tabSelectedObjectImage(boolean forward) {
+        String imagePath = "";
+        if (selectedObject != null) {
+            if (selectedObject.worldObjectType == WorldObjectType.PLATFORM) {
+                imagePath = "resources/collidables/platforms/";
+            } else if (selectedObject.worldObjectType == WorldObjectType.OBSTACLE) {
+                imagePath = "resources/collidables/obstacles/";
+            } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
+                imagePath = "resources/collidables/collectables/";
+            } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                imagePath = "resources/enemies/";
+            } else if (selectedObject.worldObjectType == WorldObjectType.TRIGGER) {
+                imagePath = "resources/collidables/triggers/";
+            }
+            File dir = new File(imagePath);
+            File[] imageFiles = dir.listFiles();
+            String[] fileNames = new String[imageFiles.length];
+            String nextImage = "";
+            for (int i = 0; i < imageFiles.length; i++) {
+                if ((imagePath + imageFiles[i].getName()).equalsIgnoreCase(selectedObject.getImageLocation())) {
+                    if (forward) {
+                        // Moving forward
+                        if (i == imageFiles.length-1) {
+                            nextImage = imageFiles[0].getName();
+                        } else {
+                            nextImage = imageFiles[i+1].getName();
+                        }
+                    } else {
+                        // Moving backward
+                        if (i == 0) {
+                            nextImage = imageFiles[imageFiles.length-1].getName();
+                        } else {
+                            nextImage = imageFiles[i-1].getName();
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            if (nextImage == null) {
+                System.out.println("background is null");
+                // Just quit the box. Nothing wrong, they just changed their mind.
+            } else {
+                selectedObject.setImage(imagePath + nextImage);
+            }
+        }
+    }
+    
+    public static void deleteSelectedObject() {
+        if (selectedObject != null) {
+            int youSureBro = JOptionPane.showConfirmDialog(eFrame,
+                    "You sure bro?",
+                    "Bobert Level Editor - BlockTwo Studios",
+                    JOptionPane.OK_CANCEL_OPTION);
             if (youSureBro == JOptionPane.OK_OPTION) {
                 if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
+                        || selectedObject.worldObjectType == WorldObjectType.OBSTACLE
+                        || selectedObject.worldObjectType == WorldObjectType.TRIGGER
+                        || selectedObject.worldObjectType == WorldObjectType.FLOOR) {
+                    for (int i = 0; i < level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
+                    for (int i = 0; i < level.collidables.size(); i++) {
+                        if (level.collidables.get(i).equals(selectedObject)) {
+                            level.collidables.remove(i);
+                        }
+                    }
+                } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                    for (int i = 0; i < level.enemies.size(); i++) {
+                        if (level.enemies.get(i).equals(selectedObject)) {
+                            level.enemies.remove(i);
+                        }
+                    }
+                }
+                // We can't be selecting anything anymore because the current selection just got deleted.
+                selectedObject = null;
+            } else {
+                return; // They hit cancel, get the hell out of this function eh.
+            }
+        }
+    }
+    
+    public static boolean cut() {
+        if (selectedObject != null) {
+            copiedObject = new Collidable(selectedObject);
+            // Now delete the selected object
+            if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
                         || selectedObject.worldObjectType == WorldObjectType.OBSTACLE
                         || selectedObject.worldObjectType == WorldObjectType.TRIGGER
                         || selectedObject.worldObjectType == WorldObjectType.FLOOR) {
@@ -771,13 +884,30 @@ public class EditPanel extends JPanel
                     }
                 }
                 // We can't be selecting anything anymore because the current selection just got deleted.
-                selectedObject = null; 
-            } else {
-                return; // They hit cancel, get the hell out of this function eh.
-            }
-        } else {
-            System.out.println("Action \"" + action + "\" not implemented yet!");
+                selectedObject = null;
+                return true;
         }
+        return false;
+    }
+    
+    public static boolean copy() {
+        if (selectedObject != null) {
+            copiedObject = new Collidable(selectedObject);
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean paste() {
+        if (copiedObject != null) {
+        Rectangle pastedCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 
+                        copiedObject.getWidth(), copiedObject.getHeight());
+                level.collidables.add(new Collidable(pastedCollisRect, 
+                        copiedObject.worldObjectType, copiedObject.collisionType, 
+                        copiedObject.getImageLocation()));
+                return true;
+        } 
+        return false;
     }
 
     @Override
@@ -866,80 +996,135 @@ public class EditPanel extends JPanel
         }
     }
     
-    public static boolean cut() {
-        if (selectedObject != null) {
-            copiedObject = selectedObject;
-            // Now delete the selected object
-            if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
-                        || selectedObject.worldObjectType == WorldObjectType.OBSTACLE
-                        || selectedObject.worldObjectType == WorldObjectType.TRIGGER
-                        || selectedObject.worldObjectType == WorldObjectType.FLOOR) {
-                    for (int i=0; i<level.collidables.size(); i++) {
-                        if (level.collidables.get(i).equals(selectedObject)) {
-                            level.collidables.remove(i);
-                        }
-                    }
-                } else if (selectedObject.worldObjectType == WorldObjectType.COLLECTABLE) {
-                    for (int i=0; i<level.collidables.size(); i++) {
-                        if (level.collidables.get(i).equals(selectedObject)) {
-                            level.collidables.remove(i);
-                        }
-                    }
-                } else if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
-                    for (int i=0; i<level.enemies.size(); i++) {
-                        if (level.enemies.get(i).equals(selectedObject)) {
-                            level.enemies.remove(i);
-                        }
-                    }
-                }
-                // We can't be selecting anything anymore because the current selection just got deleted.
-                selectedObject = null;
-                return true;
-        }
-        return false;
-    }
-    
-    public static boolean copy() {
-        if (selectedObject != null) {
-            copiedObject = selectedObject;
-            return true;
-        }
-        return false;
-    }
-    
-    public static boolean paste() {
-        if (copiedObject != null) {
-        Rectangle pastedCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 
-                        copiedObject.getWidth(), copiedObject.getHeight());
-                level.collidables.add(new Collidable(pastedCollisRect, 
-                        copiedObject.worldObjectType, copiedObject.collisionType, 
-                        copiedObject.getImageLocation()));
-                return true;
-        } 
-        return false;
-    }
-    
-
-    protected void addBindings() {
+    public static Object[] getInputAndActionMaps() {
+        KeyStroke key = null;
+        InputMap inputMap = new InputMap();
+        ActionMap actionMap = new ActionMap();
         
-        this.getActionMap().put("keys", new AbstractAction() {
-            public void actionPerformed(ActionEvent e){
-                if (e.)
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "new");
+        actionMap.put("new", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                newLevel();
             }
         });
         
-        InputMap inputMap = this.getInputMap();
-
-        //Ctrl-b to go backward one character
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK);
-        inputMap.put(key, EditPanel.cut());
- 
-        //Ctrl-f to go forward one character
-        key = KeyStroke.getKeyStroke("c");
-        inputMap.put(key, "keys");
-
-        //Ctrl-p to go up one line
-        key = KeyStroke.getKeyStroke("v");
-        inputMap.put(key, EditPanel.paste());
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "open");
+        actionMap.put("open", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openLevel();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "save");
+        actionMap.put("save", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveLevel();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK);
+        inputMap.put(key, "saveAs");
+        actionMap.put("saveAs", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveAsLevel();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "saveAndTest");
+        actionMap.put("saveAndTest", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveAndTestLevel();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
+        inputMap.put(key, "tabImageForward");
+        actionMap.put("tabImageForward", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabSelectedObjectImage(true);
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0);
+        inputMap.put(key, "tabImageBackward");
+        actionMap.put("tabImageBackward", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabSelectedObjectImage(false);
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_D, 0);
+        inputMap.put(key, "tabImageForward");
+        actionMap.put("tabImageForward", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabSelectedObjectImage(true);
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_A, 0);
+        inputMap.put(key, "tabImageBackward");
+        actionMap.put("tabImageBackward", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabSelectedObjectImage(false);
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
+        inputMap.put(key, "delete");
+        actionMap.put("delete", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSelectedObject();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "cut");
+        actionMap.put("cut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (!cut()) {
+                    System.err.println("cut() failed...");
+                }
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "copy");
+        actionMap.put("copy", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!copy()) {
+                    System.err.println("copy() failed...");
+                }
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK);
+        inputMap.put(key, "paste");
+        actionMap.put("paste", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!paste()) {
+                    System.err.println("paste() failed...");
+                }
+            }
+        });
+        
+        Object[] rets = {inputMap, actionMap};
+        return rets;
     }
 }

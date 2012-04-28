@@ -15,6 +15,21 @@
 
 </collidable>
 
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1089 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
 <collidable>
 
 <name> play </name>
@@ -145,8 +160,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 476 </x>
-<y> 662 </y>
+<x> 480 </x>
+<y> 670 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -215,7 +230,7 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 946 </x>
+<x> 966 </x>
 <y> 659 </y>
 <width> 70 </width>
 <height> 70 </height>
@@ -291,20 +306,6 @@
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> audio jumping2.wav </name>
-<location> resources/collidables/triggers/audio.png </location>
-<x> 869 </x>
-<y> 972 </y>
-<width> 100 </width>
-<height> 100 </height>
-<collisionType> PASSABLE </collisionType>
-<worldObjectType> TRIGGER </worldObjectType>
 
 </collidable>
 
