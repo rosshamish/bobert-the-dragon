@@ -92,13 +92,13 @@ public class EditPanel extends JPanel
                 borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
         borderLeftImg = new ImageIcon("resources/editor/border_facingLeft.png").getImage();
         borderTop = new Rectangle(0, Main.B_WINDOW_BAR_HEIGHT,
-                Main.B_WINDOW_WIDTH, borderSize);
+                Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, borderSize);
         borderTopImg = new ImageIcon("resources/editor/border_facingUp.png").getImage();
         borderRight = new Rectangle(Main.B_WINDOW_WIDTH-borderSize-EditFrame.buttonPanelWidth, Main.B_WINDOW_BAR_HEIGHT,
                 borderSize, Main.B_WINDOW_CANVAS_HEIGHT);
         borderRightImg = new ImageIcon("resources/editor/border_facingRight.png").getImage();
         borderBottom = new Rectangle(0, Main.B_WINDOW_HEIGHT-borderSize,
-                Main.B_WINDOW_WIDTH, borderSize);
+                Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth, borderSize);
         borderBottomImg = new ImageIcon("resources/editor/border_facingDown.png").getImage();
         String[] options = {
             "New Level",

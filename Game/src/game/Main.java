@@ -15,6 +15,8 @@ public class Main {
     public static int B_WINDOW_BAR_HEIGHT = 24;
     public static int B_WINDOW_CANVAS_HEIGHT = B_WINDOW_HEIGHT - B_WINDOW_BAR_HEIGHT;
     public static int B_WINDOW_WIDTH = 1200;
+    public static final int B_WINDOW_DEFAULT_HEIGHT = B_WINDOW_HEIGHT;
+    public static final int B_WINDOW_DEFAULT_WIDTH = B_WINDOW_WIDTH;
     static BobertFrame bFrame;
     
     public static String[] curArgs;
@@ -81,7 +83,7 @@ public class Main {
             bFrame.setLocationByPlatform(true);
             bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-        bFrame.setSize(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        bFrame.setSize(Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT);
 //        bFrame.setAutoRequestFocus(true);
         bFrame.setBackground(new Color(93, 50, 237));
         bFrame.setResizable(false);
