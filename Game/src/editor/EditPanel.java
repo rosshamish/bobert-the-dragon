@@ -750,6 +750,7 @@ public class EditPanel extends JPanel
     public static void saveAndTestLevel() {
         RossLib.writeLevelData(level);
         String[] curLevel = {level.levelName};
+        BobertPanel.gameRunning = true;
         Main.main(curLevel); // Call the game's main method.
     }
     

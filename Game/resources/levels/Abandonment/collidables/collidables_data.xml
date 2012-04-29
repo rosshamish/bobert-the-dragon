@@ -7,6 +7,20 @@
 <name> Floor, eh? </name>
 <location> resources/default.jpg </location>
 <x> 0 </x>
+<y> 910 </y>
+<width> 3278 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
 <y> 886 </y>
 <width> 3278 </width>
 <height> 100 </height>
