@@ -938,8 +938,9 @@ public class BobertPanel extends JPanel implements Runnable,
 
     @Override
     public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
         if (!typingConsoleCommand) {
-            if (e.getKeyCode() == bobert.keyLeft) {
+            if (key == bobert.keyLeft || key == KeyEvent.VK_LEFT) {
                 bobert.movingLeft = true;
                 bobert.facingLeft = true;
                 bobert.facingRight = false;
@@ -947,14 +948,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.horizAccelFrame = Character.horizAccelDelay -1;
                 
             }
-            if (e.getKeyCode() == bobert.keyRight) {
+            if (key == bobert.keyRight || key == KeyEvent.VK_RIGHT) {
                 bobert.movingRight = true;
                 bobert.facingLeft = false;
                 bobert.facingRight = true;
                 bobert.shouldAccelRight = true;
                 bobert.horizAccelFrame = Character.horizAccelDelay -1;
             }
-            if (e.getKeyCode() == bobert.keyJump) {
+            if (key == bobert.keyJump || key == KeyEvent.VK_UP) {
                 // Make sure we aren't already jumping, then set isInAir to true
                 // as a flag that we are jumping, and then set the vertical 
                 // velocity to jumping.
@@ -972,7 +973,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     bobert.vertVelocity = Character.vertVelocityDoubleJump;
                 }
             }
-//            if (e.getKeyCode() == bobert.keyShoot) {
+//            if (key == bobert.keyShoot) {
 //                // Make sure we aren't already shooting the projetile, then set
 //                // shootingProjectile to true and set the projectile velocity
 //                // to bouncing.
@@ -999,13 +1000,13 @@ public class BobertPanel extends JPanel implements Runnable,
 //                shootingProjectile = true;
 //            } 
             // Dev commands, debug commands
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (key == KeyEvent.VK_ENTER) {
                 consoleCommand = ""; // Clear the input for the command
                 typingConsoleCommand = true; // Start grabbing characters
             }
         } else {
             // Dev/debug commands
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (key == KeyEvent.VK_ENTER) {
                 // deal with the console command, then clear it.
                 if (consoleCommand.isEmpty()) return; // don't deal with it if it's empty
                 // String to hold the second word in a command, 
@@ -1071,7 +1072,7 @@ public class BobertPanel extends JPanel implements Runnable,
                     }
                 }
                 typingConsoleCommand = false; // We're done typing.
-            } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            } else if (key == KeyEvent.VK_BACK_SPACE) {
                 // backspace: delete a character
                 consoleCommand = consoleCommand.substring(0, consoleCommand.length()-1);
             } else {
@@ -1084,12 +1085,13 @@ public class BobertPanel extends JPanel implements Runnable,
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == bobert.keyLeft) {
+        int key = e.getKeyCode();
+        if (key == bobert.keyLeft) {
             bobert.movingLeft = false;
             bobert.shouldAccelLeft = false;
             bobert.decelerateCompletely();
         }
-        if (e.getKeyCode() == bobert.keyRight) {
+        if (key == bobert.keyRight) {
             bobert.movingRight = false;
             bobert.shouldAccelRight = false;
             bobert.decelerateCompletely();

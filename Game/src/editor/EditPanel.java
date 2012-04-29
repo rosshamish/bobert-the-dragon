@@ -42,10 +42,16 @@ public class EditPanel extends JPanel
     public static int borderSize = 50;
     public static Rectangle borderLeft;
     public static Image borderLeftImg;
+    
     public static Rectangle borderTop;
     public static Image borderTopImg;
+    
     public static Rectangle borderRight;
     public static Image borderRightImg;
+    public static int borderRightFrame = 0;
+    public static final int borderRightDelay = 100;
+    public static boolean wantsToMoveRight = false;
+
     public static Rectangle borderBottom;
     public static Image borderBottomImg;
     
@@ -262,10 +268,10 @@ public class EditPanel extends JPanel
             
             g2d.setColor(Color.black);
             g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-            g2d.drawString("Selected Object: "+selectedObject, 10, 10);
-            g2d.drawString("Copied Object: "+copiedObject, 10, 20);
-//            g2d.drawString("Cloud x: "+String.valueOf(mouseDeltaX), 10, 30);
-//            g2d.drawString("Cloud y: "+String.valueOf(mouseDeltaY), 10, 40); 
+//            g2d.drawString("Selected Object: "+selectedObject, 10, 10);
+//            g2d.drawString("Copied Object: "+copiedObject, 10, 20);
+//            g2d.drawString("Right Border Frame: "+borderRightFrame, 10, 40);
+//            g2d.drawString("Right Border Delay: "+borderRightDelay, 10, 50); 
 //            
 //            g2d.drawString("heldObject: "+String.valueOf(heldObject), 10, 60);
 //            g2d.drawString("selectedObject: "+String.valueOf(selectedObject), 10, 70);
@@ -284,6 +290,13 @@ public class EditPanel extends JPanel
             
             eFrame.labelFileName.setText(level.levelName);
             
+            
+            if (wantsToMoveRight) {
+                borderRightFrame++;
+                // int overflow protection. You never know.
+                if (borderRightFrame > borderRightDelay + 100)
+                    borderRightFrame = borderRightDelay + 10;
+            }
             if (camMovementFrame >= camMovementDelay) {
                 if (movingRight && (editCam.getX() + editCam.getWidth() < level.background.drawBox.width)) {
                     editCam.moveRightBy(1);
@@ -453,9 +466,19 @@ public class EditPanel extends JPanel
             movingLeft = false;
         }
         if (borderRight.contains(e.getPoint())) {
-            movingRight = true;
+            if (borderRightFrame >= borderRightDelay) {
+                movingRight = true;
+            } else {
+                // Increment the delay counter, get closer to actually
+                // scrolling each time.
+                wantsToMoveRight = true;
+            }
             moving = true;
         } else {
+            // Zero out the delay counter because the user doesn't want to
+            // scroll right anymore (cause we aren't touching the side)
+            borderRightFrame = 0;
+            wantsToMoveRight = false;
             movingRight = false;
         }
         if (borderTop.contains(e.getPoint())) {
@@ -641,7 +664,7 @@ public class EditPanel extends JPanel
                 if (strChosenAction != null) {
                     if (strChosenAction.equalsIgnoreCase("audio")) {
                         strChosenAction += " " + JOptionPane.showInputDialog(eFrame,
-                                "If sound effect, specify the name. If larger audio, specify the name",
+                                "If sound effect, specify the filename. If larger audio, specify its name.",
                                 "***.wav OR SoundFile1");
                     }
                 }
@@ -655,7 +678,7 @@ public class EditPanel extends JPanel
                 level.collidables.add(new Collidable(trigCollisRect, WorldObjectType.TRIGGER, CollisionType.PASSABLE,
                         triggersPath + (String)chosenTrigger, strChosenAction));
             }
-        } else if (action.equalsIgnoreCase("Change Img (A & D, <- & ->)")) {
+        } else if (action.equalsIgnoreCase("Change Img (A & D)")) {
             changeSelectedObjectImage();
         } else if (action.equalsIgnoreCase("Delete Object (Delete)")) {
             deleteSelectedObject();
@@ -921,43 +944,11 @@ public class EditPanel extends JPanel
         if (source.getName().equalsIgnoreCase("Level Width")) {
             if (level.background != null) {
                 int newWidth = source.getValue();
-                int oldWidth = level.background.drawBox.width;
-                for (int i=0; i<level.collidables.size(); i++) {
-                    if (level.collidables.get(i).hitBox.x != 0) {
-                        // TODO make these scroll
-//                        double ratio = oldWidth / level.collidables.get(i).hitBox.x;
-//                        level.collidables.get(i).setX((int) (newWidth / ratio));
-                    }
-                }
-                for (int i=0; i<level.enemies.size(); i++) {
-                    if (level.enemies.get(i).hitBox.x != 0) {
-                        // TODO make these scroll
-//                        double ratio = oldWidth / level.enemies.get(i).hitBox.x;
-//                        level.enemies.get(i).setX((int) (newWidth / ratio));
-                    }
-                }
-                
                 level.background.drawBox.width = newWidth;
             }
         } else if (name.equalsIgnoreCase("Level Height")) {
             if (level.background != null) {
-                
                 int newHeight = source.getValue();
-                int oldHeight = level.background.drawBox.height;
-                for (int i=0; i<level.collidables.size(); i++) {
-                    if (level.collidables.get(i).hitBox.y != 0) {
-                        // TODO make these scroll
-//                        double ratio = oldHeight / level.collidables.get(i).hitBox.y;
-//                        level.collidables.get(i).setY((int) (newHeight / ratio));
-                    }
-                }
-                for (int i=0; i<level.enemies.size(); i++) {
-                    if (level.enemies.get(i).hitBox.y != 0) {
-                        // TODO make these scroll
-//                        double ratio = oldHeight / level.enemies.get(i).hitBox.y;
-//                        level.enemies.get(i).setY((int) (newHeight / ratio));
-                    }
-                }
                 level.background.drawBox.height = newHeight;
             }
         } else if (name.equalsIgnoreCase("Selected Object Width")) {
