@@ -34,133 +34,7 @@
 
 <name> Floor, eh? </name>
 <location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 886 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> Floor, eh? </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
-<y> 910 </y>
-<width> 3278 </width>
-<height> 100 </height>
-<collisionType> PLATFORM </collisionType>
-<worldObjectType> FLOOR </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/default.jpg </location>
-<x> 0 </x>
+<x> -14 </x>
 <y> 910 </y>
 <width> 3278 </width>
 <height> 100 </height>
@@ -202,8 +76,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blue.png </location>
-<x> 296 </x>
-<y> 657 </y>
+<x> 286 </x>
+<y> 661 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -216,8 +90,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/blue.png </location>
-<x> 475 </x>
-<y> 505 </y>
+<x> 491 </x>
+<y> 473 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -230,8 +104,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/cloud0.png </location>
-<x> 591 </x>
-<y> 306 </y>
+<x> 651 </x>
+<y> 266 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -244,8 +118,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/cloud0.png </location>
-<x> 767 </x>
-<y> 301 </y>
+<x> 771 </x>
+<y> 263 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -258,8 +132,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/cloud0.png </location>
-<x> 954 </x>
-<y> 295 </y>
+<x> 1000 </x>
+<y> 259 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -286,9 +160,9 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/skyblue.png </location>
-<x> 1327 </x>
-<y> 682 </y>
-<width> 120 </width>
+<x> 1317 </x>
+<y> 812 </y>
+<width> 184 </width>
 <height> 70 </height>
 <collisionType> IMPASSABLE </collisionType>
 <worldObjectType> OBSTACLE </worldObjectType>
@@ -300,9 +174,9 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/blue.png </location>
-<x> 1156 </x>
-<y> 682 </y>
-<width> 120 </width>
+<x> 1158 </x>
+<y> 812 </y>
+<width> 176 </width>
 <height> 70 </height>
 <collisionType> IMPASSABLE </collisionType>
 <worldObjectType> OBSTACLE </worldObjectType>
@@ -314,9 +188,9 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/blue.png </location>
-<x> 1502 </x>
-<y> 676 </y>
-<width> 120 </width>
+<x> 1488 </x>
+<y> 810 </y>
+<width> 160 </width>
 <height> 70 </height>
 <collisionType> IMPASSABLE </collisionType>
 <worldObjectType> OBSTACLE </worldObjectType>
@@ -357,7 +231,7 @@
 <name>  </name>
 <location> resources/collidables/platforms/darkgreen.png </location>
 <x> 2060 </x>
-<y> 592 </y>
+<y> 642 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>

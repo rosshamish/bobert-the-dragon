@@ -143,7 +143,6 @@ public class GameLevel {
                     background.getWidth(), 100),
                     WorldObjectType.FLOOR, CollisionType.PLATFORM, WorldObject.defaultImgPath);
             floor.initBoxes(this.floor.hitBox);
-            collidables.add(floor);
 
             Collidable triggerEndLevel;
             Rectangle triggerEndLevelRect = new Rectangle(100, background.getHeight() * 1 / 2,

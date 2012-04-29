@@ -21,16 +21,23 @@ public class BobertPanel extends JPanel implements Runnable,
     // Character vars.
     static Character bobert;
     static Camera screenCam;
+    
     static ArrayList<String> gameLevels = new ArrayList<String>();
     static ArrayList<String> allGameLevels = new ArrayList<String>();
     static GameLevel level;
     static String levelDataPath = "resources/levels/level_order.xml";
     static boolean levelsDefined = false;
     static boolean shouldAdvanceOneLevel = false;
+    
     static boolean loadingLevel = false;
     static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
     private static boolean wonGame = false;
     static Image wonImage = new ImageIcon("resources/logos/blockTwo_3.jpg").getImage();
+    
+    public static long timeWhenRan = System.currentTimeMillis();
+    public static long gameTimer;
+    public static boolean timingGame = false;
+    public static boolean shouldStartTimingGame = false;
     
     // Animation vars
     static int animationFrame = 0;
@@ -119,7 +126,6 @@ public class BobertPanel extends JPanel implements Runnable,
 
     public static void defineObjects() {
         
-        
         if (!levelsDefined) {
             int numLevels = RossLib.parseXML(levelDataPath, "level");
             gameLevels.clear();
@@ -142,7 +148,7 @@ public class BobertPanel extends JPanel implements Runnable,
         }
         
         bobert = new Character();
-        screenCam = new Camera(0, 0, Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        screenCam = new Camera(0, 0, Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT);
         for (int i=0; i<level.collidables.size(); i++) {
             Collidable cur = level.collidables.get(i);
             if (cur.worldObjectType == WorldObjectType.TRIGGER) {
@@ -178,6 +184,8 @@ public class BobertPanel extends JPanel implements Runnable,
 //        defaultProjectile.setY(bobert.hitBox.y);
 //        Projectile.numImages = RossLib.parseXML(Projectile.dataPath, "projectile");
 
+        
+        gameTimer = System.currentTimeMillis();
         gameRunning = true;
         objectsDefined = true;
     }
@@ -188,27 +196,28 @@ public class BobertPanel extends JPanel implements Runnable,
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
-        
+
         if (objectsDefined) {
-            
+
             if (!loadingLevel && !wonGame) {
-                
-            
-            // **Draw background
-            if (showDebugBoxes) {
-                level.background.drawDebug(g2d, screenCam);
-            } else {
-                level.background.draw(g2d, screenCam);
-            }
 
-            // **Draw enemies
-            for (int i=0; i<level.enemies.size();i++) {
-                level.enemies.get(i).draw(g2d, screenCam);
-                if (showDebugBoxes) 
-                    level.enemies.get(i).drawDebug(g2d, screenCam);
-            }
 
-            // **Draw Projectile
+                // **Draw background
+                if (showDebugBoxes) {
+                    level.background.drawDebug(g2d, screenCam);
+                } else {
+                    level.background.draw(g2d, screenCam);
+                }
+
+                // **Draw enemies
+                for (int i = 0; i < level.enemies.size(); i++) {
+                    level.enemies.get(i).draw(g2d, screenCam);
+                    if (showDebugBoxes) {
+                        level.enemies.get(i).drawDebug(g2d, screenCam);
+                    }
+                }
+
+                // **Draw Projectile
 //            if (shootingProjectile) {
 //                for (int i = 0; i < onScreenProjectiles.size(); i++) {
 //                    onScreenProjectiles.get(i).draw(g2d, screenCam);
@@ -216,52 +225,68 @@ public class BobertPanel extends JPanel implements Runnable,
 //                        onScreenProjectiles.get(i).drawDebug(g2d, screenCam);
 //                }
 //            }
-            
-            // **Draw collidables
-            for (int i=0; i<level.collidables.size(); i++) {
-                if (!level.collidables.get(i).name.equalsIgnoreCase("start")) {
-                    level.collidables.get(i).draw(g2d, screenCam);
+
+                // **Draw collidables
+                for (int i = 0; i < level.collidables.size(); i++) {
+                    if (!level.collidables.get(i).name.equalsIgnoreCase("start")) {
+                        level.collidables.get(i).draw(g2d, screenCam);
+                    }
+                    if (showDebugBoxes) {
+                        level.collidables.get(i).drawDebug(g2d, screenCam);
+                    }
                 }
-                if (showDebugBoxes) 
-                    level.collidables.get(i).drawDebug(g2d, screenCam);
-            }
-            
-            // **Draw bobert
-            bobert.draw(g2d, screenCam);
-            if (showDebugBoxes) {
-                bobert.drawDebug(g2d, screenCam);
-            }
-            
-            g2d.drawImage(Collidable.collectableIcon, 
-                    Main.B_WINDOW_WIDTH - 200, 10,
-                    80, 80,
-                    null);
-            g2d.setColor(Color.black);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
-            g2d.drawString("x "+(bobert.totalCollected+bobert.numCollected),
-                    Main.B_WINDOW_WIDTH - 110, 90);
-            
-            g2d.setColor(Color.black);
-            g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, consoleCommandTextHeight));
-            if (typingConsoleCommand) {
-                g2d.drawLine((int) (Main.B_WINDOW_WIDTH *0.3 -2), 
-                        (int) (Main.B_WINDOW_HEIGHT * 0.2) -consoleCommandTextHeight, 
-                        (int) (Main.B_WINDOW_WIDTH * 0.3 -2), 
-                        (int) (Main.B_WINDOW_HEIGHT * 0.2));
-                g2d.drawString(consoleCommand, 
-                        (int) (Main.B_WINDOW_WIDTH * 0.3), 
-                        (int) (Main.B_WINDOW_HEIGHT * 0.2));
-            }
-            
-            // **Draw the currently held projectile's levelName
-            int fontSize = 20;
-            g2d.setColor(Color.black);
-            g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, fontSize));
+
+                // **Draw bobert
+                bobert.draw(g2d, screenCam);
+                if (showDebugBoxes) {
+                    bobert.drawDebug(g2d, screenCam);
+                }
+
+                // Collectables
+                g2d.drawImage(Collidable.collectableIcon,
+                        Main.B_WINDOW_DEFAULT_WIDTH - 200, 10,
+                        80, 80,
+                        null);
+                g2d.setColor(Color.black);
+                g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+                g2d.drawString("x " + (bobert.totalCollected + bobert.numCollected),
+                        Main.B_WINDOW_DEFAULT_WIDTH - 110, 90);
+
+                // Timer
+                if (timingGame) {
+                    long seconds = (long) ((gameTimer - timeWhenRan) * 0.001);
+                    long millis = (long) (((gameTimer - timeWhenRan) % 1000) / 100);
+//                long millis = gameTimer - timeWhenRan;
+                    String strSeconds = String.valueOf(seconds);
+                    String strMillis = String.valueOf(millis);
+                    String timerText = strSeconds + "." + strMillis;
+                    g2d.drawString(timerText,
+                            Main.B_WINDOW_DEFAULT_WIDTH - 100,
+                            140);
+                }
+
+                // Console
+                g2d.setColor(Color.black);
+                g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, consoleCommandTextHeight));
+                if (typingConsoleCommand) {
+                    g2d.drawLine((int) (Main.B_WINDOW_DEFAULT_WIDTH * 0.3 - 2),
+                            (int) (Main.B_WINDOW_DEFAULT_HEIGHT * 0.2) - consoleCommandTextHeight,
+                            (int) (Main.B_WINDOW_DEFAULT_WIDTH * 0.3 - 2),
+                            (int) (Main.B_WINDOW_DEFAULT_HEIGHT * 0.2));
+                    g2d.drawString(consoleCommand,
+                            (int) (Main.B_WINDOW_DEFAULT_WIDTH * 0.3),
+                            (int) (Main.B_WINDOW_DEFAULT_HEIGHT * 0.2));
+                }
+
+                // **Draw the currently held projectile's levelName
+                int fontSize = 20;
+                g2d.setColor(Color.black);
+                g2d.setFont(new Font(Font.MONOSPACED, Font.BOLD, fontSize));
 //            g2d.drawString("Holding: "+defaultProjectile.levelName, 50, Main.B_WINDOW_CANVAS_HEIGHT-fontSize);
-            
-            // **Debugging values on screen
-            g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+
+                // **Debugging values on screen
+                g2d.setColor(Color.BLACK);
+                g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
 //            g2d.drawString("Fruit Collected this Level: " + bobert.numCollected, 0, debugTextHeight * 2);
 //            g2d.drawString("Total Fruit Collected: " + (bobert.numCollected+bobert.totalCollected), 0, debugTextHeight * 4);
 //            g2d.drawString("bobert.horizAccelFrame: "+ bobert.horizAccelFrame, 0, debugTextHeight*3);
@@ -274,13 +299,14 @@ public class BobertPanel extends JPanel implements Runnable,
                 // if loading the level
                 g2d.drawImage(loadingImage,
                         0, 0,
-                        Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
+                        Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT, null);
 
             } else if (wonGame) {
                 // if the game is won
                 g2d.drawImage(wonImage,
                         0, 0,
-                        Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT, null);
+                        Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT, null);
+
             }
         }
 
@@ -291,6 +317,16 @@ public class BobertPanel extends JPanel implements Runnable,
 
         while (gameRunning) {
             FPSStartOfLoop();
+            
+            
+            if (shouldStartTimingGame) {
+                timeWhenRan = System.currentTimeMillis();
+                shouldStartTimingGame = false;
+                timingGame = true;
+            }
+            if (timingGame) {
+                gameTimer = System.currentTimeMillis();
+            }
 
             // **Moving from level 1 to level 2, for example
             //<editor-fold defaultstate="collapsed" desc="Level Advancement">
@@ -301,6 +337,10 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (Main.curArgs == null) {
                     // If this is a regular game run, boot the next level.
                     shouldAdvanceOneLevel = false;
+                    if (gameLevels.equals(allGameLevels)) {
+                        // If this is about to start the game from menu
+                        shouldStartTimingGame = true;
+                    }
                     if (gameLevels.size() > 1) {
                         // If there is still a level to remove, then remove it.
                         gameLevels.remove(level.levelName);

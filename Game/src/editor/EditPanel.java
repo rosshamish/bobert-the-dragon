@@ -937,6 +937,10 @@ public class EditPanel extends JPanel
     
     public static boolean cut() {
         if (selectedObject != null) {
+            if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                // There will be no cut, copy, paste for enemies.
+                return false;
+            }
             copiedObject = new Collidable(selectedObject);
             // Now delete the selected object
             if (selectedObject.worldObjectType == WorldObjectType.PLATFORM
@@ -970,6 +974,10 @@ public class EditPanel extends JPanel
     
     public static boolean copy() {
         if (selectedObject != null) {
+            if (selectedObject.worldObjectType == WorldObjectType.ENEMY) {
+                // There will be no cut copy or paste for enmies.
+                return false;
+            }
             copiedObject = new Collidable(selectedObject);
             return true;
         }

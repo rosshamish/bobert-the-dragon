@@ -22,6 +22,22 @@ public class Enemy extends Sprite
     
     public boolean isAlive = true;
     
+    public Enemy(Enemy _e) {
+        this.hitBox = new Rectangle(_e.hitBox);
+        this.drawBox = new Rectangle(_e.drawBox);
+        this.futureHitBox = new Rectangle(_e.hitBox);
+        this.setImage(_e.getImageLocation());
+        this.worldObjectType = _e.worldObjectType;
+        this.collisionType = _e.collisionType;
+        this.drawHitOffset = _e.drawHitOffset;
+        if (_e.name != null) {
+            this.name = _e.name;
+        }
+        this.movementDistance = _e.movementDistance;
+        this.startX = _e.startX;
+        this.horizVelocity = defaultMoveSpeed;
+    }
+    
     public Enemy(Rectangle collisionRect, ArrayList<String> imgPaths, int howFarCanMoveRightFromLocation) {
         name = "DefaultName";
         

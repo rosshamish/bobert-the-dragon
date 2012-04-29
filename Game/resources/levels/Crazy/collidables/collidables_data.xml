@@ -232,6 +232,34 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <collisionType> PLATFORM </collisionType>
@@ -593,34 +621,6 @@
 <collidable>
 
 <name>  </name>
-<location> resources/enemies/spike.png </location>
-<x> 1565 </x>
-<y> 785 </y>
-<width> 100 </width>
-<height> 100 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> ENEMY </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/enemies/spike.png </location>
-<x> 1045 </x>
-<y> 784 </y>
-<width> 100 </width>
-<height> 100 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> ENEMY </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
 <x> 1716 </x>
 <y> 196 </y>
@@ -775,20 +775,6 @@
 <collidable>
 
 <name>  </name>
-<location> resources/enemies/spike_3-wide.png </location>
-<x> 557 </x>
-<y> 789 </y>
-<width> 265 </width>
-<height> 96 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> ENEMY </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
 <location> resources/collidables/platforms/lightpurple.png </location>
 <x> 2733 </x>
 <y> 208 </y>
@@ -819,7 +805,7 @@
 <name> start </name>
 <location> resources/default.jpg </location>
 <x> 56 </x>
-<y> 595 </y>
+<y> 593 </y>
 <width> 50 </width>
 <height> 100 </height>
 <collisionType> PASSABLE </collisionType>
@@ -832,7 +818,7 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/silver.png </location>
-<x> 2136 </x>
+<x> 2134 </x>
 <y> 131 </y>
 <width> 120 </width>
 <height> 350 </height>

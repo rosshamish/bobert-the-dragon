@@ -21,7 +21,7 @@ public class LevelEditor {
         eFrame = new EditFrame();
         eFrame.setTitle("Level Editor, Bobert the Dragon (c) 2012 BlockTwo Studios");
         eFrame.setSize(new Dimension(Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT));
-        eFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        eFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         eFrame.setResizable(true);
         eFrame.setLocationRelativeTo(null);
         
@@ -53,8 +53,9 @@ public class LevelEditor {
                 //                throw new UnsupportedOperationException("Not supported yet.");
             }
         }
-            //</editor-fold>
-);
+        );
+        //</editor-fold>
+        
         eFrame.addWindowListener(new WindowListener() {
 
             @Override

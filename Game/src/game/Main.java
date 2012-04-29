@@ -1,7 +1,9 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
@@ -12,7 +14,7 @@ import javax.swing.JFrame;
 public class Main {
 
     public static int B_WINDOW_HEIGHT = 700;
-    public static int B_WINDOW_BAR_HEIGHT = 24;
+    public static int B_WINDOW_BAR_HEIGHT = 28;
     public static int B_WINDOW_CANVAS_HEIGHT = B_WINDOW_HEIGHT - B_WINDOW_BAR_HEIGHT;
     public static int B_WINDOW_WIDTH = 1200;
     public static final int B_WINDOW_DEFAULT_HEIGHT = B_WINDOW_HEIGHT;
@@ -52,27 +54,27 @@ public class Main {
                 public void windowOpened(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
                 }
-                
+
                 @Override
                 public void windowClosed(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
                 }
-                
+
                 @Override
                 public void windowIconified(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
                 }
-                
+
                 @Override
                 public void windowDeiconified(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
                 }
-                
+
                 @Override
                 public void windowActivated(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
                 }
-                
+
                 @Override
                 public void windowDeactivated(WindowEvent e) {
 //                    throw new UnsupportedOperationException("Not supported yet.");
@@ -80,11 +82,21 @@ public class Main {
                 //</editor-fold>
             });
         } else {
-            bFrame.setLocationByPlatform(true);
+            System.out.println("Setting by platform");
+            // Get the size of the screen
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+            // Determine the new location of the window
+            int w = Main.B_WINDOW_DEFAULT_WIDTH;
+            int h = Main.B_WINDOW_DEFAULT_HEIGHT;
+            int x = (dim.width - w) / 2;
+            int y = (dim.height - h) / 2;
+
+            // Move the window
+            bFrame.setLocation(x, y);
             bFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         bFrame.setSize(Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT);
-//        bFrame.setAutoRequestFocus(true);
         bFrame.setBackground(new Color(93, 50, 237));
         bFrame.setResizable(false);
         bFrame.setVisible(true);
