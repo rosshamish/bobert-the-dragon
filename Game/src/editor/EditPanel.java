@@ -386,6 +386,13 @@ public class EditPanel extends JPanel
                     eFrame.sliderSelectedObjHeight.setValue(selectedObject.getHeight());
                     eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
                     eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
+                    if (level.collidables.get(i).worldObjectType == WorldObjectType.TRIGGER) {
+                        eFrame.labelModifyTrigger.setVisible(true);
+                        eFrame.buttonModifyTrigger.setVisible(true);
+                    } else {
+                        eFrame.labelModifyTrigger.setVisible(false);
+                        eFrame.buttonModifyTrigger.setVisible(false);
+                    }
                     return;
                 }
             }
@@ -401,10 +408,14 @@ public class EditPanel extends JPanel
                     eFrame.sliderSelectedEnemyMoveDistance.setValue(enem.movementDistance);
                     eFrame.labelSelectedEnemyMoveDistance.setVisible(true);
                     eFrame.sliderSelectedEnemyMoveDistance.setVisible(true);
+                    eFrame.labelModifyTrigger.setVisible(false);
+                    eFrame.buttonModifyTrigger.setVisible(false);
                     return;
                 }
             }
         }
+        eFrame.labelModifyTrigger.setVisible(false);
+        eFrame.buttonModifyTrigger.setVisible(false);
         eFrame.labelSelectedEnemyMoveDistance.setVisible(false);
         eFrame.sliderSelectedEnemyMoveDistance.setVisible(false);
     }
@@ -639,7 +650,7 @@ public class EditPanel extends JPanel
                 fileNames[i] = triggerFiles[i].getName();
             }
             Object chosenTrigger = JOptionPane.showInputDialog(eFrame, 
-                    "Choose a trigger:",
+                    "Choose an image for your trigger:",
                     "Bobert Level Editor - BlockTwo Studios",
                     JOptionPane.PLAIN_MESSAGE,
                     null,
@@ -682,10 +693,13 @@ public class EditPanel extends JPanel
             changeSelectedObjectImage();
         } else if (action.equalsIgnoreCase("Delete Object (Delete)")) {
             deleteSelectedObject();
+        } else if (action.equalsIgnoreCase("Modify Trigger")) {
+            modifyTrigger();
         } else {
             System.out.println("Action \"" + action + "\" not implemented yet!");
         }
     }
+    
     
     public static void newLevel() {
         selectedObject = null;
@@ -881,6 +895,46 @@ public class EditPanel extends JPanel
         }
     }
     
+    public static void modifyTrigger() {
+        String triggersPath = "resources/collidables/triggers/";
+
+        String strChosenAction = null;
+        String[] availableActions = {
+            "start",
+            "end",
+            "play",
+            "audio"
+        };
+        Object chosenAction = JOptionPane.showInputDialog(eFrame,
+                "Choose an action:",
+                "Bobert Level Editor - BlockTwo Studios",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                availableActions,
+                availableActions[0]);
+        strChosenAction = (String) chosenAction;
+        if (strChosenAction != null) {
+            if (strChosenAction.equalsIgnoreCase("audio")) {
+                String curName = "";
+                if (selectedObject.name.length() > "audio".length()) {
+                    curName = selectedObject.name.substring("audio".length());
+                } else {
+                    curName = "***.wav or SoundFile1";
+                }
+                
+                strChosenAction += " " + JOptionPane.showInputDialog(eFrame,
+                        "If sound effect, specify the filename. If larger audio, specify its name.",
+                        curName);
+            }
+        }
+        if (strChosenAction == null) {
+            System.err.println("your trigger is null");
+            // Just quit the box. Nothing wrong, they just changed their mind.
+        } else {
+            selectedObject.name = strChosenAction;
+        }
+    }
+    
     public static boolean cut() {
         if (selectedObject != null) {
             copiedObject = new Collidable(selectedObject);
@@ -924,13 +978,17 @@ public class EditPanel extends JPanel
     
     public static boolean paste() {
         if (copiedObject != null) {
-        Rectangle pastedCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50, 
-                        copiedObject.getWidth(), copiedObject.getHeight());
-                level.collidables.add(new Collidable(pastedCollisRect, 
-                        copiedObject.worldObjectType, copiedObject.collisionType, 
-                        copiedObject.getImageLocation()));
-                return true;
-        } 
+            Rectangle pastedCollisRect = new Rectangle(editCam.getX() + 50, editCam.getY() + 50,
+                    copiedObject.getWidth(), copiedObject.getHeight());
+            Collidable pasted = new Collidable(pastedCollisRect,
+                    copiedObject.worldObjectType, copiedObject.collisionType,
+                    copiedObject.getImageLocation());
+            if (copiedObject.name != null) {
+                pasted.name = copiedObject.name;
+            }
+            level.collidables.add(pasted);
+            return true;
+        }
         return false;
     }
 
@@ -1075,6 +1133,15 @@ public class EditPanel extends JPanel
         });
         
         key = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
+        inputMap.put(key, "delete");
+        actionMap.put("delete", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSelectedObject();
+            }
+        });
+        
+        key = KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.SHIFT_DOWN_MASK);
         inputMap.put(key, "delete");
         actionMap.put("delete", new AbstractAction() {
             @Override

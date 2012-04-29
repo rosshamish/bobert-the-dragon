@@ -22,6 +22,132 @@
 <location> resources/default.jpg </location>
 <x> 0 </x>
 <y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 7636 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
 <width> 1200 </width>
 <height> 100 </height>
 <collisionType> PLATFORM </collisionType>
@@ -36,20 +162,6 @@
 <location> resources/collidables/triggers/green_flag.png </location>
 <x> 7479 </x>
 <y> 792 </y>
-<width> 50 </width>
-<height> 100 </height>
-<collisionType> PASSABLE </collisionType>
-<worldObjectType> TRIGGER </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name> start </name>
-<location> resources/default.jpg </location>
-<x> 55 </x>
-<y> 642 </y>
 <width> 50 </width>
 <height> 100 </height>
 <collisionType> PASSABLE </collisionType>
@@ -117,20 +229,6 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/orange.png </location>
-<x> 1038 </x>
-<y> 686 </y>
-<width> 120 </width>
-<height> 122 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> OBSTACLE </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
 <x> 380 </x>
 <y> 459 </y>
@@ -188,26 +286,12 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/purple.png </location>
-<x> 523 </x>
-<y> 724 </y>
-<width> 240 </width>
+<x> 522 </x>
+<y> 721 </y>
+<width> 155 </width>
 <height> 54 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/collidables/obstacles/blue.png </location>
-<x> 1037 </x>
-<y> 761 </y>
-<width> 120 </width>
-<height> 194 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> OBSTACLE </worldObjectType>
 
 </collidable>
 
@@ -236,20 +320,6 @@
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
-<location> resources/collidables/obstacles/magenta.png </location>
-<x> 1254 </x>
-<y> 604 </y>
-<width> 120 </width>
-<height> 96 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> OBSTACLE </worldObjectType>
 
 </collidable>
 
@@ -300,8 +370,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 1055 </x>
-<y> 604 </y>
+<x> 1033 </x>
+<y> 472 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -314,8 +384,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 1147 </x>
-<y> 489 </y>
+<x> 1161 </x>
+<y> 485 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -328,8 +398,36 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 1274 </x>
-<y> 520 </y>
+<x> 1270 </x>
+<y> 527 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 1373 </x>
+<y> 419 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 1488 </x>
+<y> 347 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -342,8 +440,8 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/darkgreen.png </location>
-<x> 1474 </x>
-<y> 537 </y>
+<x> 1696 </x>
+<y> 532 </y>
 <width> 120 </width>
 <height> 92 </height>
 <collisionType> IMPASSABLE </collisionType>
@@ -355,25 +453,11 @@
 <collidable>
 
 <name>  </name>
-<location> resources/collidables/obstacles/magenta.png </location>
-<x> 1469 </x>
-<y> 604 </y>
-<width> 120 </width>
-<height> 85 </height>
-<collisionType> IMPASSABLE </collisionType>
-<worldObjectType> OBSTACLE </worldObjectType>
-
-</collidable>
-
-
-<collidable>
-
-<name>  </name>
 <location> resources/collidables/obstacles/orange.png </location>
-<x> 1470 </x>
-<y> 678 </y>
+<x> 1690 </x>
+<y> 680 </y>
 <width> 120 </width>
-<height> 105 </height>
+<height> 115 </height>
 <collisionType> IMPASSABLE </collisionType>
 <worldObjectType> OBSTACLE </worldObjectType>
 
@@ -384,10 +468,10 @@
 
 <name>  </name>
 <location> resources/collidables/obstacles/blue.png </location>
-<x> 1470 </x>
-<y> 762 </y>
+<x> 1686 </x>
+<y> 766 </y>
 <width> 120 </width>
-<height> 157 </height>
+<height> 145 </height>
 <collisionType> IMPASSABLE </collisionType>
 <worldObjectType> OBSTACLE </worldObjectType>
 
@@ -397,9 +481,65 @@
 <collidable>
 
 <name>  </name>
+<location> resources/collidables/obstacles/magenta.png </location>
+<x> 1692 </x>
+<y> 601 </y>
+<width> 120 </width>
+<height> 92 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> OBSTACLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/red.png </location>
+<x> 1696 </x>
+<y> 450 </y>
+<width> 120 </width>
+<height> 92 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> OBSTACLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/enemies/spike.png </location>
+<x> 1565 </x>
+<y> 785 </y>
+<width> 100 </width>
+<height> 100 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> ENEMY </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/enemies/spike.png </location>
+<x> 1045 </x>
+<y> 784 </y>
+<width> 100 </width>
+<height> 100 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> ENEMY </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 1366 </x>
-<y> 400 </y>
+<x> 1716 </x>
+<y> 196 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -412,12 +552,194 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 1496 </x>
-<y> 456 </y>
+<x> 1725 </x>
+<y> 364 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
 <worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 1604 </x>
+<y> 316 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 1664 </x>
+<y> 75 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/yellow.png </location>
+<x> 1483 </x>
+<y> 142 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 1519 </x>
+<y> 59 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/obstacles/magenta.png </location>
+<x> 1249 </x>
+<y> 603 </y>
+<width> 120 </width>
+<height> 108 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> OBSTACLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 1480 </x>
+<y> 709 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/lightgreen.png </location>
+<x> 2019 </x>
+<y> 68 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 2076 </x>
+<y> 729 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 2044 </x>
+<y> -8 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/enemies/spike_3-wide.png </location>
+<x> 557 </x>
+<y> 789 </y>
+<width> 265 </width>
+<height> 96 </height>
+<collisionType> IMPASSABLE </collisionType>
+<worldObjectType> ENEMY </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/lightpurple.png </location>
+<x> 2733 </x>
+<y> 208 </y>
+<width> 414 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 1897 </x>
+<y> 588 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> start </name>
+<location> resources/default.jpg </location>
+<x> 56 </x>
+<y> 595 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
 
 </collidable>
 

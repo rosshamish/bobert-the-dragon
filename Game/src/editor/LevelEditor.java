@@ -1,6 +1,9 @@
 package editor;
 
 import game.Main;
+import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
@@ -17,11 +20,41 @@ public class LevelEditor {
     public static void main(String[] args) {
         eFrame = new EditFrame();
         eFrame.setTitle("Level Editor, Bobert the Dragon (c) 2012 BlockTwo Studios");
-        eFrame.setSize(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT);
+        eFrame.setSize(new Dimension(Main.B_WINDOW_WIDTH, Main.B_WINDOW_HEIGHT));
         eFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        eFrame.setResizable(false);
+        eFrame.setResizable(true);
         eFrame.setLocationRelativeTo(null);
         
+        eFrame.addComponentListener(new ComponentListener() {
+
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Main.B_WINDOW_WIDTH = eFrame.getWidth();
+                Main.B_WINDOW_HEIGHT = eFrame.getHeight();
+                EditPanel.editCam.setWidth(Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth);
+                EditPanel.editCam.setHeight(Main.B_WINDOW_HEIGHT);
+                EditPanel.borderRight.x = Main.B_WINDOW_WIDTH - EditFrame.buttonPanelWidth - EditPanel.borderRight.width;
+                EditPanel.borderBottom.y = Main.B_WINDOW_HEIGHT - EditPanel.borderBottom.height;
+            }
+
+            //<editor-fold defaultstate="collapsed" desc="Unused ComponentListener Methods">
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                //                throw new UnsupportedOperationException("Not supported yet.");
+            }
+            
+            @Override
+            public void componentShown(ComponentEvent e) {
+                //                throw new UnsupportedOperationException("Not supported yet.");
+            }
+            
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                //                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }
+            //</editor-fold>
+);
         eFrame.addWindowListener(new WindowListener() {
 
             @Override

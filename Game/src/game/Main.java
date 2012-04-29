@@ -11,10 +11,10 @@ import javax.swing.JFrame;
  */
 public class Main {
 
-    public static final int B_WINDOW_HEIGHT = 700;
-    public static final int B_WINDOW_BAR_HEIGHT = 24;
-    public static final int B_WINDOW_CANVAS_HEIGHT = B_WINDOW_HEIGHT - B_WINDOW_BAR_HEIGHT;
-    public static final int B_WINDOW_WIDTH = 1200;
+    public static int B_WINDOW_HEIGHT = 700;
+    public static int B_WINDOW_BAR_HEIGHT = 24;
+    public static int B_WINDOW_CANVAS_HEIGHT = B_WINDOW_HEIGHT - B_WINDOW_BAR_HEIGHT;
+    public static int B_WINDOW_WIDTH = 1200;
     static BobertFrame bFrame;
     
     public static String[] curArgs;

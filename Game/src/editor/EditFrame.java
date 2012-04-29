@@ -22,6 +22,8 @@ public class EditFrame extends JFrame {
     public JSlider sliderSelectedObjHeight;
     public JLabel labelSelectedEnemyMoveDistance;
     public JSlider sliderSelectedEnemyMoveDistance;
+    public JLabel labelModifyTrigger;
+    public JButton buttonModifyTrigger;
     
     public EditFrame() {
         // Create game panel
@@ -60,7 +62,9 @@ public class EditFrame extends JFrame {
             "Label Height",
             "Slider Selected Object Height",
             "Label Movement Distance",
-            "Slider Selected Enemy Movement Distance"
+            "Slider Selected Enemy Movement Distance",
+            "Label Modify Trigger",
+            "Modify Trigger"
         };
         int buttonWidth = buttonPanelWidth;
         int buttonHeight = 23;
@@ -167,6 +171,13 @@ public class EditFrame extends JFrame {
                     labelSelectedEnemyMoveDistance.setHorizontalAlignment(SwingConstants.LEFT);
                     labelSelectedEnemyMoveDistance.setVisible(false);
                     buttonPanel.add(labelSelectedEnemyMoveDistance);
+                } else if (labelName.trim().equalsIgnoreCase("Modify Trigger")) {
+                    labelModifyTrigger = new JLabel("Modify Trigger");
+                    labelModifyTrigger.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelModifyTrigger.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    labelModifyTrigger.setHorizontalAlignment(SwingConstants.LEFT);
+                    labelModifyTrigger.setVisible(false);
+                    buttonPanel.add(labelModifyTrigger);
                 } else {
                     label.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
                     label.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
@@ -174,13 +185,24 @@ public class EditFrame extends JFrame {
                     buttonPanel.add(label);
                 }
             } else if (!buttonPanelComponents[i].isEmpty()) {
-                JButton button = new JButton(buttonPanelComponents[i]);
-                button.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-                button.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, buttonFontSize));
-                button.setHorizontalAlignment(SwingConstants.LEFT);
-                button.addActionListener(ePanel);
-                buttonPanel.add(button);
+                if (buttonPanelComponents[i].equalsIgnoreCase("Modify Trigger")) {
+                    buttonModifyTrigger = new JButton(buttonPanelComponents[i]);
+                    buttonModifyTrigger.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    buttonModifyTrigger.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    buttonModifyTrigger.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, buttonFontSize));
+                    buttonModifyTrigger.setHorizontalAlignment(SwingConstants.LEFT);
+                    buttonModifyTrigger.addActionListener(ePanel);
+                    buttonModifyTrigger.setVisible(false);
+                    buttonPanel.add(buttonModifyTrigger);
+                } else {
+                    JButton button = new JButton(buttonPanelComponents[i]);
+                    button.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+                    button.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, buttonFontSize));
+                    button.setHorizontalAlignment(SwingConstants.LEFT);
+                    button.addActionListener(ePanel);
+                    buttonPanel.add(button);
+                }
             } else {
                 JLabel extraSpace = new JLabel();
                 extraSpace.setMinimumSize(new Dimension(buttonWidth, buttonHeight));

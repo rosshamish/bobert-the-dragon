@@ -37,6 +37,9 @@ public class Collidable extends WorldObject
         this.worldObjectType = _c.worldObjectType;
         this.collisionType = _c.collisionType;
         this.drawHitOffset = _c.drawHitOffset;
+        if (_c.name != null) {
+            this.name = _c.name;
+        }
     }
     
     public Collidable() {
