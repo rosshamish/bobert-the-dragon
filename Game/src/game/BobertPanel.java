@@ -1086,12 +1086,12 @@ public class BobertPanel extends JPanel implements Runnable,
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == bobert.keyLeft) {
+        if (key == bobert.keyLeft || key == KeyEvent.VK_LEFT) {
             bobert.movingLeft = false;
             bobert.shouldAccelLeft = false;
             bobert.decelerateCompletely();
         }
-        if (key == bobert.keyRight) {
+        if (key == bobert.keyRight|| key == KeyEvent.VK_RIGHT) {
             bobert.movingRight = false;
             bobert.shouldAccelRight = false;
             bobert.decelerateCompletely();

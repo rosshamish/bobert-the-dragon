@@ -32,6 +32,20 @@
 
 <collidable>
 
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1089 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
 <name> play </name>
 <location> resources/editor/text_playGame.png </location>
 <x> 762 </x>
@@ -306,6 +320,20 @@
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
 <worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/wasd.png </location>
+<x> 357 </x>
+<y> 891 </y>
+<width> 164 </width>
+<height> 101 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> NEUTRAL </worldObjectType>
 
 </collidable>
 
