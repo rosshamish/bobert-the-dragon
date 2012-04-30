@@ -509,7 +509,10 @@ public class BobertPanel extends JPanel implements Runnable,
                         }
                     }
                 }
-                bobert.totalCollected += bobert.numCollected;
+                if (gameLevels.size() != allGameLevels.size()-1) {
+                    // As long as we aren't at the menu, add up score.
+                    bobert.totalCollected += bobert.numCollected;
+                }
                 bobert.numCollected = 0;
                 bobert.vertVelocity = 0;
                 bobert.decelerateCompletely();
