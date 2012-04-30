@@ -169,4 +169,20 @@ public class GameLevel {
             }
         }
     }
+    
+    public static int calcScore(long _timeTaken, long _maxTimeAllowedToGetTimeBonus, int _numCollected) {
+        int timeBonus = 0;
+        if (_timeTaken > _maxTimeAllowedToGetTimeBonus) {
+            timeBonus = 0;
+        } else {
+            int dTime = (int) (_maxTimeAllowedToGetTimeBonus - _timeTaken);
+            timeBonus = dTime / 1234;
+        }
+        
+        int collectionBonus = 0;
+        collectionBonus = (int) (_numCollected * 12.34);
+        
+        int calculatedScore = timeBonus + collectionBonus;
+        return calculatedScore;
+    }
 }

@@ -60,6 +60,34 @@
 
 <collidable>
 
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1089 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 1089 </y>
+<width> 1200 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
 <name> play </name>
 <location> resources/editor/text_playGame.png </location>
 <x> 762 </x>
@@ -244,8 +272,8 @@
 
 <name>  </name>
 <location> resources/collidables/platforms/lightgreen.png </location>
-<x> 940 </x>
-<y> 741 </y>
+<x> 944 </x>
+<y> 771 </y>
 <width> 120 </width>
 <height> 70 </height>
 <collisionType> PLATFORM </collisionType>
@@ -259,7 +287,7 @@
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
 <x> 966 </x>
-<y> 659 </y>
+<y> 691 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>

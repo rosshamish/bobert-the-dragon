@@ -82,7 +82,6 @@ public class Main {
                 //</editor-fold>
             });
         } else {
-            System.out.println("Setting by platform");
             // Get the size of the screen
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 

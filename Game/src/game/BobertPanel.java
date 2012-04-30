@@ -36,6 +36,15 @@ public class BobertPanel extends JPanel implements Runnable,
     
     public static long timeWhenRan = System.currentTimeMillis();
     public static long gameTimer;
+    public static long maxTimeForBonus = 100000;
+    public static Image timerIcon = new ImageIcon("resources/collidables/triggers/stopwatch.png").getImage();
+    
+    public static int score = 0;
+    public static int bestScore = 0;
+    public static int scoreDisplayFrame = 0;
+    public static int scoreDisplayDelay = 7000;
+    public static int scoreDisplayStep = 0;
+    
     public static boolean timingGame = false;
     public static boolean shouldStartTimingGame = false;
     
@@ -244,13 +253,14 @@ public class BobertPanel extends JPanel implements Runnable,
 
                 // Collectables
                 g2d.drawImage(Collidable.collectableIcon,
-                        Main.B_WINDOW_DEFAULT_WIDTH - 200, 10,
-                        80, 80,
+                        Main.B_WINDOW_DEFAULT_WIDTH - 200, 5,
+                        70, 70,
                         null);
                 g2d.setColor(Color.black);
                 g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
-                g2d.drawString("x " + (bobert.totalCollected + bobert.numCollected),
-                        Main.B_WINDOW_DEFAULT_WIDTH - 110, 90);
+                g2d.drawString(String.valueOf(bobert.totalCollected + bobert.numCollected),
+                        Main.B_WINDOW_DEFAULT_WIDTH - 105, 
+                        65);
 
                 // Timer
                 if (timingGame) {
@@ -260,10 +270,30 @@ public class BobertPanel extends JPanel implements Runnable,
                     String strSeconds = String.valueOf(seconds);
                     String strMillis = String.valueOf(millis);
                     String timerText = strSeconds + "." + strMillis;
+                    g2d.drawImage(BobertPanel.timerIcon,
+                            Main.B_WINDOW_DEFAULT_WIDTH - 200, 75,
+                            70, 70,
+                            null);
                     g2d.drawString(timerText,
-                            Main.B_WINDOW_DEFAULT_WIDTH - 100,
-                            140);
+                            Main.B_WINDOW_DEFAULT_WIDTH - 105,
+                            135);
                 }
+
+                // Score
+//                g2d.setColor(Color.black);
+//                g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
+//                try {
+//                    File fooFile = new File("resources/fonts/foo.ttf");
+//                    Font foo = Font.createFont(Font.TRUETYPE_FONT, fooFile);
+//                    foo.deriveFont(Font.BOLD, 40.0f);
+//                    g2d.setFont(foo);
+//                } catch (FontFormatException ex) {
+//                    Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//
+//                g2d.drawString("Pts: " + score, Main.B_WINDOW_DEFAULT_WIDTH - 250, 200);
 
                 // Console
                 g2d.setColor(Color.black);
@@ -277,7 +307,18 @@ public class BobertPanel extends JPanel implements Runnable,
                             (int) (Main.B_WINDOW_DEFAULT_WIDTH * 0.3),
                             (int) (Main.B_WINDOW_DEFAULT_HEIGHT * 0.2));
                 }
-
+                
+                // Highscore
+                if (gameLevels.size() == allGameLevels.size()) {
+                    // If we are at the main menu.S
+                    g2d.setColor(Color.black);
+                    g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+                    g2d.drawString("Highscore: " + bestScore, 
+                            Main.B_WINDOW_DEFAULT_HEIGHT / 3, 
+                            level.collidables.get(level.collidables.size() - 1).yPositionInCam(screenCam));
+                }
+                
+                
                 // **Draw the currently held projectile's levelName
                 int fontSize = 20;
                 g2d.setColor(Color.black);
@@ -306,10 +347,60 @@ public class BobertPanel extends JPanel implements Runnable,
                 g2d.drawImage(wonImage,
                         0, 0,
                         Main.B_WINDOW_DEFAULT_WIDTH, Main.B_WINDOW_DEFAULT_HEIGHT, null);
-
+                
+                // Points sequential display
+                int y = 20;
+                int textHeight = 50;
+                g2d.setColor(Color.black);
+                g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+                switch (scoreDisplayStep) {
+                    // The break statements are left out INTENTIONALLY to allow
+                    // for a build-up of score display messages.
+                    case 0:
+//                    try {
+//                        Font foo = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/foo.ttf"));
+//                        foo.deriveFont(Font.BOLD, 40.0f);
+//                        g2d.setFont(foo);
+//                    } catch (FontFormatException ex) {
+//                        Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                        g2d.drawString("Coins: ", Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        break;
+                    case 1:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        break;
+                    case 2:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Seconds: ", Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        break;
+                    case 3:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        break;
+                    case 4: 
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
+                        g2d.drawString("Points: ", Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                        break;
+                    case 5:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
+                        g2d.drawString("Points: " + score, Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                        break;
+                    case 6:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
+                        g2d.drawString("Points: " + score, Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                        break;
+                }
             }
-        }
 
+        }
     }
 
     @Override
@@ -318,7 +409,8 @@ public class BobertPanel extends JPanel implements Runnable,
         while (gameRunning) {
             FPSStartOfLoop();
             
-            
+            // **Timer for scoring
+            //<editor-fold defaultstate="collapsed" desc="Game Timer">
             if (shouldStartTimingGame) {
                 timeWhenRan = System.currentTimeMillis();
                 shouldStartTimingGame = false;
@@ -327,6 +419,10 @@ public class BobertPanel extends JPanel implements Runnable,
             if (timingGame) {
                 gameTimer = System.currentTimeMillis();
             }
+            score = GameLevel.calcScore(gameTimer-timeWhenRan, 
+                                maxTimeForBonus, 
+                                bobert.totalCollected + bobert.numCollected);
+            //</editor-fold>
 
             // **Moving from level 1 to level 2, for example
             //<editor-fold defaultstate="collapsed" desc="Level Advancement">
@@ -347,17 +443,41 @@ public class BobertPanel extends JPanel implements Runnable,
                     } else {
                         // Otherwise, reload the level array
                         wonGame = true;
-                        repaint();
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        score = GameLevel.calcScore(gameTimer-timeWhenRan, 
+                                maxTimeForBonus, 
+                                bobert.totalCollected + bobert.numCollected);
+                        if (score > bestScore) {
+                            bestScore = score;
                         }
+                        boolean done = false;
+                        while (!done) {
+                            if (scoreDisplayFrame > scoreDisplayDelay) {
+                                scoreDisplayStep++;
+                                if (scoreDisplayStep > 5) {
+                                    done = true;
+                                }
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                scoreDisplayFrame = 0;
+                            } else {
+                                scoreDisplayFrame++;
+                            }
+                            repaint();
+                            
+                        }
+                        scoreDisplayStep = 0;
+                        scoreDisplayFrame = 0;
+                        bobert.numCollected = 0;
+                        bobert.totalCollected = 0;
                         gameLevels.clear();
                         wonGame = false;
                         for (int i=0; i < allGameLevels.size(); i++) {
                             gameLevels.add(allGameLevels.get(i));
                         }
+                        timingGame = false;
                     }
                     level = new GameLevel(gameLevels.get(0), false);
                 } else {
@@ -371,9 +491,21 @@ public class BobertPanel extends JPanel implements Runnable,
                         if (cur.name.equalsIgnoreCase("start")) {
                             bobert.setX(cur.leftEdge());
                             bobert.setY(cur.topEdge());
-                        } else if (cur.name.equalsIgnoreCase("end")) {
-                            screenCam.setX(cur.leftEdge());
-                            screenCam.setY(cur.topEdge());
+                            if (cur.leftEdge() < level.background.drawBox.x + screenCam.getWidth()) {
+                                screenCam.setX(level.background.drawBox.x);
+                            } else if (cur.rightEdge() > level.background.drawBox.x + level.background.drawBox.width - screenCam.getWidth()) {
+                                screenCam.setX(level.background.drawBox.x + level.background.drawBox.width - screenCam.getWidth());
+                            } else {
+                                screenCam.setX(cur.leftEdge());
+                            }
+                            if (cur.topEdge() < level.background.drawBox.y + screenCam.getHeight()) {
+                                screenCam.setY(level.background.drawBox.y);
+                            } else if (cur.bottomEdge() > level.background.drawBox.y + level.background.drawBox.height - screenCam.getHeight()) {
+                                screenCam.setY(level.background.drawBox.y + level.background.drawBox.height - screenCam.getHeight());
+                            } else {
+                                screenCam.setY(cur.topEdge());
+                            }
+                            break;
                         }
                     }
                 }
