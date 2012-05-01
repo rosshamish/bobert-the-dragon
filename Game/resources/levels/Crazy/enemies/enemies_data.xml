@@ -6,8 +6,8 @@
 
 <name> DefaultName </name>
 <location> resources/enemies/spike_3-wide.png </location>
-<x> 292 </x>
-<y> 790 </y>
+<x> 288 </x>
+<y> 770 </y>
 <width> 265 </width>
 <height> 96 </height>
 <movementDistance> 0 </movementDistance>
@@ -20,7 +20,7 @@
 <name> DefaultName </name>
 <location> resources/enemies/spike.png </location>
 <x> 1415 </x>
-<y> 785 </y>
+<y> 765 </y>
 <width> 100 </width>
 <height> 100 </height>
 <movementDistance> 0 </movementDistance>
@@ -32,8 +32,8 @@
 
 <name> DefaultName </name>
 <location> resources/enemies/spike_3-wide.png </location>
-<x> 557 </x>
-<y> 789 </y>
+<x> 553 </x>
+<y> 771 </y>
 <width> 265 </width>
 <height> 96 </height>
 <movementDistance> 0 </movementDistance>
@@ -46,7 +46,7 @@
 <name> DefaultName </name>
 <location> resources/enemies/spike.png </location>
 <x> 1565 </x>
-<y> 785 </y>
+<y> 765 </y>
 <width> 100 </width>
 <height> 100 </height>
 <movementDistance> 0 </movementDistance>
@@ -58,8 +58,8 @@
 
 <name> DefaultName </name>
 <location> resources/enemies/spike.png </location>
-<x> 1045 </x>
-<y> 784 </y>
+<x> 1047 </x>
+<y> 768 </y>
 <width> 100 </width>
 <height> 100 </height>
 <movementDistance> 0 </movementDistance>
@@ -71,11 +71,50 @@
 
 <name> DefaultName </name>
 <location> resources/enemies/0.png </location>
-<x> 2753 </x>
-<y> 92 </y>
+<x> 2727 </x>
+<y> 104 </y>
 <width> 100 </width>
 <height> 100 </height>
-<movementDistance> 265 </movementDistance>
+<movementDistance> 380 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 3730 </x>
+<y> 762 </y>
+<width> 155 </width>
+<height> 100 </height>
+<movementDistance> 0 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 3386 </x>
+<y> 754 </y>
+<width> 188 </width>
+<height> 100 </height>
+<movementDistance> 0 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 4025 </x>
+<y> 760 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 0 </movementDistance>
 
 </enemy>
 

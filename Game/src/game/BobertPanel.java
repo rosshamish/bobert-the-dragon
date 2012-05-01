@@ -309,8 +309,8 @@ public class BobertPanel extends JPanel implements Runnable,
                 }
                 
                 // Highscore
-                if (gameLevels.size() == allGameLevels.size()) {
-                    // If we are at the main menu.S
+                if (gameLevels.get(0).equals(allGameLevels.get(0))) {
+                    // If we are at the main menu.
                     g2d.setColor(Color.black);
                     g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
                     g2d.drawString("Highscore: " + bestScore, 
