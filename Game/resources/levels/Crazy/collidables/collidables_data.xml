@@ -20,6 +20,20 @@
 
 <name> Floor, eh? </name>
 <location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 910 </y>
+<width> 5252 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
 <x> -146 </x>
 <y> 910 </y>
 <width> 5252 </width>
@@ -1028,8 +1042,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 4032 </x>
-<y> 684 </y>
+<x> 4033 </x>
+<y> 661 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1042,8 +1056,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 3740 </x>
-<y> 686 </y>
+<x> 3735 </x>
+<y> 660 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1056,8 +1070,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 3810 </x>
-<y> 688 </y>
+<x> 3812 </x>
+<y> 658 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1070,8 +1084,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 3381 </x>
-<y> 706 </y>
+<x> 3384 </x>
+<y> 661 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1084,8 +1098,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 3455 </x>
-<y> 706 </y>
+<x> 3460 </x>
+<y> 661 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1098,8 +1112,8 @@
 
 <name>  </name>
 <location> resources/collidables/collectables/coin0.png </location>
-<x> 3527 </x>
-<y> 708 </y>
+<x> 3531 </x>
+<y> 662 </y>
 <width> 70 </width>
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
@@ -1160,6 +1174,20 @@
 <height> 70 </height>
 <collisionType> PASSABLE </collisionType>
 <worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/cloud0.png </location>
+<x> 4872 </x>
+<y> 722 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
 
 </collidable>
 
