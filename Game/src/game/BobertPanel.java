@@ -32,7 +32,7 @@ public class BobertPanel extends JPanel implements Runnable,
     static boolean loadingLevel = false;
     static Image loadingImage = new ImageIcon("resources/logos/blockTwo_loadScreen.jpg").getImage();
     private static boolean wonGame = false;
-    static Image wonImage = new ImageIcon("resources/logos/blockTwo_3.jpg").getImage();
+    static Image wonImage = new ImageIcon("resources/logos/wonGameScreen.png").getImage();
     
     public static long timeWhenRan = System.currentTimeMillis();
     public static long gameTimer;
@@ -351,51 +351,44 @@ public class BobertPanel extends JPanel implements Runnable,
                 // Points sequential display
                 int y = 20;
                 int textHeight = 50;
+                int textY = y + textHeight;
+                int textX = Main.B_WINDOW_DEFAULT_WIDTH / 3;
                 g2d.setColor(Color.black);
                 g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
                 switch (scoreDisplayStep) {
                     // The break statements are left out INTENTIONALLY to allow
                     // for a build-up of score display messages.
-                    case 0:
-//                    try {
-//                        Font foo = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/foo.ttf"));
-//                        foo.deriveFont(Font.BOLD, 40.0f);
-//                        g2d.setFont(foo);
-//                    } catch (FontFormatException ex) {
-//                        Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(BobertPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-                        g2d.drawString("Coins: ", Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        break;
                     case 1:
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
+                        g2d.drawString("Coins: ", textX, textY * 1);
                         break;
                     case 2:
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        g2d.drawString("Seconds: ", Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
                         break;
                     case 3:
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
+                        g2d.drawString("Seconds: ", textX, textY * 2);
                         break;
-                    case 4: 
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
-                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
-                        g2d.drawString("Points: ", Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                    case 4:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), textX, textY * 2);
                         break;
-                    case 5:
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                    case 5: 
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), textX, textY * 2);
                         g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
-                        g2d.drawString("Points: " + score, Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                        g2d.drawString("Points: ", textX, textY * 4);
                         break;
                     case 6:
-                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 1);
-                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), Main.B_WINDOW_DEFAULT_WIDTH / 3, y + textHeight * 2);
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), textX, textY * 2);
                         g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
-                        g2d.drawString("Points: " + score, Main.B_WINDOW_WIDTH / 3, y + textHeight * 4);
+                        g2d.drawString("Points: " + score, textX, textY * 4);
+                        break;
+                    case 7:
+                        g2d.drawString("Coins: " + (bobert.numCollected + bobert.totalCollected), textX, textY * 1);
+                        g2d.drawString("Seconds: " + ((gameTimer - timeWhenRan) / 1000), textX, textY * 2);
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
+                        g2d.drawString("Points: " + score, textX, textY * 4);
                         break;
                 }
             }

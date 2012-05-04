@@ -5,9 +5,22 @@
 <enemy>
 
 <name> DefaultName </name>
-<location> resources/enemies/0.png </location>
-<x> 1019 </x>
-<y> 203 </y>
+<location> resources/enemies/spike.png </location>
+<x> 1031 </x>
+<y> 191 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 0 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 429 </x>
+<y> 289 </y>
 <width> 100 </width>
 <height> 100 </height>
 <movementDistance> 0 </movementDistance>
@@ -19,11 +32,11 @@
 
 <name> DefaultName </name>
 <location> resources/enemies/0.png </location>
-<x> 433 </x>
-<y> 305 </y>
+<x> 86 </x>
+<y> 236 </y>
 <width> 100 </width>
 <height> 100 </height>
-<movementDistance> 0 </movementDistance>
+<movementDistance> 207 </movementDistance>
 
 </enemy>
 
