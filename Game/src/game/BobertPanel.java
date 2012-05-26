@@ -1123,7 +1123,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 bobert.shouldAccelRight = true;
                 bobert.horizAccelFrame = Character.horizAccelDelay -1;
             }
-            if (key == bobert.keyJump || key == KeyEvent.VK_UP) {
+            if (key == bobert.keyJump || key == bobert.keyJumpAlt || key == KeyEvent.VK_UP) {
                 // Make sure we aren't already jumping, then set isInAir to true
                 // as a flag that we are jumping, and then set the vertical 
                 // velocity to jumping.

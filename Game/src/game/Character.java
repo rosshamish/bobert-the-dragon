@@ -21,6 +21,7 @@ public class Character extends Sprite
     public int keyLeft = KeyEvent.VK_A;
     public int keyRight = KeyEvent.VK_D;
     public int keyJump = KeyEvent.VK_W;
+    public int keyJumpAlt = KeyEvent.VK_SPACE;
     public int keyShoot = KeyEvent.VK_SPACE;
     
     public int horizAcceleration = 1;
