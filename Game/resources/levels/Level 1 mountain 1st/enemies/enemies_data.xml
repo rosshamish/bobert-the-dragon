@@ -1,0 +1,45 @@
+
+<enemies_data>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike.png </location>
+<x> 737 </x>
+<y> 2096 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 391 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/spike_3-wide.png </location>
+<x> 1466 </x>
+<y> 1575 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 357 </movementDistance>
+
+</enemy>
+
+
+<enemy>
+
+<name> DefaultName </name>
+<location> resources/enemies/0.png </location>
+<x> 2399 </x>
+<y> 1352 </y>
+<width> 100 </width>
+<height> 100 </height>
+<movementDistance> 10 </movementDistance>
+
+</enemy>
+
+
+</enemies_data>
+
