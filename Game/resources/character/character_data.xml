@@ -3,7 +3,7 @@
 		<name> Bobert </name>
 
 		<numberOfImages> 16 </numberOfImages>
-		<defaultImage> 12 </defaultImage>
+		<defaultImage> 2 </defaultImage>
 
 		<width> 60</width>
 		<height> 100</height>

@@ -778,7 +778,7 @@ public class BobertPanel extends JPanel implements Runnable,
                 if (bobert.movingRight || bobert.movingLeft) {
                     bobert.imageCount++;
                 } else if (bobert.facingRight || bobert.facingLeft) {
-                    bobert.imageCount = 12;
+                    bobert.imageCount = 2;
                 }
                 if (bobert.imageCount >= bobert.imagePaths.size()) {
                     bobert.imageCount = 0;
