@@ -16,4 +16,16 @@
 <name> MOUNTAIN! </name>
 </level>
 
+<level>
+<name> Level 2 </name>
+</level>
+
+<level>
+<name> Volcano 1 </name>
+</level>
+
+<level>
+<name> Volcano 3 </name>
+</level>
+
 </level_order>
