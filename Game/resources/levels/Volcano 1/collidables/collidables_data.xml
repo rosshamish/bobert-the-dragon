@@ -1,0 +1,202 @@
+
+<collidables_data>
+
+
+<collidable>
+
+<name> Floor, eh? </name>
+<location> resources/default.jpg </location>
+<x> 0 </x>
+<y> 3450 </y>
+<width> 1440 </width>
+<height> 100 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> FLOOR </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> end </name>
+<location> resources/collidables/triggers/green_flag.png </location>
+<x> 531 </x>
+<y> 3229 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> start </name>
+<location> resources/default.jpg </location>
+<x> 295 </x>
+<y> 3207 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blockTwo.jpg </location>
+<x> 252 </x>
+<y> 3318 </y>
+<width> 120 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 541 </x>
+<y> 2696 </y>
+<width> 600 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 112 </x>
+<y> 2873 </y>
+<width> 283 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 445 </x>
+<y> 3143 </y>
+<width> 226 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/platforms/blue.png </location>
+<x> 550 </x>
+<y> 2473 </y>
+<width> 600 </width>
+<height> 70 </height>
+<collisionType> PLATFORM </collisionType>
+<worldObjectType> PLATFORM </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 471 </x>
+<y> 2959 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 51 </x>
+<y> 2654 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 662 </x>
+<y> 2769 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 771 </x>
+<y> 2771 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 691 </x>
+<y> 2609 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name>  </name>
+<location> resources/collidables/collectables/coin0.png </location>
+<x> 962 </x>
+<y> 2609 </y>
+<width> 70 </width>
+<height> 70 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> COLLECTABLE </worldObjectType>
+
+</collidable>
+
+
+</collidables_data>
+

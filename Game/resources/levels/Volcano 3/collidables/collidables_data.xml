@@ -1,0 +1,34 @@
+
+<collidables_data>
+
+
+<collidable>
+
+<name> end </name>
+<location> resources/collidables/triggers/green_flag.png </location>
+<x> 100 </x>
+<y> 350 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+<collidable>
+
+<name> start </name>
+<location> resources/default.jpg </location>
+<x> 200 </x>
+<y> 350 </y>
+<width> 50 </width>
+<height> 100 </height>
+<collisionType> PASSABLE </collisionType>
+<worldObjectType> TRIGGER </worldObjectType>
+
+</collidable>
+
+
+</collidables_data>
+
